@@ -1,8 +1,9 @@
 package model;
 
 public enum State {
+
     /**
-     * The state of the door.
+     * The state of a door.
      */
-    NOTVISITED, OPENED, LOCKED;
+    CLOSED, OPENED, LOCKED, WALL;
 }
