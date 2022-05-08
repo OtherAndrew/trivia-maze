@@ -9,7 +9,7 @@ import java.util.Random;
  * @author Andrew Nguyen
  * @version 05/07/2022
  */
-public class MazeDoor implements Door {
+public class GeneralDoor implements Door {
 
     /**
      * The door's state.
@@ -28,7 +28,7 @@ public class MazeDoor implements Door {
      * Constructs a MazeDoor.
      * @param theAdjRooms the pair of rooms on either side of the door.
      */
-    public MazeDoor(final Pair<Room> theAdjRooms) {
+    public GeneralDoor(final Pair<Room> theAdjRooms) {
         myQuestion = randomQuestion();
         myAdjRooms = theAdjRooms;
         myState = State.CLOSED;

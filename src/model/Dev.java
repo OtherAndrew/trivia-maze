@@ -21,6 +21,10 @@ public class Dev implements Player {
      * @return succces indicatior
      */
     pulbic boolean move(final Door theDoor) {
-        if (theDoor.kock() ==)
+        if (theDoor.kock() == State.LOCKED || theDoor.kock() == State.NOTVISITED) {
+            return false
+        } else {
+            if (theDoor.getMyAdjoiningRooms().getFirstElement())
+        }
     }
 }

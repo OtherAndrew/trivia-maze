@@ -5,5 +5,5 @@ public enum State {
     /**
      * The state of a door.
      */
-    CLOSED, OPENED, LOCKED, WALL;
+    CLOSED, OPENED, LOCKED;
 }
