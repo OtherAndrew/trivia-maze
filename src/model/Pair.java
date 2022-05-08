@@ -6,7 +6,7 @@
  * Formatted code to meet course coding conventions.
  */
 
-package structures;
+package model;
 
 /**
  * A pair consists of two elements of the same type. This class illustrates the

@@ -25,7 +25,7 @@ public class GeneralDoor implements Door {
     private final Pair<Room> myAdjRooms;
 
     /**
-     * Constructs a MazeDoor.
+     * Constructs a GeneralDoor.
      * @param theAdjRooms the pair of rooms on either side of the door.
      */
     public GeneralDoor(final Pair<Room> theAdjRooms) {
@@ -34,7 +34,7 @@ public class GeneralDoor implements Door {
         myState = State.CLOSED;
     }
 
-    public MazeDoor() {
+    public GeneralDoor() {
         this(null);
     }
 
