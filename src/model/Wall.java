@@ -35,7 +35,7 @@ public class Wall implements Door {
     /**
      * @return the pair of rooms on either side of the wall.
      */
-    public Pair<Room> getMyAdjoiningRooms() {
+    public Pair<Room> getAdjRooms() {
         return myAdjRooms;
     }
 }

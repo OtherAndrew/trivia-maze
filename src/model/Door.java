@@ -12,7 +12,7 @@ public interface Door {
      * Gets the adjoining rooms of the door.
      * @return myAdjoiningRooms the adjoining rooms
      */
-    Pair<Room> getMyAdjoiningRooms();
+    Pair<Room> getAdjRooms();
     
     
 }

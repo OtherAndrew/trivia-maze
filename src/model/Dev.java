@@ -4,68 +4,48 @@ package model;
  * Dev is a class that represents a developer of the game as a player
  *
  * @author Timon Tukei
+ * @author Andrew Nguyen
  * @version 5/7/22
  */
-public class Dev implements Player {
+public class Dev extends Client {
 
     /**
-     * The location of the player
-     */
-    protected Location myLocation;
-
-    /**
-     * Creates a developer player at the start of the maze.
-     */
-    public Dev() {
-        this.myLocation = new Location(0,0);
-    }
-
-    /**
-     * Creates a devleoper player at any location on the map.
-     * @param theLocation the location of the devleoper
+     * Creates a Dev at any location on the map.
+     * @param theLocation the location of the client
      */
     public Dev(final Location theLocation) {
-        this.myLocation = theLocation;
+        super(theLocation);
     }
 
     /**
-     * Gets the developers location
-     * @return the developers location
+     * Creates a Dev at the start of the maze.
      */
-    public Location getMyLocation() {
-        return myLocation;
-    }
-
-    /**
-     * Sets the developers location.
-     * @param myLocation the location to be updated to
-     */
-    private void setMyLocation(Location myLocation) {
-        this.myLocation = myLocation;
-    }
-
-    /**
-     * Moves the player through a door.
-     * @param theDoor the door to move through
-     * @return succces indicatior
-     */
-    pulbic boolean move(final Door theDoor) {
-        if (theDoor.kock() == State.LOCKED || theDoor.kock() == State.NOTVISITED) {
-            return false
-        } else {
-            if (theDoor.getMyAdjoiningRooms().getFirstElement().getMyLocation().equals(this.getMyLocation())) {
-                setMyLocation(theDoor.getMyAdjoiningRooms().getSecondElement().getMyLocation());
-            } else {
-                setMyLocation(theDoor.getMyAdjoiningRooms().getFirstElement().getMyLocation());
-            }
-        }
+    public Dev() {
+        super(new Location(0,0));
     }
 
     /**
      * Teleports the developer to any room in the maze.
-     * @param theRoom
+     * @param theRoom the room to teleport to.
      */
     public void teleport(final Room theRoom) {
-        this.setMyLocation(theRoom.getMyLocation());
+        setLocation(theRoom.getLocation());
+    }
+
+    /**
+     * Moves the player through a door.
+     * @param theDoor the door to move through.
+     * @return if move was successful.
+     */
+    @Override
+    public boolean move(final Door theDoor) {
+        Pair<Room> adjRooms = theDoor.getAdjRooms();
+        Location currentLocation = adjRooms.getFirstElement().getLocation();
+        if (currentLocation.equals(myLocation)) {
+            setLocation(adjRooms.getSecondElement().getLocation());
+        } else {
+            setLocation(adjRooms.getFirstElement().getLocation());
+        }
+        return true;
     }
 }

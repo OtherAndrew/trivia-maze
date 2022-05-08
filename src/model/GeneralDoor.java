@@ -28,21 +28,22 @@ public class GeneralDoor implements Door {
      * Constructs a GeneralDoor.
      * @param theAdjRooms the pair of rooms on either side of the door.
      */
-    public GeneralDoor(final Pair<Room> theAdjRooms) {
-        myQuestion = randomQuestion();
+    public GeneralDoor(final TriviaQuestion theQuestion,
+                       final Pair<Room> theAdjRooms) {
+        myQuestion = theQuestion;
         myAdjRooms = theAdjRooms;
         myState = State.CLOSED;
     }
 
     public GeneralDoor() {
-        this(null);
+        this(null, null);
     }
 
     /**
      * Opens the door.
      */
     public void open() {
-        myState = State.OPENED;
+        myState = State.OPEN;
     }
 
     /**
@@ -73,26 +74,26 @@ public class GeneralDoor implements Door {
         return myQuestion;
     }
 
-    /**
-     * Assigns a random question to the door.
-     * @return
-     */
-    // TODO: move logic to different class?
-    private TriviaQuestion randomQuestion() {
-        TriviaQuestion out;
-        final int randomNumber = new Random().nextInt(3);
-        switch (randomNumber) {
-            case (2) -> out = new TrueFalse();
-            case (1) -> out = new ShortAnswer();
-            default -> out = new MultipleChoice();
-        }
-        return out;
-    }
+//    /**
+//     * Assigns a random question to the door.
+//     * @return
+//     */
+//    // TODO: move logic to different class?
+//    private TriviaQuestion randomQuestion() {
+//        TriviaQuestion out;
+//        final int randomNumber = new Random().nextInt(3);
+//        switch (randomNumber) {
+//            case (2) -> out = new TrueFalse();
+//            case (1) -> out = new ShortAnswer();
+//            default -> out = new MultipleChoice();
+//        }
+//        return out;
+//    }
 
     /**
      * @return the pair of rooms on either side of the door.
      */
-    public Pair<Room> getMyAdjoiningRooms() {
+    public Pair<Room> getAdjRooms() {
         return myAdjRooms;
     }
 }

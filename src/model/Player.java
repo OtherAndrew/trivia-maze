@@ -2,6 +2,6 @@ package model;
 
 public interface Player {
 
-    public static final boolean move();
+    boolean move(Door theDoor);
 
 }

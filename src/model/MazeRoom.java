@@ -53,12 +53,4 @@ public class MazeRoom implements Room {
         return myLocation;
     }
 
-    /**
-     * Walks through the door corresponding to the specified direction.
-     * @param theDirection the direction to walk through.
-     */
-    public void walkThrough(final Direction theDirection) {
-
-
-    }
 }
