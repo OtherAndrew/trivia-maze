@@ -18,7 +18,7 @@ public class GeneralDoor implements Door {
     /**
      * The trivia question associated with the door.
      */
-    private final TriviaQuestion myQuestion;
+    private final Question myQuestion;
     /**
      * The pair of rooms on either side of the door.
      */
@@ -28,7 +28,7 @@ public class GeneralDoor implements Door {
      * Constructs a GeneralDoor.
      * @param theAdjRooms the pair of rooms on either side of the door.
      */
-    public GeneralDoor(final TriviaQuestion theQuestion,
+    public GeneralDoor(final Question theQuestion,
                        final Pair<Room> theAdjRooms) {
         myQuestion = theQuestion;
         myAdjRooms = theAdjRooms;
@@ -70,7 +70,7 @@ public class GeneralDoor implements Door {
     /**
      * @return the trivia question associated with the door
      */
-    public TriviaQuestion ask() {
+    public Question ask() {
         return myQuestion;
     }
 
