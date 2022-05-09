@@ -1,16 +1,19 @@
 package model;
-
+/**
+ * Door is an interface that represents a door.
+ *
+ * @author Andrew Nguyen
+ * @version 05/08/2022
+ */
 public interface Door {
     
     /**
-     * Gets the state of the door.
      * @return the state of the door
      */
     State knock();
     
     /**
-     * Gets the adjoining rooms of the door.
-     * @return myAdjoiningRooms the adjoining rooms
+     * @return the pair of rooms on either side of the door.
      */
     Pair<Room> getAdjRooms();
     

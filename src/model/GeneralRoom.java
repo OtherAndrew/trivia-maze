@@ -46,7 +46,7 @@ public class GeneralRoom implements Room {
     }
 
     /**
-     * @return the x and y coordinates of the room relative to the top left
+     * @return the X and Y coordinates of the room relative to the top left
      *         corner.
      */
     public Location getLocation() {

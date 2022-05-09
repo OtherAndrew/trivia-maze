@@ -35,10 +35,6 @@ public class GeneralDoor implements Door {
         myState = State.CLOSED;
     }
 
-    public GeneralDoor() {
-        this(null, null);
-    }
-
     /**
      * Opens the door.
      */
