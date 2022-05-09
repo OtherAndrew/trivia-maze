@@ -7,7 +7,7 @@
  * Formatted code to meet course coding conventions.
  */
 
-package structures;
+package model;
 
 import java.util.List;
 

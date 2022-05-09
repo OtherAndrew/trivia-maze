@@ -6,7 +6,7 @@
  * Formatted code to meet course coding conventions.
  */
 
-package structures;
+package model;
 
 /**
  * Adjacency Matrix implementation of an undirected >Graph>.

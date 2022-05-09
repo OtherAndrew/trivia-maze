@@ -6,7 +6,7 @@
  * Formatted code to meet course coding conventions.
  */
 
-package structures;
+package model;
 
 /**
  * A vertex in a graph. Every vertex has an identifying, immutable label.
