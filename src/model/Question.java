@@ -1,6 +1,12 @@
 package model;
 
-import java.util.*;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Stack;
 
 /**
  * Question is a class that represents an option-based question and its answer
@@ -9,33 +15,50 @@ import java.util.*;
  * @author Anthony Nguyen
  * @version 2022 May 6
  */
-public class Question {
+public class Question implements Serializable {
+
+    private static final Random RAND = new Random();
+    private static final int TRUEFALSE = 0;
+    private static final int MULTICHOICE = 1;
+    private static final int SHORTANS = 2;
 
     private final String myQuery;
     private final Map<Option, Answer> myAnswers;
-
-    // create a List of Answers elsewhere (i.e. when reading from SQLite),
-    // shuffle it, and just pass it to Question
 
     /**
      * Constructs a Question object from a query and a set of answers. The
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
-     * @param theQuery the query
-     * @param theChoices the set of potential answers to the query
+     *
+     * @param theDB a connection to a SQLite database.
      */
-    public Question(final String theQuery, final List<Answer> theChoices) {
-        // create local copy of choices to shuffle instead of param
-        final List<Answer> choices = new ArrayList<>(theChoices);
+    public Question(Connection theDB) {
+        String table;
+        switch (RAND.nextInt(3)) {
+            case TRUEFALSE -> table = "TF";
+            case MULTICHOICE -> table = "MC";
+            case SHORTANS -> table = "SA";
+        }
+
+        // SQLite code access DB and corresponding table using string table
+        // Select random row:
+        // "SELECT * FROM table ORDER BY RANDOM() LIMIT 1;"
+
+        myQuery = ""; // Get string for QUES column
+
+        Stack<Answer> choices = new Stack<>();
+
+        // Build Answer objs from ANS columns
+        // Push them onto choices
+
         Collections.shuffle(choices);
-        myQuery = theQuery;
+
         myAnswers = new EnumMap<>(Option.class);
-        int i = 0;
         for (Option letter : Option.values()) {
-            if (i < choices.size()) {
-                myAnswers.put(letter, choices.get(i++));
-            } else {
+            if (choices.isEmpty()) {
                 break;
+            } else {
+                myAnswers.put(letter, choices.pop());
             }
         }
     }
@@ -63,8 +86,6 @@ public class Question {
      * @param theOption an option submitted by a player.
      * @return if the option selected correct.
      */
-    // For true-false and multiple choice
-    // TODO: split multiple choice/true-false/short answer into different classes
     public boolean checkAnswer(final Option theOption) {
         // Exception throw would not be necessary if method calling this one
         // checks first, or if we decide to handle this differently.
@@ -80,8 +101,8 @@ public class Question {
      * @param theResponse a response submitted by a player.
      * @return if the response is correct.
      */
-    // For short answer
     public boolean checkAnswer(final String theResponse) {
+        // for short answer
         boolean result = false;
         for(Answer choice : myAnswers.values()) {
             if (choice.toString().equals(theResponse)) {
