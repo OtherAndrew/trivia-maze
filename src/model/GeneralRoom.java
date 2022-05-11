@@ -1,56 +1,29 @@
 package model;
 
-/**
- * GeneralRoom is a class that represents a room in the maze.
- *
- * @author Andrew Nguyen
- * @version 05/07/2022
- */
-public class GeneralRoom implements Room {
-    private final Door[] myDoors;
-    private final Location myLocation;
+import java.util.EnumMap;
+import java.util.Map;
 
-    private boolean myVisited;
+public class Room {
+    private final int myX;
+    private final int myY;
+    private final Map<Direction, Door> myDoors;
 
-    /**
-     * Constructs a MazeRoom.
-     * @param theDoors the set of doors on each side of the room.
-     * @param theLocation the x and y coordinates of the room relative to
-     *                    the top left corner.
-     */
-    public GeneralRoom(final Door[] theDoors, final Location theLocation) {
-        myDoors = theDoors;
-        myVisited = false;
-        myLocation = theLocation;
+    public Room(final int theX, final int theY) {
+        myX = theX;
+        myY = theY;
+        myDoors = new EnumMap<>(Direction.class);
     }
 
-    /**
-     * @return the set of doors on each side of the room.
-     */
-    public Door[] getDoors() {
-        return myDoors;
+    public void addDoor(final Direction theDirection, final Door theDoor) {
+        myDoors.put(theDirection, theDoor);
     }
 
-    /**
-     * Marks the room as visited.
-     */
-    public void visit() {
-        myVisited = true;
+    public boolean hasDoor(final Direction theDirection) {
+        return myDoors.containsKey(theDirection);
     }
 
-    /**
-     * @return if the room has been visited.
-     */
-    public boolean isVisited() {
-        return myVisited;
+    public boolean checkDoorState(final Direction theDirection,
+                                  final State theState) {
+        return myDoors.get(theDirection).getState() == theState;
     }
-
-    /**
-     * @return the X and Y coordinates of the room relative to the top left
-     *         corner.
-     */
-    public Location getLocation() {
-        return myLocation;
-    }
-
 }

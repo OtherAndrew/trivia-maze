@@ -1,95 +1,58 @@
 package model;
 
-import java.util.Random;
+import static model.State.WALL;
 
-/**
- * MazeDoor is a class that represents a door that has an associated trivia
- * question.
- *
- * @author Andrew Nguyen
- * @version 05/07/2022
- */
-public class GeneralDoor implements Door {
+public class Door {
 
-    /**
-     * The door's state.
-     */
     private State myState;
-    /**
-     * The trivia question associated with the door.
-     */
-    private final Question myQuestion;
-    /**
-     * The pair of rooms on either side of the door.
-     */
-    private final Pair<Room> myAdjRooms;
+    private final Room myRoom1;
+    private final Direction myDirection1;
+    private final Room myRoom2;
+    private final Direction myDirection2;
 
-    /**
-     * Constructs a GeneralDoor.
-     * @param theAdjRooms the pair of rooms on either side of the door.
-     */
-    public GeneralDoor(final Question theQuestion,
-                       final Pair<Room> theAdjRooms) {
-        myQuestion = theQuestion;
-        myAdjRooms = theAdjRooms;
-        myState = State.CLOSED;
+    public Door(final Room theRoom1, final Direction theDirection1,
+                final Room theRoom2, final Direction theDirection2) {
+        myState = WALL;
+        myRoom1 = theRoom1;
+        myDirection1 = theDirection1;
+        establishDoorRoomConnection(myRoom1, myDirection1);
+        myRoom2 = theRoom2;
+        myDirection2 = theDirection2;
+        establishDoorRoomConnection(myRoom2, myDirection2);
     }
 
-    /**
-     * Opens the door.
-     */
-    public void open() {
-        myState = State.OPEN;
+    private void establishDoorRoomConnection(final Room theRoom,
+                                             final Direction theDirection) {
+        theRoom.addDoor(theDirection,this);
     }
 
-    /**
-     * Locks the door.
-     */
-    public void lock() {
-        myState = State.LOCKED;
+    public boolean connects(final Room theRoom) {
+        return myRoom1.equals(theRoom) | myRoom2.equals(theRoom);
     }
 
-    /**
-     * Closes the door
-     */
-    public void close() {
-        myState = State.CLOSED;
+    public Direction getDirection(final Room theRoom) {
+        Direction direction;
+        if (myRoom1.equals(theRoom)) {
+            direction = myDirection1;
+        } else {
+            direction = myDirection2;
+        }
+        return direction;
     }
 
-    /**
-     * @return the door state.
-     */
-    public State knock() {
+    public Room getRoom1() {
+        return myRoom1;
+    }
+
+    public Room getRoom2() {
+        return myRoom2;
+    }
+
+    public State getState() {
         return myState;
     }
 
-    /**
-     * @return the trivia question associated with the door
-     */
-    public Question ask() {
-        return myQuestion;
-    }
-
-//    /**
-//     * Assigns a random question to the door.
-//     * @return
-//     */
-//    // TODO: move logic to different class?
-//    private TriviaQuestion randomQuestion() {
-//        TriviaQuestion out;
-//        final int randomNumber = new Random().nextInt(3);
-//        switch (randomNumber) {
-//            case (2) -> out = new TrueFalse();
-//            case (1) -> out = new ShortAnswer();
-//            default -> out = new MultipleChoice();
-//        }
-//        return out;
-//    }
-
-    /**
-     * @return the pair of rooms on either side of the door.
-     */
-    public Pair<Room> getAdjRooms() {
-        return myAdjRooms;
+    public void setState(final State theState) {
+        myState = theState;
     }
 }
