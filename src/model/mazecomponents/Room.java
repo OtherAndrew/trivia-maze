@@ -1,7 +1,5 @@
 package model.mazecomponents;
 
-import model.Direction;
-
 import java.util.EnumMap;
 import java.util.Map;
 

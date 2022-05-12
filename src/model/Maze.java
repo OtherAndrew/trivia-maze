@@ -1,6 +1,7 @@
 package model;
 
 import model.mazecomponents.Door;
+import model.mazecomponents.HashMapDisjointSet;
 import model.mazecomponents.Room;
 import model.questions.Question;
 
@@ -9,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
-import static model.Direction.*;
+import static model.mazecomponents.Direction.*;
 
 // FOR TESTING
 import static model.mazecomponents.State.CLOSED;

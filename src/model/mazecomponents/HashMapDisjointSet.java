@@ -1,4 +1,4 @@
-package model;
+package model.mazecomponents;
 
 import model.mazecomponents.Room;
 

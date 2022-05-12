@@ -1,7 +1,5 @@
 package model.mazecomponents;
 
-import model.Direction;
-
 import static model.mazecomponents.State.*;
 
 /**
