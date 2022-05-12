@@ -14,7 +14,7 @@ public class QuestionFactory {
         switch (RAND.nextInt(3)) {
             case TRUEFALSE -> question = new ChoiceSelection(theDB, "TF");
             case MULTICHOICE -> question = new ChoiceSelection(theDB, "MC");
-            case SHORTANS -> question = new ChoiceSelection(theDB, "SA");
+            case SHORTANS -> question = new ShortAnswer(theDB);
         }
         return question;
     }

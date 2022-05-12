@@ -12,8 +12,8 @@ public class ShortAnswer extends Question implements Serializable {
      *
      * @param theDB a connection to a SQLite database.
      */
-    public ShortAnswer(final Connection theDB, final String theTable) {
-        super(theDB, theTable);
+    public ShortAnswer(final Connection theDB) {
+        super(theDB, "SA");
     }
 
     /**
