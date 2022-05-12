@@ -1,4 +1,4 @@
-package model;
+package model.questions;
 
 import java.io.Serializable;
 import java.sql.Connection;

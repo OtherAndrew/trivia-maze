@@ -1,5 +1,7 @@
 package model;
 
+import model.mazecomponents.Room;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package model;
+package model.mazecomponents;
 
 public enum State {
 
@@ -10,5 +10,5 @@ public enum State {
      * - Locked: Unable to be passed through or opened. Will show a question.
      * - Wall: Unable to be passed through or opened. Does not show a question.
      */
-    CLOSED, OPEN, LOCKED, WALL;
+    CLOSED, OPEN, LOCKED, WALL
 }

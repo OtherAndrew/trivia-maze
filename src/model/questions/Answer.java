@@ -1,4 +1,4 @@
-package model;
+package model.questions;
 
 /**
  * Answer is a class that represents an answer to a question.

@@ -1,19 +1,41 @@
 package model;
 
+import model.mazecomponents.Door;
+import model.mazecomponents.Room;
+import model.questions.Question;
+
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 import static model.Direction.*;
 
 // FOR TESTING
-import static model.State.CLOSED;
+import static model.mazecomponents.State.CLOSED;
 
+/**
+ * Maze is a class that represents a maze with doors.
+ */
 public class Maze {
 
+    /**
+     * The rooms in the maze.
+     */
     private final Room[][] myRooms;
+    /**
+     * Doors with corresponding question.
+     */
+    private final Map<Door, Question> myQuestionMap;
 
+    /**
+     * Constructs a maze of arbitrary size.
+     * @param theRows the number of rows the maze should have.
+     * @param theCols the number of columns the maze should have.
+     */
     public Maze(final int theRows, final int theCols) {
         myRooms = new Room[theRows][theCols];
+        myQuestionMap = new HashMap<>();
         for (int row = 0; row < myRooms.length; row++) {
             for (int col = 0; col < myRooms[row].length; col++) {
                 myRooms[row][col] = new Room(row, col);
@@ -22,6 +44,10 @@ public class Maze {
         generateMaze(generatePossibleDoors());
     }
 
+    /**
+     * Generates a list of doors for every possible door position.
+     * @return a list of doors for every possible door position.
+     */
     private LinkedList<Door> generatePossibleDoors() {
         LinkedList<Door> doors = new LinkedList<>();
         for (int row = 0; row < myRooms.length; row++) {
@@ -38,6 +64,10 @@ public class Maze {
         return doors;
     }
 
+    /**
+     * Generates a randomized maze.
+     * @param theDoors the set of doors to join into a maze.
+     */
     private void generateMaze(LinkedList<Door> theDoors) {
         Random rand = new Random();
         HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
@@ -47,7 +77,7 @@ public class Maze {
             Room room1 = door.getRoom1();
             Room room2 = door.getRoom2();
             if (!diset.find(room1).equals(diset.find(room2))) {
-                door.setState(CLOSED);
+                door.close();
                 // assign question to Door?
                 diset.join(room1, room2);
             }
