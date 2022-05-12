@@ -52,8 +52,8 @@ public class Door {
 
     /**
      * Adds this door to the room in the direction specified.
-     * @param theRoom the room to add this door to
-     * @param theDirection the side to add the door on
+     * @param theRoom the room to add this door to.
+     * @param theDirection the side to add the door on.
      */
     private void addDoor(final Room theRoom,
                          final Direction theDirection) {
