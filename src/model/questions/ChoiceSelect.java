@@ -1,19 +1,19 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.sql.Connection;
+import java.sql.Statement;
 
-public class ChoiceSelection extends Question implements Serializable {
+public class ChoiceSelect extends Question implements Serializable {
 
     /**
      * Constructs a Question object from a query and a set of answers. The
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theDB a connection to a SQLite database.
+     * @param theStatement  a connection to a SQLite database.
      */
-    public ChoiceSelection(final Connection theDB, final String theTable) {
-        super(theDB, theTable);
+    public ChoiceSelect(final Statement theStatement, final String theTable) {
+        super(theStatement, theTable);
     }
 
     /**

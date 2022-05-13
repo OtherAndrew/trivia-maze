@@ -1,7 +1,7 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.sql.Connection;
+import java.sql.Statement;
 
 public class ShortAnswer extends Question implements Serializable {
 
@@ -10,10 +10,10 @@ public class ShortAnswer extends Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theDB a connection to a SQLite database.
+     * @param theStatement  a connection to a SQLite database.
      */
-    public ShortAnswer(final Connection theDB) {
-        super(theDB, "SA");
+    public ShortAnswer(final Statement theStatement) {
+        super(theStatement, "SA");
     }
 
     /**
