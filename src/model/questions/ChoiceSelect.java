@@ -1,7 +1,7 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.sql.Statement;
+import java.util.Stack;
 
 public class ChoiceSelect extends Question implements Serializable {
 
@@ -10,10 +10,11 @@ public class ChoiceSelect extends Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theStatement  a connection to a SQLite database.
+     * @param theQuestion
+     * @param theChoices
      */
-    public ChoiceSelect(final Statement theStatement, final String theTable) {
-        super(theStatement, theTable);
+    public ChoiceSelect(String theQuestion, Stack<Answer> theChoices) {
+        super(theQuestion, theChoices);
     }
 
     /**

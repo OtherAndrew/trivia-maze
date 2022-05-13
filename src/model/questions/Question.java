@@ -1,10 +1,6 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -28,33 +24,19 @@ public abstract class Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theStatement  a Statement for a SQLite database.
+     * @param theQuestion
+     * @param theChoices
      */
-    public Question(final Statement theStatement, final String theTable) {
-        try (ResultSet rs = theStatement.executeQuery("SELECT * FROM "
-                + theTable + " ORDER BY RANDOM() LIMIT 1")) {
-            myQuery = rs.getString("QUES");
-
-            Stack<Answer> choices = new Stack<>();
-            choices.push(new Answer(rs.getString("ANSC"), true));
-            int colCount = rs.getMetaData().getColumnCount();
-            boolean multipleCorrect = theTable.equals("SA");
-            for (int i = 3; i <= colCount; i++) {
-                choices.push(new Answer(rs.getString(i), multipleCorrect));
+    public Question(final String theQuestion,
+                    final Stack<Answer> theChoices) {
+        myQuery = theQuestion;
+        myAnswers = new HashMap<>();
+        for (String option : OPTIONS) {
+            if (theChoices.isEmpty()) {
+                break;
+            } else {
+                myAnswers.put(option, theChoices.pop());
             }
-            Collections.shuffle(choices);
-            rs.deleteRow();
-
-            myAnswers = new HashMap<>();
-            for (String option : OPTIONS) {
-                if (choices.isEmpty()) {
-                    break;
-                } else {
-                    myAnswers.put(option, choices.pop());
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 

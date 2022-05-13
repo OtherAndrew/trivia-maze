@@ -1,19 +1,21 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.sql.Statement;
+import java.util.Stack;
 
 public class ShortAnswer extends Question implements Serializable {
+
 
     /**
      * Constructs a Question object from a query and a set of answers. The
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theStatement  a connection to a SQLite database.
+     * @param theQuestion
+     * @param theChoices
      */
-    public ShortAnswer(final Statement theStatement) {
-        super(theStatement, "SA");
+    public ShortAnswer(String theQuestion, Stack<Answer> theChoices) {
+        super(theQuestion, theChoices);
     }
 
     /**
