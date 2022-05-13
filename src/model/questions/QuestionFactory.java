@@ -15,7 +15,7 @@ public class QuestionFactory {
     private Connection myConnection;
     private Statement myStatement;
 
-    public void setUp() {
+    public QuestionFactory() {
         try {
             myConnection = DriverManager.getConnection("jdbc:sqlite:Questions.db");
             myConnection.setAutoCommit(false);
