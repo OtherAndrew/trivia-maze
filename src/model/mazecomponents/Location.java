@@ -49,4 +49,15 @@ public class Location {
     public int y() {
         return myY;
     }
+
+    /**
+     * Determines if Location is equal to another Location. In other words,
+     * if they refer to the same position.
+     * @param theOtherLocation the location to compare to.
+     * @return if both Locations point to the same position.
+     */
+    public boolean equals(final Location theOtherLocation) {
+        return myX == theOtherLocation.x() && myY == theOtherLocation.y();
+    }
+
 }

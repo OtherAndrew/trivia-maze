@@ -69,6 +69,25 @@ public class Room {
      */
     public boolean checkDoorState(final Direction theDirection,
                                   final State theState) {
-        return myDoors.get(theDirection).getState() == theState;
+        return getDoorState(theDirection) == theState;
     }
+
+    /**
+     * Gets the state of the door in the direction.
+     * @param theDirection the direction the door is in.
+     * @return the state of the specified door.
+     */
+    public State getDoorState(final Direction theDirection) {
+        return getDoor(theDirection).getState();
+    }
+
+    /**
+     * Gets the door in the direction.
+     * @param theDirection the direction the door is in.
+     * @return the door in the specified direction.
+     */
+    public Door getDoor(final Direction theDirection) {
+        return myDoors.get(theDirection);
+    }
+
 }
