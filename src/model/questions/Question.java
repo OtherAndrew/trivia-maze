@@ -16,8 +16,8 @@ public abstract class Question implements Serializable {
 
     private static final String[] OPTIONS = {"A", "B", "C", "D"};
 
-    protected String myQuery;
-    protected Map<String, Answer> myAnswers;
+    protected final String myQuery;
+    protected final Map<String, Answer> myAnswers;
 
     /**
      * Constructs a Question object from a query and a set of answers. The
@@ -32,11 +32,8 @@ public abstract class Question implements Serializable {
         myQuery = theQuestion;
         myAnswers = new HashMap<>();
         for (String option : OPTIONS) {
-            if (theChoices.isEmpty()) {
-                break;
-            } else {
-                myAnswers.put(option, theChoices.pop());
-            }
+            if (theChoices.isEmpty()) break;
+            else myAnswers.put(option, theChoices.pop());
         }
     }
 

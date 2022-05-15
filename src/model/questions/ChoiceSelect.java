@@ -13,7 +13,8 @@ public class ChoiceSelect extends Question implements Serializable {
      * @param theQuestion
      * @param theChoices
      */
-    public ChoiceSelect(String theQuestion, Stack<Answer> theChoices) {
+    public ChoiceSelect(final String theQuestion,
+                        final Stack<Answer> theChoices) {
         super(theQuestion, theChoices);
     }
 
@@ -42,12 +43,6 @@ public class ChoiceSelect extends Question implements Serializable {
      */
     @Override
     public boolean checkAnswer(final String theOption) {
-        // Exception throw would not be necessary if method calling this one
-        // checks first, or if we decide to handle this differently.
-        Answer result = myAnswers.get(theOption);
-        if (result == null) {
-            throw new IllegalArgumentException();
-        }
-        return result.isCorrect();
+        return myAnswers.get(theOption).isCorrect();
     }
 }
