@@ -2,6 +2,7 @@ package model;
 
 import model.mazecomponents.*;
 import model.questions.Question;
+import model.questions.QuestionFactory;
 
 import java.util.*;
 
@@ -38,8 +39,7 @@ public class Maze {
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
      */
-    public Maze(final int theRows, final int theCols,
-                final Stack<Question> theQuestionStack) {
+    public Maze(final int theRows, final int theCols) {
         myRooms = new Room[theRows][theCols];
         myQuestionMap = new HashMap<>();
         myPlayerLocation = new Location(0, 0);
@@ -49,28 +49,23 @@ public class Maze {
                 myRooms[row][col] = new Room(row, col);
             }
         }
-        generateMaze(generatePossibleDoors(theQuestionStack));
+        generateMaze(generatePossibleDoors());
     }
 
     /**
      * Generates a list of doors for every possible door position.
      * @return a list of doors for every possible door position.
      */
-    private List<Door> generatePossibleDoors(
-            final Stack<Question> theQuestionStack) {
-        List<Door> doors = new LinkedList<>();
+    private List<Door> generatePossibleDoors() {
+        final List<Door> doors = new LinkedList<>();
         for (int row = 0; row < myRooms.length; row++) {
             for (int col = 0; col < myRooms[row].length; col++) {
                 if (row + 1 < myRooms.length) {
-                    Door verticalDoor = new Door(myRooms[row][col], SOUTH,
-                            myRooms[row + 1][col], NORTH);
-                    doors.add(verticalDoor);
-                    myQuestionMap.put(verticalDoor, theQuestionStack.pop());
+                    doors.add(new Door(myRooms[row][col], SOUTH,
+                                       myRooms[row + 1][col], NORTH));
                 } if (col + 1 < myRooms[row].length) {
-                    Door horizontalDoor = new Door(myRooms[row][col], EAST,
-                            myRooms[row][col + 1], WEST);
-                    doors.add(horizontalDoor);
-                    myQuestionMap.put(horizontalDoor, theQuestionStack.pop());
+                    doors.add(new Door(myRooms[row][col], EAST,
+                                       myRooms[row][col + 1], WEST));
                 }
             }
         }
@@ -82,22 +77,23 @@ public class Maze {
      * @param theDoors the set of doors to join into a maze.
      */
     private void generateMaze(final List<Door> theDoors) {
-        Random rand = new Random();
-        HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
+        final Random rand = new Random();
+        final QuestionFactory qf = new QuestionFactory();
+        final HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
         while (diset.getSize() > 1) {
             int doorIndex = rand.nextInt(theDoors.size());
             Door door = theDoors.get(doorIndex);
             Room room1 = door.getRoom1();
             Room room2 = door.getRoom2();
             if (!diset.find(room1).equals(diset.find(room2))) {
-                door.close();
                 diset.join(room1, room2);
+                door.close();
+                myQuestionMap.put(door, qf.createQuestion());
             }
             theDoors.remove(doorIndex);
         }
+        qf.cleanUp();
     }
-
-
 
     /**
      * Moves the player to an adjacent room based on the direction.
@@ -192,7 +188,8 @@ public class Maze {
     }
 
     // FOR TESTING
-//    public static void main(final String[] theArgs) {
-//        System.out.println(new Maze(5,6));
-//    }
+    public static void main(final String[] theArgs) {
+        final Maze maze = new Maze(2,2);
+        System.out.println(maze);
+    }
 }
