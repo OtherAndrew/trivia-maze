@@ -8,39 +8,27 @@ import java.util.Map;
  * occupy. Each room has a wall or door on each of its four sides.
  */
 public class Room {
-    /**
-     * Relative location of this Room to top left Room.
-     */
-    private final Location myLocation;
+
+    private final int myX;
+    private final int myY;
+
     /**
      * The doors in each cardinal direction.
      */
     private final Map<Direction, Door> myDoors;
 
-    /**
-     * Constructs a Room at a Location.
-     * @param theLocation the relative location of the room.
-     */
-    public Room(final Location theLocation) {
-        myLocation = new Location(theLocation);
+    public Room(final int theX, final int theY) {
+        myX = theX;
+        myY = theY;
         myDoors = new EnumMap<>(Direction.class);
     }
 
-    /**
-     * Constructs a Room from X and Y coordinates.
-     * @param theX the X coordinate.
-     * @param theY the Y coordinate.
-     */
-    public Room(final int theX, final int theY) {
-        this(new Location(theX, theY));
+    public int getX() {
+        return myX;
     }
 
-    /**
-     * Gets the Room's location.
-     * @return the location of the room.
-     */
-    public Location getLocation() {
-        return new Location(myLocation);
+    public int getY() {
+        return myY;
     }
 
     /**

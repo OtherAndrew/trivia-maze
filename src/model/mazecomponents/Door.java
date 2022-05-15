@@ -53,8 +53,7 @@ public class Door {
      * @param theRoom the room to add this door to.
      * @param theDirection the side to add the door on.
      */
-    private void addDoor(final Room theRoom,
-                         final Direction theDirection) {
+    private void addDoor(final Room theRoom, final Direction theDirection) {
         theRoom.addDoor(theDirection,this);
     }
 
@@ -74,11 +73,8 @@ public class Door {
      */
     public Direction getDirection(final Room theRoom) {
         Direction direction;
-        if (myRoom1.equals(theRoom)) {
-            direction = myDirection1;
-        } else {
-            direction = myDirection2;
-        }
+        if (myRoom1.equals(theRoom)) direction = myDirection1;
+        else direction = myDirection2;
         return direction;
     }
 
@@ -99,14 +95,6 @@ public class Door {
     }
 
     /**
-     * Retrieves both rooms connected to this door.
-     * @return both doors connected to this door.
-     */
-    public Pair<Room> getRooms() {
-        return new Pair<>(myRoom1, myRoom2);
-    }
-
-    /**
      * Gets this door's state.
      * @return the door's state.
      */
@@ -114,25 +102,28 @@ public class Door {
         return myState;
     }
 
-    /**
-     * Closes the door.
-     */
-    public void close() {
-        myState = CLOSED;
+    public void setState(State theState) {
+        myState = theState;
     }
 
-    /**
-     * Opens the door.
-     */
-    public void open() {
-        myState = OPEN;
-    }
-
-    /**
-     * Locks the door.
-     */
-    public void lock() {
-        myState = LOCKED;
-    }
-
+//    /**
+//     * Closes the door.
+//     */
+//    public void close() {
+//        myState = CLOSED;
+//    }
+//
+//    /**
+//     * Opens the door.
+//     */
+//    public void open() {
+//        myState = OPEN;
+//    }
+//
+//    /**
+//     * Locks the door.
+//     */
+//    public void lock() {
+//        myState = LOCKED;
+//    }
 }

@@ -7,10 +7,7 @@ import model.questions.QuestionFactory;
 import java.util.*;
 
 import static model.mazecomponents.Direction.*;
-
-// FOR TESTING
-import static model.mazecomponents.State.CLOSED;
-import static model.mazecomponents.State.OPEN;
+import static model.mazecomponents.State.*;
 
 /**
  * Maze is a class that represents a maze with doors.
@@ -28,22 +25,27 @@ public class Maze {
     /**
      * The goal location.
      */
-    private final Location myGoalLocation;
+    private final Room myGoalLocation;
     /**
      * The player's location.
      */
-    private Location myPlayerLocation;
+    private Room myPlayerLocation;
 
     /**
      * Constructs a maze of arbitrary size.
+     *
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
      */
     public Maze(final int theRows, final int theCols) {
         myRooms = new Room[theRows][theCols];
         myQuestionMap = new HashMap<>();
-        myPlayerLocation = new Location(0, 0);
-        myGoalLocation = new Location(theRows, theCols);
+
+        // TODO: Random starting location and goal, with latter being forced
+        //  to be chosen a certain distance from the former
+        myPlayerLocation = myRooms[0][0];
+        myGoalLocation = myRooms[theRows - 1][theCols - 1];
+
         for (int row = 0; row < myRooms.length; row++) {
             for (int col = 0; col < myRooms[row].length; col++) {
                 myRooms[row][col] = new Room(row, col);
@@ -54,6 +56,7 @@ public class Maze {
 
     /**
      * Generates a list of doors for every possible door position.
+     *
      * @return a list of doors for every possible door position.
      */
     private List<Door> generatePossibleDoors() {
@@ -62,10 +65,11 @@ public class Maze {
             for (int col = 0; col < myRooms[row].length; col++) {
                 if (row + 1 < myRooms.length) {
                     doors.add(new Door(myRooms[row][col], SOUTH,
-                                       myRooms[row + 1][col], NORTH));
-                } if (col + 1 < myRooms[row].length) {
+                            myRooms[row + 1][col], NORTH));
+                }
+                if (col + 1 < myRooms[row].length) {
                     doors.add(new Door(myRooms[row][col], EAST,
-                                       myRooms[row][col + 1], WEST));
+                            myRooms[row][col + 1], WEST));
                 }
             }
         }
@@ -74,6 +78,7 @@ public class Maze {
 
     /**
      * Generates a randomized maze.
+     *
      * @param theDoors the set of doors to join into a maze.
      */
     private void generateMaze(final List<Door> theDoors) {
@@ -81,13 +86,13 @@ public class Maze {
         final QuestionFactory qf = new QuestionFactory();
         final HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
         while (diset.getSize() > 1) {
-            int doorIndex = rand.nextInt(theDoors.size());
-            Door door = theDoors.get(doorIndex);
-            Room room1 = door.getRoom1();
-            Room room2 = door.getRoom2();
+            final int doorIndex = rand.nextInt(theDoors.size());
+            final Door door = theDoors.get(doorIndex);
+            final Room room1 = door.getRoom1();
+            final Room room2 = door.getRoom2();
             if (!diset.find(room1).equals(diset.find(room2))) {
                 diset.join(room1, room2);
-                door.close();
+                door.setState(CLOSED);
                 myQuestionMap.put(door, qf.createQuestion());
             }
             theDoors.remove(doorIndex);
@@ -97,27 +102,21 @@ public class Maze {
 
     /**
      * Moves the player to an adjacent room based on the direction.
+     *
      * @param theDirection the direction to move the player in.
      * @return if the move was successful.
      */
     public boolean move(final Direction theDirection) {
         boolean successfulMove = false;
-        final int currentX = myPlayerLocation.x();
-        final int currentY = myPlayerLocation.y();
-        final State doorState =
-                myRooms[currentX][currentY].getDoorState(theDirection);
-        if (doorState == OPEN) {
+        final int x = myPlayerLocation.getX();
+        final int y = myPlayerLocation.getY();
+        if (myPlayerLocation.getDoorState(theDirection) == OPEN) {
             successfulMove = true;
             switch (theDirection) {
-                case NORTH -> myPlayerLocation =
-                        new Location(currentX, currentY - 1);
-                case EAST -> myPlayerLocation =
-                        new Location(currentX + 1, currentY);
-                case SOUTH -> myPlayerLocation =
-                        new Location(currentX, currentY + 1);
-                case WEST -> myPlayerLocation =
-                        new Location(currentX - 1, currentY);
-                default -> successfulMove = false;
+                case NORTH -> myPlayerLocation = myRooms[x][y - 1];
+                case EAST -> myPlayerLocation = myRooms[x + 1][y];
+                case SOUTH -> myPlayerLocation = myRooms[x][y + 1];
+                case WEST -> myPlayerLocation = myRooms[x - 1][y];
             }
         }
         return successfulMove;
@@ -125,33 +124,30 @@ public class Maze {
 
     /**
      * Gets the question associated with the door in the specified location.
+     *
      * @param theDirection the direction to look in
      * @return the question associated with the door in the specified location.
      */
     public Question getQuestion(final Direction theDirection) {
-        final int currentX = myPlayerLocation.x();
-        final int currentY = myPlayerLocation.y();
-        return myQuestionMap.get(
-                myRooms[currentX][currentY].getDoor(theDirection));
+        return myQuestionMap.get(myPlayerLocation.getDoor(theDirection));
     }
 
-    public void closeDoor(final Direction theDirection) {
-        final int currentX = myPlayerLocation.x();
-        final int currentY = myPlayerLocation.y();
-        myRooms[currentX][currentY].getDoor(theDirection).close();
+    public void changeDoorState(final Direction theDirection,
+                                final State theState) {
+        myPlayerLocation.getDoor(theDirection).setState(theState);
     }
 
-    public void openDoor(final Direction theDirection) {
-        final int currentX = myPlayerLocation.x();
-        final int currentY = myPlayerLocation.y();
-        myRooms[currentX][currentY].getDoor(theDirection).open();
-    }
-
-    public void lockDoor(final Direction theDirection) {
-        final int currentX = myPlayerLocation.x();
-        final int currentY = myPlayerLocation.y();
-        myRooms[currentX][currentY].getDoor(theDirection).lock();
-    }
+//    public void closeDoor(final Direction theDirection) {
+//        myPlayerLocation.getDoor(theDirection).close();
+//    }
+//
+//    public void openDoor(final Direction theDirection) {
+//        myPlayerLocation.getDoor(theDirection).open();
+//    }
+//
+//    public void lockDoor(final Direction theDirection) {
+//        myPlayerLocation.getDoor(theDirection).lock();
+//    }
 
     public boolean atGoal() {
         return myPlayerLocation.equals(myGoalLocation);
@@ -189,7 +185,7 @@ public class Maze {
 
     // FOR TESTING
     public static void main(final String[] theArgs) {
-        final Maze maze = new Maze(2,2);
+        final Maze maze = new Maze(2, 2);
         System.out.println(maze);
     }
 }
