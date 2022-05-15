@@ -132,23 +132,22 @@ public class Maze {
         return myQuestionMap.get(myPlayerLocation.getDoor(theDirection));
     }
 
+    /**
+     * Alters specified Door in the player's Room to specified State.
+     *
+     * @param theDirection  the Direction of the Door.
+     * @param theState      the new State of the Door.
+     */
     public void changeDoorState(final Direction theDirection,
                                 final State theState) {
         myPlayerLocation.getDoor(theDirection).setState(theState);
     }
 
-//    public void closeDoor(final Direction theDirection) {
-//        myPlayerLocation.getDoor(theDirection).close();
-//    }
-//
-//    public void openDoor(final Direction theDirection) {
-//        myPlayerLocation.getDoor(theDirection).open();
-//    }
-//
-//    public void lockDoor(final Direction theDirection) {
-//        myPlayerLocation.getDoor(theDirection).lock();
-//    }
-
+    /**
+     * Checks if player has reached the goal room.
+     *
+     * @return boolean representing success or lack thereof.
+     */
     public boolean atGoal() {
         return myPlayerLocation.equals(myGoalLocation);
     }

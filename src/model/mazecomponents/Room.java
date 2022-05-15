@@ -9,7 +9,9 @@ import java.util.Map;
  */
 public class Room {
 
+    /** X-coordinate. */
     private final int myX;
+    /** Y-coordinate. */
     private final int myY;
 
     /**
@@ -17,16 +19,32 @@ public class Room {
      */
     private final Map<Direction, Door> myDoors;
 
+    /**
+     * Constructor for a Room instance.
+     *
+     * @param theX  the Room's x-coordinate.
+     * @param theY  the Room's y-coordinate.
+     */
     public Room(final int theX, final int theY) {
         myX = theX;
         myY = theY;
         myDoors = new EnumMap<>(Direction.class);
     }
 
+    /**
+     * Gets this Room's x-coordinate.
+     *
+     * @return an integer representing the Room's x-coordinate.
+     */
     public int getX() {
         return myX;
     }
 
+    /**
+     * Gets this Room's y-coordinate.
+     *
+     * @return an integer representing the Room's y-coordinate.
+     */
     public int getY() {
         return myY;
     }

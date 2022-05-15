@@ -102,28 +102,12 @@ public class Door {
         return myState;
     }
 
+    /**
+     * Sets this Door's State.
+     *
+     * @param theState  the Door's new State.
+     */
     public void setState(State theState) {
         myState = theState;
     }
-
-//    /**
-//     * Closes the door.
-//     */
-//    public void close() {
-//        myState = CLOSED;
-//    }
-//
-//    /**
-//     * Opens the door.
-//     */
-//    public void open() {
-//        myState = OPEN;
-//    }
-//
-//    /**
-//     * Locks the door.
-//     */
-//    public void lock() {
-//        myState = LOCKED;
-//    }
 }
