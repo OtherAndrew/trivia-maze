@@ -41,16 +41,16 @@ public class Maze {
         myRooms = new Room[theRows][theCols];
         myQuestionMap = new HashMap<>();
 
+        for (int row = 0; row < myRooms.length; row++) {
+            for (int col = 0; col < myRooms[row].length; col++)
+                myRooms[row][col] = new Room(row, col);
+        }
+
         // TODO: Random starting location and goal, with latter being forced
         //  to be chosen a certain distance from the former
         myPlayerLocation = myRooms[0][0];
         myGoalLocation = myRooms[theRows - 1][theCols - 1];
 
-        for (int row = 0; row < myRooms.length; row++) {
-            for (int col = 0; col < myRooms[row].length; col++) {
-                myRooms[row][col] = new Room(row, col);
-            }
-        }
         generateMaze(generatePossibleDoors());
     }
 
@@ -59,8 +59,25 @@ public class Maze {
      *
      * @return a list of doors for every possible door position.
      */
-    private List<Door> generatePossibleDoors() {
-        final List<Door> doors = new LinkedList<>();
+//    private List<Door> generatePossibleDoors() {
+//        final List<Door> doors = new LinkedList<>();
+//        for (int row = 0; row < myRooms.length; row++) {
+//            for (int col = 0; col < myRooms[row].length; col++) {
+//                if (row + 1 < myRooms.length) {
+//                    doors.add(new Door(myRooms[row][col], SOUTH,
+//                            myRooms[row + 1][col], NORTH));
+//                }
+//                if (col + 1 < myRooms[row].length) {
+//                    doors.add(new Door(myRooms[row][col], EAST,
+//                            myRooms[row][col + 1], WEST));
+//                }
+//            }
+//        }
+//        return doors;
+//    }
+    // Better practice?
+    private Stack<Door> generatePossibleDoors() {
+        final Stack<Door> doors = new Stack<>();
         for (int row = 0; row < myRooms.length; row++) {
             for (int col = 0; col < myRooms[row].length; col++) {
                 if (row + 1 < myRooms.length) {
@@ -73,6 +90,7 @@ public class Maze {
                 }
             }
         }
+        Collections.shuffle(doors);
         return doors;
     }
 
@@ -81,21 +99,37 @@ public class Maze {
      *
      * @param theDoors the set of doors to join into a maze.
      */
-    private void generateMaze(final List<Door> theDoors) {
-        final Random rand = new Random();
+//    private void generateMaze(final List<Door> theDoors) {
+//        final Random rand = new Random();
+//        final QuestionFactory qf = new QuestionFactory();
+//        final HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
+//        while (diset.getSize() > 1) {
+//            final int doorIndex = rand.nextInt(theDoors.size());
+//            final Door door = theDoors.get(doorIndex);
+//            final Room room1 = door.getRoom1();
+//            final Room room2 = door.getRoom2();
+//            if (!diset.find(room1).equals(diset.find(room2))) {
+//                diset.join(room1, room2);
+//                door.setState(CLOSED);
+//                myQuestionMap.put(door, qf.createQuestion());
+//            }
+//            theDoors.remove(doorIndex);
+//        }
+//        qf.cleanUp();
+//    }
+    // Ask Tom.
+    private void generateMaze(final Stack<Door> theDoors) {
         final QuestionFactory qf = new QuestionFactory();
-        final HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
-        while (diset.getSize() > 1) {
-            final int doorIndex = rand.nextInt(theDoors.size());
-            final Door door = theDoors.get(doorIndex);
+        final HashMapDisjointSet djSet = new HashMapDisjointSet(myRooms);
+        while (djSet.getSize() > 1) {
+            final Door door = theDoors.pop();
             final Room room1 = door.getRoom1();
             final Room room2 = door.getRoom2();
-            if (!diset.find(room1).equals(diset.find(room2))) {
-                diset.join(room1, room2);
+            if (!djSet.find(room1).equals(djSet.find(room2))) {
+                djSet.join(room1, room2);
                 door.setState(CLOSED);
                 myQuestionMap.put(door, qf.createQuestion());
             }
-            theDoors.remove(doorIndex);
         }
         qf.cleanUp();
     }
@@ -149,7 +183,7 @@ public class Maze {
      * @return boolean representing success or lack thereof.
      */
     public boolean atGoal() {
-        return myPlayerLocation.equals(myGoalLocation);
+        return myPlayerLocation == myGoalLocation;
     }
 
     // FOR TESTING

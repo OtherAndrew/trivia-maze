@@ -66,15 +66,22 @@ public class Door {
         return myRoom1.equals(theRoom) || myRoom2.equals(theRoom);
     }
 
+    public Room getOtherSide(final Room theRoom) {
+        Room result = null;
+        if (myRoom1.equals(theRoom)) result = myRoom2;
+        else if (myRoom2.equals(theRoom)) result = myRoom1;
+        return result;
+    }
+
     /**
      * Gets the direction of this door in a room.
      * @param theRoom the room to check.
      * @return the wall this door is on.
      */
     public Direction getDirection(final Room theRoom) {
-        Direction direction;
+        Direction direction = null;
         if (myRoom1.equals(theRoom)) direction = myDirection1;
-        else direction = myDirection2;
+        else if (myRoom2.equals(theRoom)) direction = myDirection2;
         return direction;
     }
 
@@ -107,7 +114,7 @@ public class Door {
      *
      * @param theState  the Door's new State.
      */
-    public void setState(State theState) {
+    public void setState(final State theState) {
         myState = theState;
     }
 }

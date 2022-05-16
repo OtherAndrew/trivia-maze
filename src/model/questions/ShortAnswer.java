@@ -5,7 +5,6 @@ import java.util.Stack;
 
 public class ShortAnswer extends Question implements Serializable {
 
-
     /**
      * Constructs a Question object from a query and a set of answers. The
      * resulting set of answers in the Question will be a shuffled version

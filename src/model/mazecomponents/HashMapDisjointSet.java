@@ -46,12 +46,8 @@ public class HashMapDisjointSet {
      */
     public Room find(final Room theRoom) {
         Room root = theRoom;
-        while (!myMap.get(root).equals(root)) {
-            root = myMap.get(root);
-        }
-        while (!myMap.get(theRoom).equals(root)) {
-            myMap.replace(theRoom, root);
-        }
+        while (!myMap.get(root).equals(root)) root = myMap.get(root);
+        while (!myMap.get(theRoom).equals(root)) myMap.replace(theRoom, root);
         return root;
     }
 
@@ -68,11 +64,8 @@ public class HashMapDisjointSet {
         Room group1 = find(theRoom1);
         Room group2 = find(theRoom2);
         --mySize;
-        if (mySizes.get(group1) > mySizes.get(group2)) {
-            joinHelper(group1, group2);
-        } else {
-            joinHelper(group2, group1);
-        }
+        if (mySizes.get(group1) > mySizes.get(group2)) joinHelper(group1, group2);
+        else joinHelper(group2, group1);
     }
 
     /**

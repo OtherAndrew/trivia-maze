@@ -11,9 +11,12 @@ public class QuestionFactory {
 
     private Connection myConnection;
     private Statement myStatement;
+    private final Map<Type, Integer> myTableUsage;
 
     public QuestionFactory() {
         setUp();
+        myTableUsage = new EnumMap<>(Type.class);
+        evaluateTableUsage();
     }
 
     private void setUp() {
@@ -28,17 +31,13 @@ public class QuestionFactory {
         }
     }
 
-    public Question createQuestion() {
-        return createQuestion(TYPES.get(RAND.nextInt(TYPES.size())));
-    }
-
     private void evaluateTableUsage() {
         ResultSet counter = null;
         try {
-            for (int i = 0; i < TYPES.size(); i++) {
+            for (Type table : TYPES) {
                 counter = myStatement.executeQuery("SELECT COUNT(qid) AS " +
-                        " total FROM " + TYPES.get(i));
-                if (counter.getInt("total") == 0) TYPES.remove(i);
+                        " total FROM " + table);
+                myTableUsage.put(table, counter.getInt("total"));
             }
         } catch (final SQLException e) {
             e.printStackTrace();
@@ -51,10 +50,14 @@ public class QuestionFactory {
         }
     }
 
-    private void evaluateTableUsage(final Type theTable) throws SQLException {
-        final ResultSet counter = myStatement.executeQuery("SELECT COUNT(qid)" +
-                " AS total FROM " + theTable);
-        if (counter.getInt("total") == 0) TYPES.remove(theTable);
+    private void evaluateTableUsage(final Type theTable) {
+        int count = myTableUsage.get(theTable);
+        if (--count == 0) TYPES.remove(theTable);
+        else myTableUsage.replace(theTable, count);
+    }
+
+    public Question createQuestion() {
+        return createQuestion(TYPES.get(RAND.nextInt(TYPES.size())));
     }
 
     private Question createQuestion(final Type theTable) {
