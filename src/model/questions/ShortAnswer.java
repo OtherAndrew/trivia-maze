@@ -1,7 +1,7 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.util.Stack;
+import java.util.LinkedList;
 
 public class ShortAnswer extends Question implements Serializable {
 
@@ -14,7 +14,7 @@ public class ShortAnswer extends Question implements Serializable {
      * @param theChoices
      */
     public ShortAnswer(final String theQuestion,
-                       final Stack<Answer> theChoices) {
+                       final LinkedList<Answer> theChoices) {
         super(theQuestion, theChoices);
     }
 

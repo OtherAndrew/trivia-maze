@@ -68,7 +68,7 @@ public class QuestionFactory {
                 theTable + " WHERE qid IS NOT NULL ORDER BY RANDOM() LIMIT 1")) {
             final String query = rs.getString("ques");
 
-            final Stack<Answer> choices = new Stack<>();
+            final LinkedList<Answer> choices = new LinkedList<>();
             choices.push(new Answer(rs.getString("ansc"), true));
             final int colCount = rs.getMetaData().getColumnCount();
             for (int i = 4; i <= colCount; i++) {

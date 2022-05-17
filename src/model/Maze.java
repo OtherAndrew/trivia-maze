@@ -59,33 +59,16 @@ public class Maze {
      *
      * @return a list of doors for every possible door position.
      */
-//    private List<Door> generatePossibleDoors() {
-//        final List<Door> doors = new LinkedList<>();
-//        for (int row = 0; row < myRooms.length; row++) {
-//            for (int col = 0; col < myRooms[row].length; col++) {
-//                if (row + 1 < myRooms.length) {
-//                    doors.add(new Door(myRooms[row][col], SOUTH,
-//                            myRooms[row + 1][col], NORTH));
-//                }
-//                if (col + 1 < myRooms[row].length) {
-//                    doors.add(new Door(myRooms[row][col], EAST,
-//                            myRooms[row][col + 1], WEST));
-//                }
-//            }
-//        }
-//        return doors;
-//    }
-    // Better practice?
-    private Stack<Door> generatePossibleDoors() {
-        final Stack<Door> doors = new Stack<>();
+    private LinkedList<Door> generatePossibleDoors() {
+        final LinkedList<Door> doors = new LinkedList<>();
         for (int row = 0; row < myRooms.length; row++) {
             for (int col = 0; col < myRooms[row].length; col++) {
                 if (row + 1 < myRooms.length) {
-                    doors.add(new Door(myRooms[row][col], SOUTH,
+                    doors.push(new Door(myRooms[row][col], SOUTH,
                             myRooms[row + 1][col], NORTH));
                 }
                 if (col + 1 < myRooms[row].length) {
-                    doors.add(new Door(myRooms[row][col], EAST,
+                    doors.push(new Door(myRooms[row][col], EAST,
                             myRooms[row][col + 1], WEST));
                 }
             }
@@ -99,26 +82,7 @@ public class Maze {
      *
      * @param theDoors the set of doors to join into a maze.
      */
-//    private void generateMaze(final List<Door> theDoors) {
-//        final Random rand = new Random();
-//        final QuestionFactory qf = new QuestionFactory();
-//        final HashMapDisjointSet diset = new HashMapDisjointSet(myRooms);
-//        while (diset.getSize() > 1) {
-//            final int doorIndex = rand.nextInt(theDoors.size());
-//            final Door door = theDoors.get(doorIndex);
-//            final Room room1 = door.getRoom1();
-//            final Room room2 = door.getRoom2();
-//            if (!diset.find(room1).equals(diset.find(room2))) {
-//                diset.join(room1, room2);
-//                door.setState(CLOSED);
-//                myQuestionMap.put(door, qf.createQuestion());
-//            }
-//            theDoors.remove(doorIndex);
-//        }
-//        qf.cleanUp();
-//    }
-    // Ask Tom.
-    private void generateMaze(final Stack<Door> theDoors) {
+    private void generateMaze(final LinkedList<Door> theDoors) {
         final QuestionFactory qf = new QuestionFactory();
         final HashMapDisjointSet djSet = new HashMapDisjointSet(myRooms);
         while (djSet.getSize() > 1) {
@@ -127,8 +91,8 @@ public class Maze {
             final Room room2 = door.getRoom2();
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
-                door.setState(CLOSED);
-                myQuestionMap.put(door, qf.createQuestion());
+                door.addToRooms();
+                //myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -155,6 +119,7 @@ public class Maze {
         }
         return successfulMove;
     }
+
 
     /**
      * Gets the question associated with the door in the specified location.
@@ -184,6 +149,18 @@ public class Maze {
      */
     public boolean atGoal() {
         return myPlayerLocation == myGoalLocation;
+    }
+
+    public Room getGoalLocation() {
+        return myGoalLocation;
+    }
+
+    public Room getPlayerLocation() {
+        return myPlayerLocation;
+    }
+
+    public boolean gameLoss() {
+        return BFSRunner.findPath(this).isEmpty();
     }
 
     // FOR TESTING
@@ -218,7 +195,9 @@ public class Maze {
 
     // FOR TESTING
     public static void main(final String[] theArgs) {
-        final Maze maze = new Maze(2, 2);
+        final Maze maze = new Maze(6, 6);
         System.out.println(maze);
+        System.out.println(maze.gameLoss());
+        System.out.println(BFSRunner.findPath(maze));
     }
 }

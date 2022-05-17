@@ -2,8 +2,8 @@ package model.questions;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Question is a class that represents a question and its answer choices,
@@ -28,7 +28,7 @@ public abstract class Question implements Serializable {
      * @param theChoices
      */
     public Question(final String theQuestion,
-                    final Stack<Answer> theChoices) {
+                    final LinkedList<Answer> theChoices) {
         myQuery = theQuestion;
         myAnswers = new HashMap<>();
         for (String option : OPTIONS) {

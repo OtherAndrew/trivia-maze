@@ -9,9 +9,13 @@ import java.util.Map;
  */
 public class Room {
 
-    /** X-coordinate. */
+    /**
+     * X-coordinate.
+     */
     private final int myX;
-    /** Y-coordinate. */
+    /**
+     * Y-coordinate.
+     */
     private final int myY;
 
     /**
@@ -22,8 +26,8 @@ public class Room {
     /**
      * Constructor for a Room instance.
      *
-     * @param theX  the Room's x-coordinate.
-     * @param theY  the Room's y-coordinate.
+     * @param theX the Room's x-coordinate.
+     * @param theY the Room's y-coordinate.
      */
     public Room(final int theX, final int theY) {
         myX = theX;
@@ -49,10 +53,19 @@ public class Room {
         return myY;
     }
 
+    public int getDoorCount() {
+        return myDoors.size();
+    }
+
+    public Map<Direction, Door> getAllDoors() {
+        return myDoors;
+    }
+
     /**
      * Adds a Door at the specified direction.
+     *
      * @param theDirection the direction to add the Door at.
-     * @param theDoor the Door to add.
+     * @param theDoor      the Door to add.
      */
     public void addDoor(final Direction theDirection, final Door theDoor) {
         myDoors.put(theDirection, theDoor);
@@ -60,6 +73,7 @@ public class Room {
 
     /**
      * Determines if a Door exists in the direction specified.
+     *
      * @param theDirection the direction to check in.
      * @return if a Door exists in the direction.
      */
@@ -69,8 +83,9 @@ public class Room {
 
     /**
      * Checks if the state of the Door matches the state given.
+     *
      * @param theDirection the direction the door is in.
-     * @param theState the state to check for.
+     * @param theState     the state to check for.
      * @return if the Door state matches the given state.
      */
     public boolean checkDoorState(final Direction theDirection,
@@ -80,6 +95,7 @@ public class Room {
 
     /**
      * Gets the state of the door in the direction.
+     *
      * @param theDirection the direction the door is in.
      * @return the state of the specified door.
      */
@@ -89,6 +105,7 @@ public class Room {
 
     /**
      * Gets the door in the direction.
+     *
      * @param theDirection the direction the door is in.
      * @return the door in the specified direction.
      */
@@ -96,4 +113,9 @@ public class Room {
         return myDoors.get(theDirection);
     }
 
+    // For testing
+    @Override
+    public String toString() {
+        return String.format("(%d,%d)", myX, myY);
+    }
 }

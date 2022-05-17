@@ -1,7 +1,5 @@
 package model.mazecomponents;
 
-import static model.mazecomponents.State.*;
-
 /**
  * Door is a class that represents a maze door. Door connects two Rooms and
  * can be unlocked or locked.
@@ -39,22 +37,19 @@ public class Door {
      */
     public Door(final Room theRoom1, final Direction theDirection1,
                 final Room theRoom2, final Direction theDirection2) {
-        myState = WALL;
+        myState = State.CLOSED;
         myRoom1 = theRoom1;
         myDirection1 = theDirection1;
-        addDoor(myRoom1, myDirection1);
         myRoom2 = theRoom2;
         myDirection2 = theDirection2;
-        addDoor(myRoom2, myDirection2);
     }
 
     /**
-     * Adds this door to the room in the direction specified.
-     * @param theRoom the room to add this door to.
-     * @param theDirection the side to add the door on.
+     * Adds this door to the rooms in the directions specified.
      */
-    private void addDoor(final Room theRoom, final Direction theDirection) {
-        theRoom.addDoor(theDirection,this);
+    public void addToRooms() {
+        myRoom1.addDoor(myDirection1,this);
+        myRoom2.addDoor(myDirection2,this);
     }
 
     /**
