@@ -22,9 +22,9 @@ public class TriviaMaze {
             System.out.print("Choose a direction to move in (E, W, N, S): ");
             String direction = input.nextLine();
             boolean moved = switch (direction.toUpperCase()) {
-                case "E" -> movePlayer(myMaze, Direction.EAST, input);
-                case "W" -> movePlayer(myMaze, Direction.WEST, input);
-                case "N" -> movePlayer(myMaze, Direction.NORTH, input);
+                case "D" -> movePlayer(myMaze, Direction.EAST, input);
+                case "A" -> movePlayer(myMaze, Direction.WEST, input);
+                case "W" -> movePlayer(myMaze, Direction.NORTH, input);
                 case "S" -> movePlayer(myMaze, Direction.SOUTH, input);
                 default -> false;
             };
