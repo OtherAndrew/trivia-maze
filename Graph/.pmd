@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<pmd>
-    <useProjectRuleSet>true</useProjectRuleSet>
-    <ruleSetFile>C:\Users\alanc\Documents\Courses\TCSS 342\2021-2-spring\Environment\Demo Workspace\username-assignment5\.ruleset</ruleSetFile>
-    <includeDerivedFiles>false</includeDerivedFiles>
-    <violationsAsErrors>false</violationsAsErrors>
-    <fullBuildEnabled>true</fullBuildEnabled>
-</pmd>
