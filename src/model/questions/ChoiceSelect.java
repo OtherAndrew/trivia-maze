@@ -32,6 +32,7 @@ public class ChoiceSelect extends Question implements Serializable {
     /**
      * Checks if the provided option is one of the possible answers to the
      * query.
+     *
      * @param theOption the option to check for.
      * @return if the option is one of the possible answers to the query.
      */
@@ -49,6 +50,7 @@ public class ChoiceSelect extends Question implements Serializable {
     /**
      * Checks if an answer submitted by a player to a true/false or multiple
      * choice question is true.
+     *
      * @param theOption an option submitted by a player.
      * @return if the option selected correct.
      */

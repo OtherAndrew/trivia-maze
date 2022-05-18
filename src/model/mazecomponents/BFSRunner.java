@@ -4,6 +4,12 @@ import model.Maze;
 
 import java.util.*;
 
+/**
+ * Finds the shortest path to the exit of a maze, provided it is possible.
+ *
+ * @author Anthony Nguyen
+ * @author Amit Pandey (original)
+ */
 public class BFSRunner {
 
     private static class Node {

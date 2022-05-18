@@ -26,6 +26,7 @@ public abstract class Question implements Serializable {
 
     /**
      * Checks if an answer submitted by a player to a question is correct
+     *
      * @param theAnswer an answer submitted by a player.
      * @return if the option selected correct.
      */

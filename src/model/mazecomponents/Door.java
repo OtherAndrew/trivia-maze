@@ -32,9 +32,10 @@ public class Door implements Serializable {
 
     /**
      * Constructs a door.
-     * @param theRoom1 the first room to connect
+     *
+     * @param theRoom1      the first room to connect
      * @param theDirection1 the direction the first room is in
-     * @param theRoom2 the second room to connect
+     * @param theRoom2      the second room to connect
      * @param theDirection2 the direction the second room is in
      */
     public Door(final Room theRoom1, final Direction theDirection1,
@@ -50,12 +51,13 @@ public class Door implements Serializable {
      * Adds this door to the rooms in the directions specified.
      */
     public void addToRooms() {
-        myRoom1.addDoor(myDirection1,this);
-        myRoom2.addDoor(myDirection2,this);
+        myRoom1.addDoor(myDirection1, this);
+        myRoom2.addDoor(myDirection2, this);
     }
 
     /**
      * Determines if this door connects to a room.
+     *
      * @param theRoom the room to check for connection
      * @return if theRoom connects to this door.
      */
@@ -72,6 +74,7 @@ public class Door implements Serializable {
 
     /**
      * Gets the direction of this door in a room.
+     *
      * @param theRoom the room to check.
      * @return the wall this door is on.
      */
@@ -84,6 +87,7 @@ public class Door implements Serializable {
 
     /**
      * Retrieves the first room.
+     *
      * @return the first room.
      */
     public Room getRoom1() {
@@ -92,6 +96,7 @@ public class Door implements Serializable {
 
     /**
      * Retrieves the second room.
+     *
      * @return the second room.
      */
     public Room getRoom2() {
@@ -100,6 +105,7 @@ public class Door implements Serializable {
 
     /**
      * Gets this door's state.
+     *
      * @return the door's state.
      */
     public State getState() {
@@ -109,7 +115,7 @@ public class Door implements Serializable {
     /**
      * Sets this Door's State.
      *
-     * @param theState  the Door's new State.
+     * @param theState the Door's new State.
      */
     public void setState(final State theState) {
         myState = theState;

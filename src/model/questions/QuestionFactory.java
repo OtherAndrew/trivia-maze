@@ -8,8 +8,10 @@ import static model.questions.QuestionFactory.Type.*;
 public class QuestionFactory {
 
     enum Type {TF, MC, SA}
+
     private static final Random RAND = new Random();
-    private static final List<Type> TYPES = new ArrayList<>(List.of(TF, MC, SA));
+    private static final List<Type> TYPES = new ArrayList<>(List.of(TF, MC,
+            SA));
     private Connection myConnection;
     private Statement myStatement;
     private final Map<Type, Integer> myTableUsage;
@@ -62,8 +64,8 @@ public class QuestionFactory {
 
     private Question createQuestion(final Type theTable) {
         Question question = null;
-        try (final ResultSet rs = myStatement.executeQuery("SELECT * FROM " +
-                theTable + " WHERE qid IS NOT NULL ORDER BY RANDOM() LIMIT 1")) {
+        try (final ResultSet rs = myStatement.executeQuery("SELECT * FROM "
+                + theTable + " WHERE qid IS NOT NULL ORDER BY RANDOM() LIMIT 1")) {
 
             final String query = rs.getString(2);
 
@@ -82,8 +84,8 @@ public class QuestionFactory {
                 question = new ChoiceSelect(query, choices);
             }
 
-            myStatement.executeUpdate("UPDATE " + theTable +
-                    " SET qid=null WHERE qid=" + rs.getInt("qid"));
+            myStatement.executeUpdate("UPDATE " + theTable + " SET qid=null " +
+                    "WHERE qid=" + rs.getInt("qid"));
             evaluateTableUsage(theTable);
         } catch (final SQLException e) {
             e.printStackTrace();

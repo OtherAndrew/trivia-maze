@@ -23,30 +23,12 @@ public class ShortAnswer extends Question implements Serializable {
 
     /**
      * Checks to see if the answer to a short answer question is true.
+     *
      * @param theResponse a response submitted by a player.
      * @return if the response is correct.
      */
     @Override
     public boolean checkAnswer(final String theResponse) {
         return myAnswers.contains(theResponse);
-    }
-
-    // FOR TESTING
-    public static void main(final String[] theArgs) {
-        String question = "What is the largest ocean on Earth?";
-        String ans1 = "pacific";
-        String ans2 = "pacific ocean";
-        String ans3 = "the pacific";
-        String ans4 = "the pacific ocean";
-        ArrayList<String> choices = new ArrayList<>();
-        choices.add(ans1);
-        choices.add(ans2);
-        choices.add(ans3);
-        choices.add(ans4);
-
-        ShortAnswer sa = new ShortAnswer(question, choices);
-        String original = "Pacific";
-        String check = original.toLowerCase().trim();
-        System.out.println(sa.checkAnswer(check));
     }
 }
