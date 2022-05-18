@@ -19,7 +19,7 @@ public class ChoiceSelect extends Question implements Serializable {
      * @param theQuestion
      * @param theChoices
      */
-    public ChoiceSelect(final String theQuestion,
+    ChoiceSelect(final String theQuestion,
                         final LinkedList<Answer> theChoices) {
         super(theQuestion);
         myAnswers = new HashMap<>();

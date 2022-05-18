@@ -1,25 +1,17 @@
 package model.questions;
 
 import java.sql.*;
-import java.util.*;
-
-import static model.questions.QuestionFactory.Type.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class QuestionFactory {
 
-    enum Type {TF, MC, SA}
-
-    private static final Random RAND = new Random();
-    private static final List<Type> TYPES = new ArrayList<>(List.of(TF, MC,
-            SA));
     private Connection myConnection;
     private Statement myStatement;
-    private final Map<Type, Integer> myTableUsage;
 
     public QuestionFactory() {
         setUp();
-        myTableUsage = new EnumMap<>(Type.class);
-        evaluateTableUsage();
     }
 
     private void setUp() {
@@ -33,60 +25,34 @@ public class QuestionFactory {
         }
     }
 
-    private void evaluateTableUsage() {
-        ResultSet counter = null;
-        try {
-            for (Type table : TYPES) {
-                counter = myStatement.executeQuery("SELECT COUNT(qid) AS " +
-                        " total FROM " + table);
-                myTableUsage.put(table, counter.getInt("total"));
-            }
-        } catch (final SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (counter != null) counter.close();
-            } catch (final SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void evaluateTableUsage(final Type theTable) {
-        int count = myTableUsage.get(theTable);
-        if (--count == 0) TYPES.remove(theTable);
-        else myTableUsage.replace(theTable, count);
-    }
-
     public Question createQuestion() {
-        return createQuestion(TYPES.get(RAND.nextInt(TYPES.size())));
-    }
-
-    private Question createQuestion(final Type theTable) {
         Question question = null;
-        try (final ResultSet rs = myStatement.executeQuery("SELECT * FROM "
-                + theTable + " WHERE qid IS NOT NULL ORDER BY RANDOM() LIMIT 1")) {
+        try (final ResultSet rs = myStatement.executeQuery("SELECT * FROM " +
+                "unified WHERE qid IS NOT NULL ORDER BY RANDOM() LIMIT 1")) {
 
             final String query = rs.getString(2);
 
             final int colCount = rs.getMetaData().getColumnCount();
-            if (theTable == SA) {
+            if (rs.getString(3).equals("SA")) {
                 final ArrayList<String> choices = new ArrayList<>();
-                for (int i = 3; i <= colCount; i++)
-                    choices.add(rs.getString(i));
+                for (int i = 4; i <= colCount; i++) {
+                    if (rs.getString(i) != null)
+                        choices.add(rs.getString(i));
+                }
                 question = new ShortAnswer(query, choices);
             } else {
                 final LinkedList<Answer> choices = new LinkedList<>();
-                choices.push(new Answer(rs.getString(3), true));
-                for (int i = 4; i <= colCount; i++)
-                    choices.push(new Answer(rs.getString(i), false));
+                choices.push(new Answer(rs.getString(4), true));
+                for (int i = 5; i <= colCount; i++) {
+                    if (rs.getString(i) != null)
+                        choices.push(new Answer(rs.getString(i), false));
+                }
                 Collections.shuffle(choices);
                 question = new ChoiceSelect(query, choices);
             }
 
-            myStatement.executeUpdate("UPDATE " + theTable + " SET qid=null " +
-                    "WHERE qid=" + rs.getInt("qid"));
-            evaluateTableUsage(theTable);
+            myStatement.executeUpdate("UPDATE unified SET qid=null WHERE qid=" +
+                    rs.getInt(1));
         } catch (final SQLException e) {
             e.printStackTrace();
         }

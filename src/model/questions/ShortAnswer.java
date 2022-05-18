@@ -15,7 +15,7 @@ public class ShortAnswer extends Question implements Serializable {
      * @param theQuestion
      * @param theChoices
      */
-    public ShortAnswer(final String theQuestion,
+    ShortAnswer(final String theQuestion,
                        final ArrayList<String> theChoices) {
         super(theQuestion);
         myAnswers = theChoices;

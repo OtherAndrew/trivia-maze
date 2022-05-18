@@ -20,7 +20,7 @@ public abstract class Question implements Serializable {
      *
      * @param theQuestion
      */
-    public Question(final String theQuestion) {
+    protected Question(final String theQuestion) {
         myQuery = theQuestion;
     }
 

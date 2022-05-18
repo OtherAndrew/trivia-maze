@@ -12,7 +12,7 @@ public class Answer implements Serializable {
     private final String myAnswer;
     private final boolean myValidity;
 
-    public Answer(final String theAnswer, final boolean theValidity) {
+    Answer(final String theAnswer, final boolean theValidity) {
         myAnswer = theAnswer;
         myValidity = theValidity;
     }
