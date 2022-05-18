@@ -1,12 +1,14 @@
 package model.questions;
 
+import java.io.Serializable;
+
 /**
  * Answer is a class that represents an answer to a question.
  *
  * @author Anthony Nguyen
  * @version 2022 May 6
  */
-public class Answer {
+public class Answer implements Serializable {
     private final String myAnswer;
     private final boolean myValidity;
 

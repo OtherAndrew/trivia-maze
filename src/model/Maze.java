@@ -4,15 +4,20 @@ import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import static model.mazecomponents.Direction.*;
-import static model.mazecomponents.State.*;
+import static model.mazecomponents.State.CLOSED;
+import static model.mazecomponents.State.OPEN;
 
 /**
  * Maze is a class that represents a maze with doors.
  */
-public class Maze {
+public class Maze implements Serializable {
 
     /**
      * The rooms in the maze.
@@ -23,13 +28,13 @@ public class Maze {
      */
     private final Map<Door, Question> myQuestionMap;
     /**
-     * The goal location.
-     */
-    private final Room myGoalLocation;
-    /**
      * The player's location.
      */
     private Room myPlayerLocation;
+    /**
+     * The goal location.
+     */
+    private final Room myGoalLocation;
 
     /**
      * Constructs a maze of arbitrary size.
@@ -92,7 +97,7 @@ public class Maze {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                //myQuestionMap.put(door, qf.createQuestion());
+                // myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -134,8 +139,8 @@ public class Maze {
     /**
      * Alters specified Door in the player's Room to specified State.
      *
-     * @param theDirection  the Direction of the Door.
-     * @param theState      the new State of the Door.
+     * @param theDirection the Direction of the Door.
+     * @param theState     the new State of the Door.
      */
     public void changeDoorState(final Direction theDirection,
                                 final State theState) {

@@ -1,10 +1,12 @@
 package model.mazecomponents;
 
+import java.io.Serializable;
+
 /**
  * Door is a class that represents a maze door. Door connects two Rooms and
  * can be unlocked or locked.
  */
-public class Door {
+public class Door implements Serializable {
 
     /**
      * The first room the door connects to.

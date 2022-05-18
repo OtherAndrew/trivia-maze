@@ -1,9 +1,15 @@
 package model.questions;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class ChoiceSelect extends Question implements Serializable {
+
+    private static final String[] OPTIONS = {"A", "B", "C", "D"};
+
+    private final Map<String, Answer> myAnswers;
 
     /**
      * Constructs a Question object from a query and a set of answers. The
@@ -15,7 +21,12 @@ public class ChoiceSelect extends Question implements Serializable {
      */
     public ChoiceSelect(final String theQuestion,
                         final LinkedList<Answer> theChoices) {
-        super(theQuestion, theChoices);
+        super(theQuestion);
+        myAnswers = new HashMap<>();
+        for (String option : OPTIONS) {
+            if (theChoices.isEmpty()) break;
+            else myAnswers.put(option, theChoices.pop());
+        }
     }
 
     /**

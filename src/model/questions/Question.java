@@ -1,9 +1,6 @@
 package model.questions;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * Question is a class that represents a question and its answer choices,
@@ -14,10 +11,7 @@ import java.util.Map;
  */
 public abstract class Question implements Serializable {
 
-    private static final String[] OPTIONS = {"A", "B", "C", "D"};
-
-    protected final String myQuery;
-    protected final Map<String, Answer> myAnswers;
+    private final String myQuery;
 
     /**
      * Constructs a Question object from a query and a set of answers. The
@@ -25,16 +19,9 @@ public abstract class Question implements Serializable {
      * of the set provided in arguments.
      *
      * @param theQuestion
-     * @param theChoices
      */
-    public Question(final String theQuestion,
-                    final LinkedList<Answer> theChoices) {
+    public Question(final String theQuestion) {
         myQuery = theQuestion;
-        myAnswers = new HashMap<>();
-        for (String option : OPTIONS) {
-            if (theChoices.isEmpty()) break;
-            else myAnswers.put(option, theChoices.pop());
-        }
     }
 
     /**

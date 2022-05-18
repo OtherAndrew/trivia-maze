@@ -3,12 +3,13 @@ package model.questions;
 import java.sql.*;
 import java.util.*;
 
-import static model.questions.Type.*;
+import static model.questions.QuestionFactory.Type.*;
 
 public class QuestionFactory {
+
+    enum Type {TF, MC, SA}
     private static final Random RAND = new Random();
     private static final List<Type> TYPES = new ArrayList<>(List.of(TF, MC, SA));
-
     private Connection myConnection;
     private Statement myStatement;
     private final Map<Type, Integer> myTableUsage;
@@ -21,8 +22,7 @@ public class QuestionFactory {
 
     private void setUp() {
         try {
-            myConnection = DriverManager.getConnection("jdbc:sqlite:Questions"
-                    + ".db");
+            myConnection = DriverManager.getConnection("jdbc:sqlite:Questions.db");
             myConnection.setAutoCommit(false);
             myStatement = myConnection.createStatement();
             myStatement.setQueryTimeout(30);
@@ -62,23 +62,25 @@ public class QuestionFactory {
 
     private Question createQuestion(final Type theTable) {
         Question question = null;
-        final boolean multipleCorrect = theTable == SA;
-
         try (final ResultSet rs = myStatement.executeQuery("SELECT * FROM " +
                 theTable + " WHERE qid IS NOT NULL ORDER BY RANDOM() LIMIT 1")) {
-            final String query = rs.getString("ques");
 
-            final LinkedList<Answer> choices = new LinkedList<>();
-            choices.push(new Answer(rs.getString("ansc"), true));
+            final String query = rs.getString(2);
+
             final int colCount = rs.getMetaData().getColumnCount();
-            for (int i = 4; i <= colCount; i++) {
-                final String choice = rs.getString(i);
-                if (choice != null) choices.push(new Answer(choice, multipleCorrect));
+            if (theTable == SA) {
+                final ArrayList<String> choices = new ArrayList<>();
+                for (int i = 3; i <= colCount; i++)
+                    choices.add(rs.getString(i));
+                question = new ShortAnswer(query, choices);
+            } else {
+                final LinkedList<Answer> choices = new LinkedList<>();
+                choices.push(new Answer(rs.getString(3), true));
+                for (int i = 4; i <= colCount; i++)
+                    choices.push(new Answer(rs.getString(i), false));
+                Collections.shuffle(choices);
+                question = new ChoiceSelect(query, choices);
             }
-            Collections.shuffle(choices);
-
-            if (multipleCorrect) question = new ShortAnswer(query, choices);
-            else question = new ChoiceSelect(query, choices);
 
             myStatement.executeUpdate("UPDATE " + theTable +
                     " SET qid=null WHERE qid=" + rs.getInt("qid"));

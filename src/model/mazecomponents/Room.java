@@ -1,5 +1,6 @@
 package model.mazecomponents;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Room is a class that represents a space in the maze that the player can
  * occupy. Each room has a wall or door on each of its four sides.
  */
-public class Room {
+public class Room implements Serializable {
 
     /**
      * X-coordinate.
@@ -113,7 +114,7 @@ public class Room {
         return myDoors.get(theDirection);
     }
 
-    // For testing
+    // FOR TESTING
     @Override
     public String toString() {
         return String.format("(%d,%d)", myX, myY);
