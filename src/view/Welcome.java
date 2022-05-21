@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 
+
 public class Welcome {
 
     private JFrame myFrame;
@@ -30,6 +31,10 @@ public class Welcome {
         myButton.setBounds(0, 0, myFrameWidth, myFrameHeight);
         myButton.setText("PRESS ANY KEY TO START");
         myButton.setVerticalTextPosition(JButton.NORTH);
+        myButton.addActionListener(theAction -> {
+            new SaveAndLoad();
+            myFrame.dispose();
+        });
         myFrame.add(myButton);
 
 
