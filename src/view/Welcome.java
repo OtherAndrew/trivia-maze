@@ -1,38 +1,41 @@
 package view;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 public class Welcome {
 
     private JFrame myFrame;
-    private JPanel myPanel;
-    private Image myImage;
-    private JLabel myLabel;
+    private ImageIcon myBackgroundImage;
+    private ImageIcon myWindowIcon;
+    private JButton myButton;
     private final int myFrameWidth = 500, myFrameHeight = 500;
-    private final String myBackground = "assets/Landing_Page_01.png";
+    private final String myBackgroundPath = "assets\\Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
 
 
+    // TODO add Landing_Page_01.png to the JButton, set vertical text position to bottom, make text breath, add action listener
     public Welcome() {
         myFrame = new JFrame();
         myFrame.setTitle("Trivia Maze");
+        myWindowIcon = new ImageIcon(myWindowIconPath);
+        myFrame.setIconImage(myWindowIcon.getImage());
         myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         myFrame.setResizable(false);
         myFrame.setSize(myFrameWidth, myFrameHeight);
         myFrame.setVisible(true);
 
-        myImage = Toolkit.getDefaultToolkit().getImage(myBackground);
-        myPanel = new JPanel();
-        myPanel.setSize(myFrameWidth, myFrameHeight);
-        
+
+        myBackgroundImage = new ImageIcon(myBackgroundPath);
+        myButton = new JButton();
+        myButton.setIcon(myBackgroundImage);
+        myButton.setBounds(0, 0, myFrameWidth, myFrameHeight);
+        myButton.setText("PRESS ANY KEY TO START");
+        myButton.setVerticalTextPosition(JButton.NORTH);
+        myFrame.add(myButton);
 
 
     }
-    private static void main(String[] args) {
-
+    public static void main(String[] args) {
+        Welcome welcome = new Welcome();
     }
 
 }
