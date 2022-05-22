@@ -168,32 +168,77 @@ public class Maze implements Serializable {
         return BFSRunner.findPath(this).isEmpty();
     }
 
-    // FOR TESTING
+//    // FOR TESTING
+//    @Override
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder();
+//        for (int row = 0; row < myRooms.length; row++) {
+//            for (int col = 0; col < myRooms[row].length; col++) {
+//                if (myRooms[row][col].hasDoor(SOUTH)) {
+//                    if (myRooms[row][col].checkDoorState(SOUTH, CLOSED)) {
+//                        sb.append("C");
+//                    } else {
+//                        sb.append("O");
+//                    }
+//                } else {
+//                    sb.append("█");
+//                }
+//                if (myRooms[row][col].hasDoor(EAST)) {
+//                    if (myRooms[row][col].checkDoorState(EAST, CLOSED)) {
+//                        sb.append("C");
+//                    } else {
+//                        sb.append("O");
+//                    }
+//                } else {
+//                    sb.append("O");
+//                }
+//            }
+//            sb.append("\n");
+//        }
+//        return sb.toString();
+//    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < myRooms.length; row++) {
-            for (int col = 0; col < myRooms[row].length; col++) {
-                if (myRooms[row][col].hasDoor(SOUTH)) {
-                    if (myRooms[row][col].checkDoorState(SOUTH, CLOSED)) {
-                        sb.append("C");
-                    } else {
-                        sb.append("O");
+        final String[][] out =
+                new String[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
+        int roomsRow = 0;
+        for (int row = 0; row < out.length; row++) {
+            // first and last tiles are always walls
+            out[row][0] = "█";
+            out[row][out[row].length - 1] = "█";
+            int col = 1;
+            int roomsCol = 0;
+            while (col < out[row].length - 1) {
+                // first or last rows
+                if (row == 0 || row == out.length - 1) {
+                    out[row][col++] = "█";
+                // odd rows
+                } else if (row % 2 == 1) {
+                    out[row][col++] = " ";
+                    if (myRooms[roomsRow][roomsCol].hasDoor(EAST)) {
+                        out[row][col] = myRooms[roomsRow][roomsCol]
+                                .getDoor(EAST).toString();
                     }
+                    col++;
+                // even rows
                 } else {
-                    sb.append("█");
-                }
-                if (myRooms[row][col].hasDoor(EAST)) {
-                    if (myRooms[row][col].checkDoorState(EAST, CLOSED)) {
-                        sb.append("C");
-                    } else {
-                        sb.append("O");
+                    if (myRooms[roomsRow][roomsCol].hasDoor(SOUTH)) {
+                        out[row][col] = myRooms[roomsRow][roomsCol]
+                                .getDoor(SOUTH).toString();
                     }
-                } else {
-                    sb.append("O");
+                    col++;
+                    out[row][col++] = "█";
                 }
+                roomsCol++;
             }
-            sb.append("\n");
+            roomsRow++;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String[] row : out) {
+            for (String space : row) {
+                sb.append(space);
+            }
         }
         return sb.toString();
     }
@@ -202,8 +247,8 @@ public class Maze implements Serializable {
 
     // FOR TESTING
     public static void main(final String[] theArgs) {
-        final Maze maze = new Maze(6, 6);
-        System.out.println(maze);
+        final Maze maze = new Maze(3, 3);
+//        System.out.println(maze);
 //        System.out.println(maze.gameLoss());
 //        System.out.println(BFSRunner.findPath(maze));
     }

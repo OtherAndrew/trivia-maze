@@ -116,22 +116,22 @@ public class Room implements Serializable {
         return myDoors.get(theDirection);
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder out = new StringBuilder();
-        out.append("█")
-                .append(getDoor(NORTH).toString())
-                .append("█")
-                .append("\n")
-                .append(getDoor(WEST).toString())
-                .append("█")
-                .append(getDoor(EAST).toString())
-                .append("\n")
-                .append("█")
-                .append(getDoor(SOUTH).toString())
-                .append("█");
-        return out.toString();
-    }
+//    @Override
+//    public String toString() {
+//        final StringBuilder out = new StringBuilder();
+//        out.append("█")
+//                .append(getDoor(NORTH).toString())
+//                .append("█")
+//                .append("\n")
+//                .append(getDoor(WEST).toString())
+//                .append("█")
+//                .append(getDoor(EAST).toString())
+//                .append("\n")
+//                .append("█")
+//                .append(getDoor(SOUTH).toString())
+//                .append("█");
+//        return out.toString();
+//    }
 
     //TESTING
     public static void main(String[] args) {
