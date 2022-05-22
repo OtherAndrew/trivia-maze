@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static model.mazecomponents.Direction.*;
+
 /**
  * Room is a class that represents a space in the maze that the player can
  * occupy. Each room has a wall or door on each of its four sides.
@@ -114,9 +116,26 @@ public class Room implements Serializable {
         return myDoors.get(theDirection);
     }
 
-    // FOR TESTING
     @Override
     public String toString() {
-        return String.format("(%d,%d)", myX, myY);
+        final StringBuilder out = new StringBuilder();
+        out.append("█")
+                .append(getDoor(NORTH).toString())
+                .append("█")
+                .append("\n")
+                .append(getDoor(WEST).toString())
+                .append("█")
+                .append(getDoor(EAST).toString())
+                .append("\n")
+                .append("█")
+                .append(getDoor(SOUTH).toString())
+                .append("█");
+        return out.toString();
+    }
+
+    //TESTING
+    public static void main(String[] args) {
+        Room room = new Room(3, 4);
+        System.out.println(room.toString());
     }
 }

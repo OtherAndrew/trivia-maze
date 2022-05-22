@@ -176,21 +176,21 @@ public class Maze implements Serializable {
             for (int col = 0; col < myRooms[row].length; col++) {
                 if (myRooms[row][col].hasDoor(SOUTH)) {
                     if (myRooms[row][col].checkDoorState(SOUTH, CLOSED)) {
-                        sb.append("*");
+                        sb.append("C");
                     } else {
-                        sb.append("_");
+                        sb.append("O");
                     }
                 } else {
-                    sb.append("_");
+                    sb.append("█");
                 }
                 if (myRooms[row][col].hasDoor(EAST)) {
                     if (myRooms[row][col].checkDoorState(EAST, CLOSED)) {
-                        sb.append("");
+                        sb.append("C");
                     } else {
-                        sb.append("|");
+                        sb.append("O");
                     }
                 } else {
-                    sb.append("|");
+                    sb.append("O");
                 }
             }
             sb.append("\n");
@@ -198,11 +198,13 @@ public class Maze implements Serializable {
         return sb.toString();
     }
 
+
+
     // FOR TESTING
     public static void main(final String[] theArgs) {
         final Maze maze = new Maze(6, 6);
         System.out.println(maze);
-        System.out.println(maze.gameLoss());
-        System.out.println(BFSRunner.findPath(maze));
+//        System.out.println(maze.gameLoss());
+//        System.out.println(BFSRunner.findPath(maze));
     }
 }

@@ -29,6 +29,10 @@ public class Door implements Serializable {
      * The door's state.
      */
     private State myState;
+    /**
+     * The door's character representation.
+     */
+    private char mySymbol;
 
     /**
      * Constructs a door.
@@ -41,6 +45,7 @@ public class Door implements Serializable {
     public Door(final Room theRoom1, final Direction theDirection1,
                 final Room theRoom2, final Direction theDirection2) {
         myState = State.CLOSED;
+        mySymbol = 'C';
         myRoom1 = theRoom1;
         myDirection1 = theDirection1;
         myRoom2 = theRoom2;
@@ -119,5 +124,16 @@ public class Door implements Serializable {
      */
     public void setState(final State theState) {
         myState = theState;
+        switch (theState) {
+            case CLOSED -> mySymbol = 'C';
+            case OPEN -> mySymbol = 'O';
+            case LOCKED -> mySymbol = 'L';
+            default -> mySymbol = '?';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(mySymbol);
     }
 }
