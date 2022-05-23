@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import static model.mazecomponents.Direction.*;
-import static model.mazecomponents.State.CLOSED;
 import static model.mazecomponents.State.OPEN;
 
 /**
@@ -19,6 +18,9 @@ import static model.mazecomponents.State.OPEN;
  */
 public class Maze implements Serializable {
 
+    public static final char MY_WALL = '█';
+    public static final char MY_PLAYER_SYMBOL = '●';
+    public static final char MY_GOAL_SYMBOL = '!';
     /**
      * The rooms in the maze.
      */
@@ -168,87 +170,77 @@ public class Maze implements Serializable {
         return BFSRunner.findPath(this).isEmpty();
     }
 
-//    // FOR TESTING
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        for (int row = 0; row < myRooms.length; row++) {
-//            for (int col = 0; col < myRooms[row].length; col++) {
-//                if (myRooms[row][col].hasDoor(SOUTH)) {
-//                    if (myRooms[row][col].checkDoorState(SOUTH, CLOSED)) {
-//                        sb.append("C");
-//                    } else {
-//                        sb.append("O");
-//                    }
-//                } else {
-//                    sb.append("█");
-//                }
-//                if (myRooms[row][col].hasDoor(EAST)) {
-//                    if (myRooms[row][col].checkDoorState(EAST, CLOSED)) {
-//                        sb.append("C");
-//                    } else {
-//                        sb.append("O");
-//                    }
-//                } else {
-//                    sb.append("O");
-//                }
-//            }
-//            sb.append("\n");
-//        }
-//        return sb.toString();
-//    }
-
     @Override
     public String toString() {
-        final String[][] out =
-                new String[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
-        int roomsRow = 0;
-        for (int row = 0; row < out.length; row++) {
-            // first and last tiles are always walls
-            out[row][0] = "█";
-            out[row][out[row].length - 1] = "█";
-            int col = 1;
-            int roomsCol = 0;
-            while (col < out[row].length - 1) {
-                // first or last rows
-                if (row == 0 || row == out.length - 1) {
-                    out[row][col++] = "█";
-                // odd rows
-                } else if (row % 2 == 1) {
-                    out[row][col++] = " ";
-                    if (myRooms[roomsRow][roomsCol].hasDoor(EAST)) {
-                        out[row][col] = myRooms[roomsRow][roomsCol]
-                                .getDoor(EAST).toString();
-                    }
-                    col++;
-                // even rows
+        final char[][] out = drawBorder();
+
+        for (int row = 1, mazeRow = 0; row < out.length - 1; row += 2, mazeRow++) {
+            for (int col = 1, mazeCol = 0; col < out[row].length - 1; col += 2, mazeCol++) {
+                // DEBUGGING, mark room examined
+//                out[row][col] = '!';
+
+                if (myRooms[mazeRow][mazeCol].equals(myPlayerLocation)) {
+                    out[row][col] = MY_PLAYER_SYMBOL;
+                } else if (myRooms[mazeRow][mazeCol].equals(myGoalLocation)) {
+                    out[row][col] = MY_GOAL_SYMBOL;
                 } else {
-                    if (myRooms[roomsRow][roomsCol].hasDoor(SOUTH)) {
-                        out[row][col] = myRooms[roomsRow][roomsCol]
-                                .getDoor(SOUTH).toString();
-                    }
-                    col++;
-                    out[row][col++] = "█";
+                    out[row][col] = myRooms[mazeRow][mazeCol]
+                            .toString().charAt(0);
                 }
-                roomsCol++;
+
+                if (myRooms[mazeRow][mazeCol].hasDoor(EAST)) {
+                    out[row][col + 1] = myRooms[mazeRow][mazeCol].getDoor(EAST)
+                            .toString().charAt(0);
+                } else {
+                    out[row][col + 1] = MY_WALL;
+                }
+                if (myRooms[mazeRow][mazeCol].hasDoor(SOUTH)) {
+                    out[row + 1][col] = myRooms[mazeRow][mazeCol].getDoor(SOUTH)
+                            .toString().charAt(0);
+                } else {
+                    out[row + 1][col] = MY_WALL;
+                }
+                // DEBUGGING, undo mark
+//                out[row][col] = ' ';
             }
-            roomsRow++;
         }
+
+
         StringBuilder sb = new StringBuilder();
-        for (String[] row : out) {
-            for (String space : row) {
+        for (char[] row : out) {
+            for (char space : row) {
                 sb.append(space);
             }
+            sb.append("\n");
         }
         return sb.toString();
     }
 
-
+    private char[][] drawBorder() {
+        final char[][] out =
+                new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
+        for (int row = 0; row < out.length; row++) {
+            // first and last tiles are always walls
+            out[row][0] = MY_WALL;
+            out[row][out[row].length - 1] = MY_WALL;
+            int col = 1;
+            while (col < out[row].length - 1) {
+                // first or last rows, or even row and odd col
+                if (row == 0 || row == out.length - 1
+                        || (row % 2 == 0 && col % 2 == 0)) {
+                    out[row][col++] = MY_WALL;
+                } else {
+                    out[row][col++] = ' ';
+                }
+            }
+        }
+        return out;
+    }
 
     // FOR TESTING
     public static void main(final String[] theArgs) {
         final Maze maze = new Maze(3, 3);
-//        System.out.println(maze);
+        System.out.println(maze);
 //        System.out.println(maze.gameLoss());
 //        System.out.println(BFSRunner.findPath(maze));
     }

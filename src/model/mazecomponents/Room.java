@@ -26,6 +26,8 @@ public class Room implements Serializable {
      */
     private final Map<Direction, Door> myDoors;
 
+    private boolean myVisited;
+
     /**
      * Constructor for a Room instance.
      *
@@ -36,6 +38,7 @@ public class Room implements Serializable {
         myX = theX;
         myY = theY;
         myDoors = new EnumMap<>(Direction.class);
+        myVisited = false;
     }
 
     /**
@@ -116,26 +119,22 @@ public class Room implements Serializable {
         return myDoors.get(theDirection);
     }
 
-//    @Override
-//    public String toString() {
-//        final StringBuilder out = new StringBuilder();
-//        out.append("█")
-//                .append(getDoor(NORTH).toString())
-//                .append("█")
-//                .append("\n")
-//                .append(getDoor(WEST).toString())
-//                .append("█")
-//                .append(getDoor(EAST).toString())
-//                .append("\n")
-//                .append("█")
-//                .append(getDoor(SOUTH).toString())
-//                .append("█");
-//        return out.toString();
-//    }
+    public void visit() {
+        myVisited = true;
+    }
 
-    //TESTING
-    public static void main(String[] args) {
-        Room room = new Room(3, 4);
-        System.out.println(room.toString());
+    public boolean isVisited() {
+        return myVisited;
+    }
+
+    @Override
+    public String toString() {
+        final String out;
+        if (myVisited) {
+            out = "░";
+        } else {
+            out = " ";
+        }
+        return out;
     }
 }
