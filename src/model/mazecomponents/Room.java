@@ -16,7 +16,7 @@ public class Room implements Serializable {
     /**
      * Representation for visited room.
      */
-    public static final char MY_VISITED_SYMBOL = '•';
+    public static final char MY_VISITED_SYMBOL = '.';
     /**
      * X-coordinate.
      */
