@@ -5,10 +5,7 @@ import model.questions.Question;
 import model.questions.QuestionFactory;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.OPEN;
@@ -17,10 +14,18 @@ import static model.mazecomponents.State.OPEN;
  * Maze is a class that represents a maze with doors.
  */
 public class Maze implements Serializable {
-
-    public static final char MY_WALL = '█';
-    public static final char MY_PLAYER_SYMBOL = '●';
+    /**
+     * Represents the goal position.
+     */
     public static final char MY_GOAL_SYMBOL = '!';
+    /**
+     * Represents the player position.
+     */
+    public static final char MY_PLAYER_SYMBOL = '●';
+    /**
+     * Represents maze walls.
+     */
+    public static final char MY_WALL = '█';
     /**
      * The rooms in the maze.
      */
@@ -45,20 +50,30 @@ public class Maze implements Serializable {
      * @param theCols the number of columns the maze should have.
      */
     public Maze(final int theRows, final int theCols) {
-        myRooms = new Room[theRows][theCols];
+        myRooms = generateRoomMatrix(theRows, theCols);
         myQuestionMap = new HashMap<>();
-
-        for (int row = 0; row < myRooms.length; row++) {
-            for (int col = 0; col < myRooms[row].length; col++)
-                myRooms[row][col] = new Room(row, col);
-        }
-
         // TODO: Random starting location and goal, with latter being forced
         //  to be chosen a certain distance from the former
         myPlayerLocation = myRooms[0][0];
         myGoalLocation = myRooms[theRows - 1][theCols - 1];
-
         generateMaze(generatePossibleDoors());
+    }
+
+    /**
+     * Generates a Room matrix from a set of dimensions.
+     *
+     * @param theRows the desired number of rows
+     * @param theCols the desired number of columns
+     * @return a room matrix with the specified number of rows and columns.
+     */
+    private Room[][] generateRoomMatrix(final int theRows, final int theCols) {
+        Room[][] roomMatrix = new Room[theRows][theCols];
+        for (int row = 0; row < roomMatrix.length; row++) {
+            for (int col = 0; col < roomMatrix[row].length; col++) {
+                roomMatrix[row][col] = new Room(row, col);
+            }
+        }
+        return roomMatrix;
     }
 
     /**
@@ -99,7 +114,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                // myQuestionMap.put(door, qf.createQuestion());
+                 myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -158,88 +173,100 @@ public class Maze implements Serializable {
         return myPlayerLocation == myGoalLocation;
     }
 
+    /**
+     * Gets the room where the goal is located.
+     *
+     * @return the goal location.
+     */
     public Room getGoalLocation() {
         return myGoalLocation;
     }
 
+    /**
+     * Gets the room where the player is located.
+     *
+     * @return the player location.
+     */
     public Room getPlayerLocation() {
         return myPlayerLocation;
     }
 
+    /**
+     * Determines if there is no longer a viable path to the goal, meaning
+     * the game is lost.
+     *
+     * @return if the game is no longer winnable.
+     */
     public boolean gameLoss() {
         return BFSRunner.findPath(this).isEmpty();
     }
 
+    /**
+     * Returns a String representation of the maze.
+     *
+     * @return a String representation of the maze.
+     */
     @Override
     public String toString() {
-        final char[][] out = drawBorder();
-
-        for (int row = 1, mazeRow = 0; row < out.length - 1; row += 2, mazeRow++) {
-            for (int col = 1, mazeCol = 0; col < out[row].length - 1; col += 2, mazeCol++) {
-                // DEBUGGING, mark room examined
-//                out[row][col] = '!';
-
-                if (myRooms[mazeRow][mazeCol].equals(myPlayerLocation)) {
+        final char[][] out = generateWallMatrix();
+        for (int row = 1, mazeRow = 0; row < out.length - 1;
+             row += 2, mazeRow++) {
+            for (int col = 1, mazeCol = 0; col < out[row].length - 1;
+                 col += 2, mazeCol++) {
+                final Room currentRoom = myRooms[mazeRow][mazeCol];
+                if (currentRoom.equals(myPlayerLocation)) {
                     out[row][col] = MY_PLAYER_SYMBOL;
-                } else if (myRooms[mazeRow][mazeCol].equals(myGoalLocation)) {
+                } else if (currentRoom.equals(myGoalLocation)) {
                     out[row][col] = MY_GOAL_SYMBOL;
                 } else {
-                    out[row][col] = myRooms[mazeRow][mazeCol]
-                            .toString().charAt(0);
+                    out[row][col] = currentRoom.toChar();
                 }
-
-                if (myRooms[mazeRow][mazeCol].hasDoor(EAST)) {
-                    out[row][col + 1] = myRooms[mazeRow][mazeCol].getDoor(EAST)
-                            .toString().charAt(0);
-                } else {
-                    out[row][col + 1] = MY_WALL;
+                if (currentRoom.hasDoor(EAST)) {
+                    out[row][col + 1] = currentRoom.getDoor(EAST).toChar();
                 }
-                if (myRooms[mazeRow][mazeCol].hasDoor(SOUTH)) {
-                    out[row + 1][col] = myRooms[mazeRow][mazeCol].getDoor(SOUTH)
-                            .toString().charAt(0);
-                } else {
-                    out[row + 1][col] = MY_WALL;
+                if (currentRoom.hasDoor(SOUTH)) {
+                    out[row + 1][col] = currentRoom.getDoor(SOUTH).toChar();
                 }
-                // DEBUGGING, undo mark
-//                out[row][col] = ' ';
             }
         }
+        return getStringBuilder(out).toString();
+    }
 
+    /**
+     * Constructs a matrix of walls based on the size of the maze.
+     *
+     * @return a matrix of walls based on the size of the maze.
+     */
+    private char[][] generateWallMatrix() {
+        final char[][] mazeFrame =
+                new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
+        for (char[] row : mazeFrame) {
+            Arrays.fill(row, MY_WALL);
+        }
+        return mazeFrame;
+    }
 
-        StringBuilder sb = new StringBuilder();
-        for (char[] row : out) {
+    /**
+     * Gets a StringBuilder with the concatenation of the input matrix.
+     *
+     * @param theMatrix a character matrix.
+     * @return the concatenation of the input matrix.
+     */
+    private StringBuilder getStringBuilder(final char[][] theMatrix) {
+        final StringBuilder sb = new StringBuilder();
+        for (char[] row : theMatrix) {
             for (char space : row) {
                 sb.append(space);
             }
             sb.append("\n");
         }
-        return sb.toString();
-    }
-
-    private char[][] drawBorder() {
-        final char[][] out =
-                new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
-        for (int row = 0; row < out.length; row++) {
-            // first and last tiles are always walls
-            out[row][0] = MY_WALL;
-            out[row][out[row].length - 1] = MY_WALL;
-            int col = 1;
-            while (col < out[row].length - 1) {
-                // first or last rows, or even row and odd col
-                if (row == 0 || row == out.length - 1
-                        || (row % 2 == 0 && col % 2 == 0)) {
-                    out[row][col++] = MY_WALL;
-                } else {
-                    out[row][col++] = ' ';
-                }
-            }
-        }
-        return out;
+        return sb;
     }
 
     // FOR TESTING
     public static void main(final String[] theArgs) {
-        final Maze maze = new Maze(3, 3);
+        Random r = new Random();
+        final Maze maze = new Maze(r.nextInt(7) + 2, r.nextInt(7) + 2);
         System.out.println(maze);
 //        System.out.println(maze.gameLoss());
 //        System.out.println(BFSRunner.findPath(maze));

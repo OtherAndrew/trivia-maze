@@ -4,14 +4,19 @@ import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static model.mazecomponents.Direction.*;
-
 /**
  * Room is a class that represents a space in the maze that the player can
- * occupy. Each room has a wall or door on each of its four sides.
+ * occupy. Each room may be connected by at most four doors.
  */
 public class Room implements Serializable {
-
+    /**
+     * Representation for unvisited room.
+     */
+    public static final char MY_UNVISITED_SYMBOL = ' ';
+    /**
+     * Representation for visited room.
+     */
+    public static final char MY_VISITED_SYMBOL = '•';
     /**
      * X-coordinate.
      */
@@ -20,13 +25,18 @@ public class Room implements Serializable {
      * Y-coordinate.
      */
     private final int myY;
-
     /**
      * The doors in each cardinal direction.
      */
     private final Map<Direction, Door> myDoors;
-
+    /**
+     * If the room has been visited.
+     */
     private boolean myVisited;
+    /**
+     * The room's character representation.
+     */
+    private char mySymbol;
 
     /**
      * Constructor for a Room instance.
@@ -39,6 +49,7 @@ public class Room implements Serializable {
         myY = theY;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
+        mySymbol = MY_UNVISITED_SYMBOL;
     }
 
     /**
@@ -59,10 +70,20 @@ public class Room implements Serializable {
         return myY;
     }
 
+    /**
+     * Gets the number of doors that connect to this room.
+     *
+     * @return the number of doors connecting to this room.
+     */
     public int getDoorCount() {
         return myDoors.size();
     }
 
+    /**
+     * Returns all doors connected to this room.
+     *
+     * @return a map of Direction -> Door
+     */
     public Map<Direction, Door> getAllDoors() {
         return myDoors;
     }
@@ -119,22 +140,39 @@ public class Room implements Serializable {
         return myDoors.get(theDirection);
     }
 
+    /**
+     * Visits this room.
+     */
     public void visit() {
         myVisited = true;
+        mySymbol = MY_VISITED_SYMBOL;
     }
 
+    /**
+     * Determines if this room has been visited.
+     *
+     * @return if the room has been visited.
+     */
     public boolean isVisited() {
         return myVisited;
     }
 
+    /**
+     * Returns the String representation of this room.
+     *
+     * @return the String representation of this room.
+     */
     @Override
     public String toString() {
-        final String out;
-        if (myVisited) {
-            out = "░";
-        } else {
-            out = " ";
-        }
-        return out;
+        return String.valueOf(mySymbol);
+    }
+
+    /**
+     * Returns the character representation of this room.
+     *
+     * @return the character representation of this room.
+     */
+    public char toChar() {
+        return mySymbol;
     }
 }

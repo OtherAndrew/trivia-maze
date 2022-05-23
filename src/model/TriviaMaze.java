@@ -14,7 +14,7 @@ public class TriviaMaze {
 
 
     public static void main(final String[] theArgs) {
-        myMaze = new Maze(10, 10);
+        myMaze = new Maze(7, 7);
         // introMessage();
         do {
             System.out.println(myMaze.toString());

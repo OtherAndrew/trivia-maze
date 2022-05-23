@@ -1,13 +1,27 @@
 package model.mazecomponents;
 
 import java.io.Serializable;
+import java.util.Arrays;
+
+import static model.mazecomponents.State.*;
 
 /**
  * Door is a class that represents a maze door. Door connects two Rooms and
  * can be unlocked or locked.
  */
 public class Door implements Serializable {
-
+    /**
+     * Representation for closed door.
+     */
+    public static final char MY_CLOSED_SYMBOL = '#';
+    /**
+     * Representation for locked door.
+     */
+    public static final char MY_LOCKED_SYMBOL = 'X';
+    /**
+     * Representation for open door.
+     */
+    public static final char MY_OPEN_SYMBOL = 'O';
     /**
      * The first room the door connects to.
      */
@@ -24,7 +38,6 @@ public class Door implements Serializable {
      * The direction that myRoom2 is in relative to the door.
      */
     private final Direction myDirection2;
-
     /**
      * The door's state.
      */
@@ -44,8 +57,7 @@ public class Door implements Serializable {
      */
     public Door(final Room theRoom1, final Direction theDirection1,
                 final Room theRoom2, final Direction theDirection2) {
-        myState = State.CLOSED;
-        mySymbol = 'C';
+        setState(CLOSED);
         myRoom1 = theRoom1;
         myDirection1 = theDirection1;
         myRoom2 = theRoom2;
@@ -123,17 +135,32 @@ public class Door implements Serializable {
      * @param theState the Door's new State.
      */
     public void setState(final State theState) {
-        myState = theState;
-        switch (theState) {
-            case CLOSED -> mySymbol = 'C';
-            case OPEN -> mySymbol = 'O';
-            case LOCKED -> mySymbol = 'L';
-            default -> mySymbol = '?';
+        if (Arrays.asList(State.values()).contains(theState)) {
+            myState = theState;
+            switch (theState) {
+                case CLOSED -> mySymbol = MY_CLOSED_SYMBOL;
+                case OPEN -> mySymbol = MY_OPEN_SYMBOL;
+                case LOCKED -> mySymbol = MY_LOCKED_SYMBOL;
+            }
         }
     }
 
+    /**
+     * Returns the String representation of this door.
+     *
+     * @return the String representation of this door.
+     */
     @Override
     public String toString() {
         return String.valueOf(mySymbol);
+    }
+
+    /**
+     * Returns the character representation of this door.
+     *
+     * @return the character representation of this door.
+     */
+    public char toChar() {
+        return mySymbol;
     }
 }
