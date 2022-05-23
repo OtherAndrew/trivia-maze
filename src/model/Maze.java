@@ -230,6 +230,22 @@ public class Maze implements Serializable {
     }
 
     /**
+     * Determines the number of rooms visited by the player.
+     * @return the number of rooms visited by the player.
+     */
+    public int getNumVisited() {
+        int numVisited = 0;
+        for (Room[] row : myRooms) {
+            for (Room room : row) {
+                if (room.isVisited()) {
+                    numVisited++;
+                }
+            }
+        }
+        return numVisited;
+    }
+
+    /**
      * Returns a String representation of the maze.
      *
      * @return a String representation of the maze.
