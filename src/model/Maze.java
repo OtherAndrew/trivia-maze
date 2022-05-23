@@ -152,12 +152,20 @@ public class Maze implements Serializable {
      * @param theDirection the direction to look in
      * @return the question associated with the door in the specified location.
      */
-    public Question getQuestion(final Direction theDirection) {
-        return myQuestionMap.get(myPlayerLocation.getDoor(theDirection));
+    public Optional<Question> getQuestion(final Direction theDirection) {
+        final Optional<Question> question;
+        if (myPlayerLocation.hasDoor(theDirection)) {
+            question = Optional.of(
+                    myQuestionMap.get(myPlayerLocation.getDoor(theDirection)));
+        } else {
+            question = Optional.empty();
+        }
+        return question;
     }
 
     /**
      * Gets the door state in the direction specified.
+     *
      * @param theDirection the direction to look in
      * @return the state of the door in the direction.
      */
@@ -179,7 +187,9 @@ public class Maze implements Serializable {
      */
     public void changeDoorState(final Direction theDirection,
                                 final State theState) {
-        myPlayerLocation.getDoor(theDirection).setState(theState);
+        if (myPlayerLocation.hasDoor(theDirection)) {
+            myPlayerLocation.getDoor(theDirection).setState(theState);
+        }
     }
 
     /**

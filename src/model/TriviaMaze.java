@@ -3,6 +3,7 @@ package model;
 import model.mazecomponents.*;
 import model.questions.Question;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class TriviaMaze {
@@ -31,12 +32,13 @@ public class TriviaMaze {
         } while (!myMaze.atGoal());
     }
 
+    //TODO check if door/question exists in direction
     private static boolean movePlayer(Maze theMaze, final Direction theDirection, final Scanner theInput) {
-        Question question = theMaze.getQuestion(theDirection);
+        Optional<Question> question = theMaze.getQuestion(theDirection);
         System.out.println(question.toString());
         System.out.print("Select an option (A, B, C, D): ");
         String selection = theInput.nextLine();
-        boolean correctness = question.checkAnswer(selection);
+        boolean correctness = question.get().checkAnswer(selection);
         if (correctness) {
             myMaze.changeDoorState(theDirection, State.OPEN);
             boolean moved = myMaze.move(theDirection);
