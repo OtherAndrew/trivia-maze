@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import java.io.IOException;
 
 
 public class Welcome {
@@ -32,7 +33,7 @@ public class Welcome {
         myButton.setText("PRESS ANY KEY TO START");
         myButton.setVerticalTextPosition(JButton.NORTH);
         myButton.addActionListener(theAction -> {
-            new SaveAndLoad();
+            new LoadOrStartNewGame();
             myFrame.dispose();
         });
         myFrame.add(myButton);
