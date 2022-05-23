@@ -9,6 +9,7 @@ import java.util.*;
 
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.OPEN;
+import static model.mazecomponents.State.WALL;
 
 /**
  * Maze is a class that represents a maze with doors.
@@ -115,7 +116,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                 myQuestionMap.put(door, qf.createQuestion());
+                myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -153,6 +154,21 @@ public class Maze implements Serializable {
      */
     public Question getQuestion(final Direction theDirection) {
         return myQuestionMap.get(myPlayerLocation.getDoor(theDirection));
+    }
+
+    /**
+     * Gets the door state in the direction specified.
+     * @param theDirection the direction to look in
+     * @return the state of the door in the direction.
+     */
+    public State getDoorState(final Direction theDirection) {
+        final State doorState;
+        if (myPlayerLocation.hasDoor(theDirection)) {
+            doorState = myPlayerLocation.getDoorState(theDirection);
+        } else {
+            doorState = WALL;
+        }
+        return doorState;
     }
 
     /**

@@ -10,6 +10,7 @@ public enum State {
      *   a question
      * - Open: Able to be passed through freely, does not show a question.
      * - Locked: Unable to be passed through or opened. Will show a question.
+     * - Wall: No door is present
      */
-    CLOSED, OPEN, LOCKED
+    CLOSED, OPEN, LOCKED, WALL
 }
