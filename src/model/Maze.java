@@ -55,6 +55,7 @@ public class Maze implements Serializable {
         // TODO: Random starting location and goal, with latter being forced
         //  to be chosen a certain distance from the former
         myPlayerLocation = myRooms[0][0];
+        myPlayerLocation.visit();
         myGoalLocation = myRooms[theRows - 1][theCols - 1];
         generateMaze(generatePossibleDoors());
     }
@@ -138,6 +139,7 @@ public class Maze implements Serializable {
                 case SOUTH -> myPlayerLocation = myRooms[x][y + 1];
                 case WEST -> myPlayerLocation = myRooms[x - 1][y];
             }
+            myPlayerLocation.visit();
         }
         return successfulMove;
     }
@@ -268,7 +270,7 @@ public class Maze implements Serializable {
         Random r = new Random();
         final Maze maze = new Maze(r.nextInt(7) + 2, r.nextInt(7) + 2);
         System.out.println(maze);
-//        System.out.println(maze.gameLoss());
-//        System.out.println(BFSRunner.findPath(maze));
+        System.out.println(maze.gameLoss());
+        System.out.println(BFSRunner.findPath(maze));
     }
 }
