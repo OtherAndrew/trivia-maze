@@ -59,7 +59,7 @@ public class Maze implements Serializable {
         myQuestionMap = new HashMap<>();
         // TODO: Random starting location and goal, with latter being forced
         //  to be chosen a certain distance from the former
-        myPlayerLocation = myRooms[0][0];
+        myPlayerLocation = chooseRandomRoom();
         myPlayerLocation.visit();
         myGoalLocation = myRooms[theRows - 1][theCols - 1];
         generateMaze(generatePossibleDoors());
@@ -80,6 +80,21 @@ public class Maze implements Serializable {
             }
         }
         return roomMatrix;
+    }
+
+    private Room chooseRandomRoom() {
+        final Random rand = new Random();
+        final int x, y;
+        if (rand.nextBoolean()) {
+            x = rand.nextInt(myRooms.length);
+            if (rand.nextBoolean()) y = 0;
+            else y = myRooms[0].length - 1;
+        } else {
+            y = rand.nextInt(myRooms[0].length);
+            if (rand.nextBoolean()) x = 0;
+            else x = myRooms.length - 1;
+        }
+        return myRooms[x][y];
     }
 
     /**
@@ -157,14 +172,7 @@ public class Maze implements Serializable {
      * @return the question associated with the door in the specified location.
      */
     public Optional<Question> getQuestion(final Direction theDirection) {
-        final Optional<Question> question;
-        if (myPlayerLocation.hasDoor(theDirection)) {
-            question = Optional.of(
-                    myQuestionMap.get(myPlayerLocation.getDoor(theDirection)));
-        } else {
-            question = Optional.empty();
-        }
-        return question;
+        return Optional.ofNullable(myQuestionMap.get(myPlayerLocation.getDoor(theDirection)));
     }
 
     /**
@@ -174,13 +182,7 @@ public class Maze implements Serializable {
      * @return the state of the door in the direction.
      */
     public State getDoorState(final Direction theDirection) {
-        final State doorState;
-        if (myPlayerLocation.hasDoor(theDirection)) {
-            doorState = myPlayerLocation.getDoorState(theDirection);
-        } else {
-            doorState = State.WALL;
-        }
-        return doorState;
+        return Optional.ofNullable(myPlayerLocation.getDoorState(theDirection)).orElse(State.WALL);
     }
 
     /**
@@ -191,9 +193,7 @@ public class Maze implements Serializable {
      */
     public void changeDoorState(final Direction theDirection,
                                 final State theState) {
-        if (myPlayerLocation.hasDoor(theDirection)) {
-            myPlayerLocation.getDoor(theDirection).setState(theState);
-        }
+        Optional.ofNullable(myPlayerLocation.getDoor(theDirection)).ifPresent(door -> door.setState(theState));
     }
 
     /**
@@ -370,12 +370,11 @@ public class Maze implements Serializable {
     // FOR TESTING
     public static void main(final String[] theArgs) {
         Random r = new Random();
-        Maze maze = new Maze(r.nextInt(7) + 2, r.nextInt(7) + 2);
+//        Maze maze = new Maze(r.nextInt(7)+3, r.nextInt(7)+3);
+        Maze maze = new Maze(5, 5);
         System.out.println(maze);
-
-        maze.quickLoad();
-        System.out.println(maze);
-
-//        maze.quickSave();
+//        maze.quickLoad();
+//        System.out.println(maze);
+//        maze.getQuestion(EAST).ifPresent(System.out::println);
     }
 }

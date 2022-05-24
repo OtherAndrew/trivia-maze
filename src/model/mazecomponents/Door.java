@@ -139,13 +139,11 @@ public class Door implements Serializable {
      * @param theState the Door's new State.
      */
     public void setState(final State theState) {
-        if (Arrays.asList(State.values()).contains(theState)) {
-            myState = theState;
-            switch (theState) {
-                case CLOSED -> mySymbol = CLOSED_SYMBOL;
-                case OPEN -> mySymbol = OPEN_SYMBOL;
-                case LOCKED -> mySymbol = LOCKED_SYMBOL;
-            }
+        myState = theState;
+        switch (theState) {
+            case CLOSED -> mySymbol = CLOSED_SYMBOL;
+            case OPEN -> mySymbol = OPEN_SYMBOL;
+            case LOCKED -> mySymbol = LOCKED_SYMBOL;
         }
     }
 
