@@ -1,5 +1,6 @@
 package model.mazecomponents;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -10,18 +11,21 @@ import static model.mazecomponents.State.*;
  * can be unlocked or locked.
  */
 public class Door implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6572203977734228079L;
     /**
      * Representation for closed door.
      */
-    public static final char MY_CLOSED_SYMBOL = '#';
+    public static final char CLOSED_SYMBOL = '#';
     /**
      * Representation for locked door.
      */
-    public static final char MY_LOCKED_SYMBOL = 'X';
+    public static final char LOCKED_SYMBOL = 'X';
     /**
      * Representation for open door.
      */
-    public static final char MY_OPEN_SYMBOL = 'O';
+    public static final char OPEN_SYMBOL = 'O';
     /**
      * The first room the door connects to.
      */
@@ -138,9 +142,9 @@ public class Door implements Serializable {
         if (Arrays.asList(State.values()).contains(theState)) {
             myState = theState;
             switch (theState) {
-                case CLOSED -> mySymbol = MY_CLOSED_SYMBOL;
-                case OPEN -> mySymbol = MY_OPEN_SYMBOL;
-                case LOCKED -> mySymbol = MY_LOCKED_SYMBOL;
+                case CLOSED -> mySymbol = CLOSED_SYMBOL;
+                case OPEN -> mySymbol = OPEN_SYMBOL;
+                case LOCKED -> mySymbol = LOCKED_SYMBOL;
             }
         }
     }

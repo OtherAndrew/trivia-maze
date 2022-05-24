@@ -1,5 +1,6 @@
 package model.questions;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,9 @@ import java.io.Serializable;
  * @version 2022 May 6
  */
 public class Answer implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7662114296546856340L;
     private final String myAnswer;
     private final boolean myValidity;
 

@@ -1,5 +1,6 @@
 package model.mazecomponents;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
@@ -9,14 +10,17 @@ import java.util.Map;
  * occupy. Each room may be connected by at most four doors.
  */
 public class Room implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7855965211246841891L;
     /**
      * Representation for unvisited room.
      */
-    public static final char MY_UNVISITED_SYMBOL = ' ';
+    public static final char UNVISITED_SYMBOL = ' ';
     /**
      * Representation for visited room.
      */
-    public static final char MY_VISITED_SYMBOL = '.';
+    public static final char VISITED_SYMBOL = '.';
     /**
      * X-coordinate.
      */
@@ -49,7 +53,7 @@ public class Room implements Serializable {
         myY = theY;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
-        mySymbol = MY_UNVISITED_SYMBOL;
+        mySymbol = UNVISITED_SYMBOL;
     }
 
     /**
@@ -145,7 +149,7 @@ public class Room implements Serializable {
      */
     public void visit() {
         myVisited = true;
-        mySymbol = MY_VISITED_SYMBOL;
+        mySymbol = VISITED_SYMBOL;
     }
 
     /**

@@ -1,5 +1,6 @@
 package model.questions;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,6 +12,8 @@ import java.io.Serializable;
  */
 public abstract class Question implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -919594342983300606L;
     private final String myQuery;
 
     /**

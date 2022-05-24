@@ -1,10 +1,13 @@
 package model.questions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ShortAnswer extends Question implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -3344095561551924264L;
     private final ArrayList<String> myAnswers;
 
     /**

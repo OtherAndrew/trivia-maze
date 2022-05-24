@@ -4,37 +4,41 @@ import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
 
+import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.OPEN;
-import static model.mazecomponents.State.WALL;
 
 /**
  * Maze is a class that represents a maze with doors.
  */
 public class Maze implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6708702333356795697L;
     /**
      * Represents the goal position.
      */
-    public static final char MY_GOAL_SYMBOL = '!';
+    public static final char GOAL_SYMBOL = '!';
     /**
      * Represents the player position.
      */
-    public static final char MY_PLAYER_SYMBOL = '●';
+    public static final char PLAYER_SYMBOL = '●';
     /**
      * Represents maze walls.
      */
-    public static final char MY_WALL = '█';
+    public static final char WALL = '█';
     /**
      * The rooms in the maze.
      */
-    private final Room[][] myRooms;
+    private Room[][] myRooms;
     /**
      * Doors with corresponding question.
      */
-    private final Map<Door, Question> myQuestionMap;
+    private Map<Door, Question> myQuestionMap;
     /**
      * The player's location.
      */
@@ -42,7 +46,7 @@ public class Maze implements Serializable {
     /**
      * The goal location.
      */
-    private final Room myGoalLocation;
+    private Room myGoalLocation;
 
     /**
      * Constructs a maze of arbitrary size.
@@ -116,7 +120,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                myQuestionMap.put(door, qf.createQuestion());
+//                myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -174,7 +178,7 @@ public class Maze implements Serializable {
         if (myPlayerLocation.hasDoor(theDirection)) {
             doorState = myPlayerLocation.getDoorState(theDirection);
         } else {
-            doorState = WALL;
+            doorState = State.WALL;
         }
         return doorState;
     }
@@ -229,6 +233,62 @@ public class Maze implements Serializable {
         return BFSRunner.findPath(this).isEmpty();
     }
 
+    public static class Memento implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = -4739895132858153478L;
+        /**
+         * The rooms in the maze.
+         */
+        private final Room[][] mySavedRooms;
+        /**
+         * Doors with corresponding question.
+         */
+        private final Map<Door, Question> mySavedQuestionMap;
+        /**
+         * The player's location.
+         */
+        private final Room mySavedPlayerLocation;
+        /**
+         * The goal location.
+         */
+        private final Room mySavedGoalLocation;
+
+        private Memento(final Room[][] theRooms,
+                        final Map<Door, Question> theQuestionMap,
+                        final Room thePlayerLocation,
+                        final Room theGoalLocation) {
+            mySavedRooms = theRooms;
+            mySavedQuestionMap = theQuestionMap;
+            mySavedPlayerLocation = thePlayerLocation;
+            mySavedGoalLocation = theGoalLocation;
+        }
+    }
+
+    public void quickSave() {
+        save(new File("saves/quickSave.ser"));
+    }
+
+    public void save(final File theSaveFile) {
+        Serializer.save(new Memento(myRooms, myQuestionMap,
+                myPlayerLocation, myGoalLocation), theSaveFile);
+    }
+
+    public void quickLoad() {
+        load(new File("saves/quickSave.ser"));
+    }
+
+    public void load(final File theSaveFile) {
+        Serializer.load(theSaveFile).ifPresent(this::restore);
+    }
+
+    private void restore(final Memento theMemento) {
+        myRooms = theMemento.mySavedRooms;
+        myQuestionMap = theMemento.mySavedQuestionMap;
+        myPlayerLocation = theMemento.mySavedPlayerLocation;
+        myGoalLocation = theMemento.mySavedGoalLocation;
+    }
+
     /**
      * Returns a String representation of the maze.
      *
@@ -243,9 +303,9 @@ public class Maze implements Serializable {
                  col += 2, mazeCol++) {
                 final Room currentRoom = myRooms[mazeRow][mazeCol];
                 if (currentRoom.equals(myPlayerLocation)) {
-                    out[row][col] = MY_PLAYER_SYMBOL;
+                    out[row][col] = PLAYER_SYMBOL;
                 } else if (currentRoom.equals(myGoalLocation)) {
-                    out[row][col] = MY_GOAL_SYMBOL;
+                    out[row][col] = GOAL_SYMBOL;
                 } else {
                     out[row][col] = currentRoom.toChar();
                 }
@@ -269,7 +329,7 @@ public class Maze implements Serializable {
         final char[][] mazeFrame =
                 new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
         for (char[] row : mazeFrame) {
-            Arrays.fill(row, MY_WALL);
+            Arrays.fill(row, WALL);
         }
         return mazeFrame;
     }
@@ -294,9 +354,12 @@ public class Maze implements Serializable {
     // FOR TESTING
     public static void main(final String[] theArgs) {
         Random r = new Random();
-        final Maze maze = new Maze(r.nextInt(7) + 2, r.nextInt(7) + 2);
+        Maze maze = new Maze(r.nextInt(7) + 2, r.nextInt(7) + 2);
         System.out.println(maze);
-        System.out.println(maze.gameLoss());
-        System.out.println(BFSRunner.findPath(maze));
+
+        maze.quickLoad();
+        System.out.println(maze);
+
+//        maze.quickSave();
     }
 }
