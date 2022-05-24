@@ -1,17 +1,15 @@
 package view;
 
 import javax.swing.*;
-import java.io.IOException;
-
 
 public class Welcome {
 
     private JFrame myFrame;
-    private ImageIcon myBackgroundImage;
+    private Icon myBackgroundImage;
     private ImageIcon myWindowIcon;
     private JButton myButton;
     private final int myFrameWidth = 500, myFrameHeight = 500;
-    private final String myBackgroundPath = "assets\\Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
+    private final String myBackgroundPath = "Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
 
 
     // TODO add Landing_Page_01.png to the JButton, set vertical text position to bottom, make text breath, add action listener
@@ -25,10 +23,8 @@ public class Welcome {
         myFrame.setSize(myFrameWidth, myFrameHeight);
         myFrame.setVisible(true);
 
-
         myBackgroundImage = new ImageIcon(myBackgroundPath);
-        myButton = new JButton();
-        myButton.setIcon(myBackgroundImage);
+        myButton = new JButton(myBackgroundImage);
         myButton.setBounds(0, 0, myFrameWidth, myFrameHeight);
         myButton.setText("PRESS ANY KEY TO START");
         myButton.setVerticalTextPosition(JButton.NORTH);
