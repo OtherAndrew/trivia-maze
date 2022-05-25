@@ -1,4 +1,4 @@
-package model.mazecomponents;
+package model;
 
 import model.Maze.Memento;
 

@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.*;
 
 import static model.mazecomponents.Direction.*;
-import static model.mazecomponents.State.OPEN;
 
 /**
  * Maze is a class that represents a maze with doors.
@@ -57,11 +56,9 @@ public class Maze implements Serializable {
     public Maze(final int theRows, final int theCols) {
         myRooms = generateRoomMatrix(theRows, theCols);
         myQuestionMap = new HashMap<>();
-        // TODO: Random starting location and goal, with latter being forced
-        //  to be chosen a certain distance from the former
         myPlayerLocation = chooseRandomRoom();
         myPlayerLocation.visit();
-        myGoalLocation = myRooms[theRows - 1][theCols - 1];
+        myGoalLocation = chooseExit(myPlayerLocation);
         generateMaze(generatePossibleDoors());
     }
 
@@ -86,7 +83,7 @@ public class Maze implements Serializable {
         final Random rand = new Random();
         final int x, y;
         if (rand.nextBoolean()) {
-            x = rand.nextInt(myRooms.length);
+            x = rand.nextInt(myRooms.length - 2) + 1;
             if (rand.nextBoolean()) y = 0;
             else y = myRooms[0].length - 1;
         } else {
@@ -96,6 +93,16 @@ public class Maze implements Serializable {
         }
         return myRooms[x][y];
     }
+
+    private Room chooseExit(final Room theRoom) {
+        Room exit;
+        do {
+            exit = chooseRandomRoom();
+        } while ((Math.abs(theRoom.getX() - exit.getX()) <= myRooms.length / 2)
+                && (Math.abs(theRoom.getY() - exit.getY()) <= myRooms[0].length / 2));
+        return exit;
+    }
+
 
     /**
      * Generates a list of doors for every possible door position.
@@ -151,7 +158,8 @@ public class Maze implements Serializable {
         boolean successfulMove = false;
         final int x = myPlayerLocation.getX();
         final int y = myPlayerLocation.getY();
-        if (myPlayerLocation.getDoorState(theDirection) == OPEN) {
+        State doorState = myPlayerLocation.getDoorState(theDirection);
+        if (doorState == State.OPEN || doorState == State.CLOSED) {
             successfulMove = true;
             switch (theDirection) {
                 case NORTH -> myPlayerLocation = myRooms[x][y - 1];
@@ -333,7 +341,7 @@ public class Maze implements Serializable {
                 }
             }
         }
-        return getStringBuilder(out).toString();
+        return concatenateMatrix(out);
     }
 
     /**
@@ -344,37 +352,28 @@ public class Maze implements Serializable {
     private char[][] generateWallMatrix() {
         final char[][] mazeFrame =
                 new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
-        for (char[] row : mazeFrame) {
-            Arrays.fill(row, WALL);
-        }
+        for (char[] row : mazeFrame) Arrays.fill(row, WALL);
         return mazeFrame;
     }
 
     /**
-     * Gets a StringBuilder with the concatenation of the input matrix.
+     * Gets a string concatenation of the input matrix.
      *
      * @param theMatrix a character matrix.
      * @return the concatenation of the input matrix.
      */
-    private StringBuilder getStringBuilder(final char[][] theMatrix) {
-        final StringBuilder sb = new StringBuilder();
-        for (char[] row : theMatrix) {
-            for (char space : row) {
-                sb.append(space);
-            }
-            sb.append("\n");
-        }
-        return sb;
+    private String concatenateMatrix(final char[][] theMatrix) {
+        final StringJoiner sj = new StringJoiner("\n");
+        for (char[] row : theMatrix) sj.add(String.valueOf(row));
+        return sj.toString();
     }
 
     // FOR TESTING
     public static void main(final String[] theArgs) {
         Random r = new Random();
-//        Maze maze = new Maze(r.nextInt(7)+3, r.nextInt(7)+3);
-        Maze maze = new Maze(5, 5);
+        Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
         System.out.println(maze);
-//        maze.quickLoad();
-//        System.out.println(maze);
-//        maze.getQuestion(EAST).ifPresent(System.out::println);
+        maze.quickLoad();
+        System.out.println(maze);
     }
 }

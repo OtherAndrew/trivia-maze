@@ -1,6 +1,8 @@
-package model.mazecomponents;
+package model;
 
-import model.Maze;
+import model.mazecomponents.Door;
+import model.mazecomponents.Room;
+import model.mazecomponents.State;
 
 import java.util.*;
 
