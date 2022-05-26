@@ -62,7 +62,7 @@ public class SkeletonGame {
             System.out.println("*** Game won. ***");
         }
         System.out.println("Rooms visited: " + triviaMaze.getNumVisited());
-        System.out.println("Opened doors: " + triviaMaze.getStateNum(OPEN));
+        System.out.println("Doors opened: " + triviaMaze.getStateNum(OPEN));
         System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
         System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
     }
