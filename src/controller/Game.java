@@ -1,6 +1,8 @@
 package controller;
 
 import model.Maze;
+import model.mazecomponents.Door;
+import model.mazecomponents.State;
 import model.questions.Question;
 
 import java.util.Optional;
@@ -11,23 +13,49 @@ import static model.mazecomponents.Direction.*;
 public class Game {
 
     public static void game() {
-        Maze triviaMaze = new Maze(6, 6);
+        Maze triviaMaze = new Maze(3, 3);
         Scanner s = new Scanner(System.in);
-        Optional<Question> q = Optional.empty();
-        while (!triviaMaze.atGoal()) {
+        Optional<Door> d = Optional.empty();
+        System.out.println("Use WASD to move.");
+        System.out.println("Lock doors with q.");
+        System.out.println("Unlock doors with e.");
+        while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
             System.out.println(triviaMaze);
-            System.out.println(triviaMaze.getPlayerLocation().getRow() + ", " + triviaMaze.getPlayerLocation().getCol());
+            System.out.println("Position: "
+                    + triviaMaze.getPlayerLocation().getRow()
+                    + ", "
+                    + triviaMaze.getPlayerLocation().getCol());
             switch (s.nextLine()) {
-                case "w" -> q = triviaMaze.move(NORTH);
-                case "a" -> q = triviaMaze.move(WEST);
-                case "s" -> q = triviaMaze.move(SOUTH);
-                case "d" -> q = triviaMaze.move(EAST);
+                case "w" -> d = triviaMaze.move(NORTH);
+                case "a" -> d = triviaMaze.move(WEST);
+                case "s" -> d = triviaMaze.move(SOUTH);
+                case "d" -> d = triviaMaze.move(EAST);
             }
-            if (q.isPresent()) {
+            if (d.isPresent()) {
+                Door door = d.get();
+                Question q = triviaMaze.getQuestion(door);
                 System.out.println(q);
+                String ans = s.nextLine();
+//                triviaMaze.changeDoorState(door, q, ans);
+                switch (ans) {
+                    case "q" -> {
+                        door.setState(State.LOCKED);
+                        System.out.println("*** Locked. ***");
+                    }
+                    case "e" -> {
+                        door.setState(State.OPEN);
+                        System.out.println("*** Opened. ***");
+                    }
+                }
             }
         }
         System.out.println(triviaMaze);
+        if (triviaMaze.gameLoss()) {
+            System.out.println("*** Game lost. ***");
+        }
+        if (triviaMaze.atGoal()) {
+            System.out.println("*** Game won. ***");
+        }
     }
 
     public static void main(String[] args) {

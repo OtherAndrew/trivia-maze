@@ -172,7 +172,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-//                myQuestionMap.put(door, qf.createQuestion());
+                myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -201,19 +201,18 @@ public class Maze implements Serializable {
      * room exists in the direction and the door is open, then the player will
      * be moved to the adjacent room. If an adjacent room exists in the
      * direction but the door is closed, then the player will remain in place
-     * and a Question for the player to answer will be returned. If an adjacent
-     * room does not exist the player will also remain in place.
+     * and the door itself will be returned. If an adjacent room does not exist
+     * the player will also remain in place.
      *
      * @param theDirection the direction to attempt movement in.
-     * @return a question, if the door in the direction is closed.
+     * @return a door, if the door in the direction is closed.
      */
-    public Optional<Question> move(final Direction theDirection) {
-        Optional<Question> out = Optional.empty();
+    public Optional<Door> move(final Direction theDirection) {
+        Optional<Door> out = Optional.empty();
         if (myPlayerLocation.hasDoor(theDirection)) {
             final Door door = myPlayerLocation.getDoor(theDirection);
             if (door.getState() == CLOSED) {
-                Question question = myQuestionMap.get(door);
-                out = Optional.ofNullable(question);
+                out = Optional.of(door);
             } else if (door.getState() == OPEN) {
                 movePlayer(theDirection);
             }
@@ -227,19 +226,18 @@ public class Maze implements Serializable {
      * opened. If an incorrect answer is provided then the door will be locked.
      * If the door is open or locked then nothing happens.
      *
-     * @param theDirection the direction the door is in.
+     * @param theDoor the door to change the state of.
      * @param theQuestion the question the player answered.
      * @param theAnswer the answer the player provided.
      */
-    public void changeDoorState(final Direction theDirection,
+    public void changeDoorState(final Door theDoor,
                                 final Question theQuestion,
                                 final String theAnswer) {
-        if (myPlayerLocation.getDoorState(theDirection) == CLOSED) {
-            final Door door = myPlayerLocation.getDoor(theDirection);
+        if (theDoor.getState() == CLOSED) {
             if (theQuestion.checkAnswer(theAnswer)) {
-                door.setState(OPEN);
+                theDoor.setState(OPEN);
             } else {
-                door.setState(LOCKED);
+                theDoor.setState(LOCKED);
             }
         }
     }
@@ -264,38 +262,14 @@ public class Maze implements Serializable {
         }
     }
 
-    // TODO: may not be necessary
     /**
-     * Gets the question associated with the door in the specified location.
+     * Gets the question associated with the specified door.
      *
-     * @param theDirection the direction to look in
+     * @param theDoor the door to retrieve a question for.
      * @return the question associated with the door in the specified location.
      */
-    public Optional<Question> getQuestion(final Direction theDirection) {
-        return Optional.ofNullable(myQuestionMap.get(myPlayerLocation.getDoor(theDirection)));
-    }
-
-    // TODO: may not be necessary
-    /**
-     * Gets the door state in the direction specified.
-     *
-     * @param theDirection the direction to look in
-     * @return the state of the door in the direction.
-     */
-    public State getDoorState(final Direction theDirection) {
-        return Optional.ofNullable(myPlayerLocation.getDoorState(theDirection)).orElse(State.WALL);
-    }
-
-    // TODO: may not be necessary
-    /**
-     * Alters specified Door in the player's Room to specified State.
-     *
-     * @param theDirection the Direction of the Door.
-     * @param theState     the new State of the Door.
-     */
-    public void changeDoorState(final Direction theDirection,
-                                final State theState) {
-        Optional.ofNullable(myPlayerLocation.getDoor(theDirection)).ifPresent(door -> door.setState(theState));
+    public Question getQuestion(final Door theDoor) {
+        return myQuestionMap.get(theDoor);
     }
 
     /**

@@ -34,7 +34,7 @@ public class LoadOrStartNewGame {
         });
 
         myNewGameBtn.addActionListener(theAction -> {
-            new Game();
+            Game.game();
             myFrame.dispose();
         });
 
