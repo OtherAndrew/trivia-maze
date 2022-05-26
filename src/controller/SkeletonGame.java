@@ -15,7 +15,7 @@ import static model.mazecomponents.State.*;
 public class SkeletonGame {
 
     public static void game() {
-        Maze triviaMaze = new Maze(7, 7);
+        Maze triviaMaze = new Maze();
         Scanner s = new Scanner(System.in);
         Optional<Door> d = Optional.empty();
         System.out.println("Use WASD to move.");
@@ -29,10 +29,6 @@ public class SkeletonGame {
                     + playerLocation.getRow()
                     + ", "
                     + playerLocation.getCol());
-            System.out.println("Visited rooms: " + triviaMaze.getNumVisited());
-//            System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
-//            System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
-//            System.out.println("Open doors: " + triviaMaze.getStateNum(OPEN));
             switch (s.nextLine()) {
                 case "w" -> d = triviaMaze.move(NORTH);
                 case "a" -> d = triviaMaze.move(WEST);
@@ -65,6 +61,10 @@ public class SkeletonGame {
         if (triviaMaze.atGoal()) {
             System.out.println("*** Game won. ***");
         }
+        System.out.println("Rooms visited: " + triviaMaze.getNumVisited());
+        System.out.println("Opened doors: " + triviaMaze.getStateNum(OPEN));
+        System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
+        System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
     }
 
     public static void main(String[] args) {
