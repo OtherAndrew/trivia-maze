@@ -32,11 +32,11 @@ public class Maze implements Serializable {
      */
     public static final char WALL = '█';
     /**
-     * Maze height in number of rooms.
+     * Number of rows.
      */
     private final int myHeight;
     /**
-     * Maze width in number of rooms.
+     * Number of columns.
      */
     private final int myWidth;
     /**
@@ -56,10 +56,8 @@ public class Maze implements Serializable {
      */
     private Room myGoalLocation;
 
-
     /**
-     * Constructs a maze of arbitrary size. Supplied dimensions should be
-     * larger than 3.
+     * Constructs a maze of arbitrary size greater than 3 x 3.
      *
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
@@ -68,7 +66,7 @@ public class Maze implements Serializable {
             throws IllegalArgumentException {
         if (theRows < 3 || theCols < 3) {
             throw new IllegalArgumentException(
-                    "dimensions passed to Maze should be larger than 3."
+                    "dimensions passed to Maze cannot be less than 3."
                     + " (passed values: " + theRows + ", " + theCols + ")");
         }
         myRooms = generateRoomMatrix(theRows, theCols);

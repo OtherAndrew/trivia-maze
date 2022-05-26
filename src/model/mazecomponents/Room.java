@@ -48,7 +48,13 @@ public class Room implements Serializable {
      * @param theRow the Room's row position.
      * @param theCol the Room's column position.
      */
-    public Room(final int theRow, final int theCol) {
+    public Room(final int theRow, final int theCol)
+            throws IllegalArgumentException{
+        if (theRow < 0 || theCol < 0) {
+            throw new IllegalArgumentException(
+                    "coordinates passed to Room cannot be less than 0"
+                    + " (passed values: " + theRow + ", " + theCol + ")");
+        }
         myRow = theRow;
         myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
