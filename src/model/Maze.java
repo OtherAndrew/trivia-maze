@@ -85,7 +85,7 @@ public class Maze implements Serializable {
         Room[][] roomMatrix = new Room[theRows][theCols];
         for (int row = 0; row < roomMatrix.length; row++) {
             for (int col = 0; col < roomMatrix[row].length; col++) {
-                roomMatrix[row][col] = new Room(col, row);
+                roomMatrix[row][col] = new Room(row, col);
             }
         }
         return roomMatrix;
@@ -129,8 +129,8 @@ public class Maze implements Serializable {
         Room exit;
         do {
             exit = chooseRandomRoom();
-        } while ((Math.abs(theRoom.getX() - exit.getX()) <= myHeight / 2)
-                && (Math.abs(theRoom.getY() - exit.getY()) <= myWidth / 2));
+        } while ((Math.abs(theRoom.getRow() - exit.getRow()) <= myHeight / 2)
+                && (Math.abs(theRoom.getCol() - exit.getCol()) <= myWidth / 2));
         return exit;
     }
 
@@ -252,13 +252,13 @@ public class Maze implements Serializable {
      */
     private void movePlayer(final Direction theDirection) {
         if (myPlayerLocation.getDoorState(theDirection) == CLOSED) {
-            final int x = myPlayerLocation.getX();
-            final int y = myPlayerLocation.getY();
+            final int row = myPlayerLocation.getRow();
+            final int col = myPlayerLocation.getCol();
             switch (theDirection) {
-                case NORTH -> myPlayerLocation = myRooms[x][y - 1];
-                case SOUTH -> myPlayerLocation = myRooms[x][y + 1];
-                case EAST -> myPlayerLocation = myRooms[x + 1][y];
-                case WEST -> myPlayerLocation = myRooms[x - 1][y];
+                case NORTH -> myPlayerLocation = myRooms[row - 1][col];
+                case SOUTH -> myPlayerLocation = myRooms[row + 1][col];
+                case EAST -> myPlayerLocation = myRooms[row][col + 1];
+                case WEST -> myPlayerLocation = myRooms[row][col - 1];
             }
             myPlayerLocation.visit();
         }

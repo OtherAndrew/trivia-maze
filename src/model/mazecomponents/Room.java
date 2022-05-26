@@ -24,11 +24,11 @@ public class Room implements Serializable {
     /**
      * X-coordinate.
      */
-    private final int myX;
+    private final int myRow;
     /**
      * Y-coordinate.
      */
-    private final int myY;
+    private final int myCol;
     /**
      * The doors in each cardinal direction.
      */
@@ -45,12 +45,12 @@ public class Room implements Serializable {
     /**
      * Constructor for a Room instance.
      *
-     * @param theX the Room's x-coordinate.
-     * @param theY the Room's y-coordinate.
+     * @param theRow the Room's row position.
+     * @param theCol the Room's column position.
      */
-    public Room(final int theX, final int theY) {
-        myX = theX;
-        myY = theY;
+    public Room(final int theRow, final int theCol) {
+        myRow = theRow;
+        myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
         mySymbol = UNVISITED_SYMBOL;
@@ -61,8 +61,8 @@ public class Room implements Serializable {
      *
      * @return an integer representing the Room's x-coordinate.
      */
-    public int getX() {
-        return myX;
+    public int getRow() {
+        return myRow;
     }
 
     /**
@@ -70,8 +70,8 @@ public class Room implements Serializable {
      *
      * @return an integer representing the Room's y-coordinate.
      */
-    public int getY() {
-        return myY;
+    public int getCol() {
+        return myCol;
     }
 
     /**
