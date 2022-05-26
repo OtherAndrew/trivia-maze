@@ -1,6 +1,6 @@
 package view;
 
-import model.mazecomponents.Serializer;
+import model.Serializer;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

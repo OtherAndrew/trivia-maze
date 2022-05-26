@@ -85,7 +85,7 @@ public class Maze implements Serializable {
         Room[][] roomMatrix = new Room[theRows][theCols];
         for (int row = 0; row < roomMatrix.length; row++) {
             for (int col = 0; col < roomMatrix[row].length; col++) {
-                roomMatrix[row][col] = new Room(row, col);
+                roomMatrix[row][col] = new Room(col, row);
             }
         }
         return roomMatrix;
@@ -209,12 +209,14 @@ public class Maze implements Serializable {
      */
     public Optional<Question> move(final Direction theDirection) {
         Optional<Question> out = Optional.empty();
-        Door door = myPlayerLocation.getDoor(theDirection);
-        if (door.getState() == CLOSED) {
-            Question question = myQuestionMap.get(door);
-            out = Optional.ofNullable(question);
-        } else if (door.getState() == OPEN) {
-            movePlayer(theDirection);
+        if (myPlayerLocation.hasDoor(theDirection)) {
+            final Door door = myPlayerLocation.getDoor(theDirection);
+            if (door.getState() == OPEN) {
+                Question question = myQuestionMap.get(door);
+                out = Optional.ofNullable(question);
+            } else if (door.getState() == CLOSED) {
+                movePlayer(theDirection);
+            }
         }
         return out;
     }
@@ -249,7 +251,7 @@ public class Maze implements Serializable {
      * @param theDirection the direction to move the player in.
      */
     private void movePlayer(final Direction theDirection) {
-        if (myPlayerLocation.getDoorState(theDirection) == OPEN) {
+        if (myPlayerLocation.getDoorState(theDirection) == CLOSED) {
             final int x = myPlayerLocation.getX();
             final int y = myPlayerLocation.getY();
             switch (theDirection) {
