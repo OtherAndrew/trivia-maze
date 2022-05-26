@@ -19,12 +19,14 @@ public class Game {
         System.out.println("Use WASD to move.");
         System.out.println("Lock doors with q.");
         System.out.println("Unlock doors with e.");
+        System.out.println();
         while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
             System.out.println(triviaMaze);
             System.out.println("Position: "
                     + triviaMaze.getPlayerLocation().getRow()
                     + ", "
                     + triviaMaze.getPlayerLocation().getCol());
+            System.out.println("Visited rooms: " + triviaMaze.getNumVisited());
             switch (s.nextLine()) {
                 case "w" -> d = triviaMaze.move(NORTH);
                 case "a" -> d = triviaMaze.move(WEST);
