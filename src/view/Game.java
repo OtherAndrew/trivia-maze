@@ -19,18 +19,6 @@ public class Game {
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
 
-        myRoomButton = new JButton("Room");
-        myMapButton = new JButton("Map");
-        myRoomButton.addActionListener(theAction -> {
-            new RoomDisplay();
-            myFrame.dispose();
-        });
-        myMapButton.addActionListener(theAction -> {
-            new MapDisplay();
-            myFrame.dispose();
-        });
-        myFrame.add(myRoomButton);
-        myFrame.add(myMapButton);
 //        for (int row = 0; row < maze.length; row++) {
 //            for (int col = 0; col < maze[0].length; col++) {
 //                JButton tile = makeTile(maze[row][col]);
