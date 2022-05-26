@@ -26,7 +26,7 @@ public class Maze implements Serializable {
     /**
      * Represents the player position.
      */
-    public static final char PLAYER_SYMBOL = 0;
+    public static final char PLAYER_SYMBOL = '0';
     /**
      * Represents maze walls.
      */
@@ -440,7 +440,7 @@ public class Maze implements Serializable {
     // FOR TESTING
     public static void main(final String[] theArgs) {
         Random r = new Random();
-        Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
+        Maze maze = new Maze(3, 3);
         System.out.println(maze);
         maze.quickLoad();
         System.out.println(maze);

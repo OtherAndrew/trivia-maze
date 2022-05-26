@@ -13,7 +13,7 @@ import static model.mazecomponents.Direction.*;
 public class SkeletonGame {
 
     public static void game() {
-        Maze triviaMaze = new Maze(3, 3);
+        Maze triviaMaze = new Maze(4, 3);
         Scanner s = new Scanner(System.in);
         Optional<Door> d = Optional.empty();
         System.out.println("Use WASD to move.");
