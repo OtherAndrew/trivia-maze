@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import static model.mazecomponents.Direction.*;
 
-public class Game {
+public class SkeletonGame {
 
     public static void game() {
         Maze triviaMaze = new Maze(3, 3);

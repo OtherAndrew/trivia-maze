@@ -1,6 +1,6 @@
 package view;
 
-import controller.Game;
+import controller.SkeletonGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,7 @@ public class LoadOrStartNewGame {
         });
 
         myNewGameBtn.addActionListener(theAction -> {
-            Game.game();
+            new Game();
             myFrame.dispose();
         });
 
