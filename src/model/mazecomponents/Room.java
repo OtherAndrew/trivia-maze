@@ -48,18 +48,16 @@ public class Room implements Serializable {
      * @param theRow the Room's row position.
      * @param theCol the Room's column position.
      */
-    public Room(final int theRow, final int theCol)
-            throws IllegalArgumentException{
-        if (theRow < 0 || theCol < 0) {
-            throw new IllegalArgumentException(
-                    "coordinates passed to Room cannot be less than 0"
-                    + " (passed values: " + theRow + ", " + theCol + ")");
-        }
+    public Room(final int theRow, final int theCol) {
         myRow = theRow;
         myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
         mySymbol = UNVISITED_SYMBOL;
+    }
+
+    public Room getOtherSide(final Direction theDirection) {
+        return getDoor(theDirection).getOtherSide(this);
     }
 
     /**
@@ -99,16 +97,6 @@ public class Room implements Serializable {
     }
 
     /**
-     * Adds a Door at the specified direction.
-     *
-     * @param theDirection the direction to add the Door at.
-     * @param theDoor      the Door to add.
-     */
-    public void addDoor(final Direction theDirection, final Door theDoor) {
-        myDoors.put(theDirection, theDoor);
-    }
-
-    /**
      * Determines if a Door exists in the direction specified.
      *
      * @param theDirection the direction to check in.
@@ -119,15 +107,23 @@ public class Room implements Serializable {
     }
 
     /**
-     * Checks if the state of the Door matches the state given.
+     * Gets the door in the direction.
      *
      * @param theDirection the direction the door is in.
-     * @param theState     the state to check for.
-     * @return if the Door state matches the given state.
+     * @return the door in the specified direction.
      */
-    public boolean checkDoorState(final Direction theDirection,
-                                  final State theState) {
-        return getDoorState(theDirection) == theState;
+    public Door getDoor(final Direction theDirection) {
+        return myDoors.get(theDirection);
+    }
+
+    /**
+     * Adds a Door at the specified direction.
+     *
+     * @param theDirection the direction to add the Door at.
+     * @param theDoor      the Door to add.
+     */
+    public void addDoor(final Direction theDirection, final Door theDoor) {
+        myDoors.put(theDirection, theDoor);
     }
 
     /**
@@ -140,15 +136,11 @@ public class Room implements Serializable {
         return getDoor(theDirection).getState();
     }
 
-    /**
-     * Gets the door in the direction.
-     *
-     * @param theDirection the direction the door is in.
-     * @return the door in the specified direction.
-     */
-    public Door getDoor(final Direction theDirection) {
-        return myDoors.get(theDirection);
+    public void setDoorState(final Direction theDirection,
+                             final State theState) {
+        getDoor(theDirection).setState(theState);
     }
+
 
     /**
      * Visits this room.

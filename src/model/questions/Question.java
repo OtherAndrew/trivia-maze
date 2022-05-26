@@ -35,6 +35,8 @@ public abstract class Question implements Serializable {
      */
     public abstract boolean checkAnswer(final String theAnswer);
 
+    // public abstract void display() for GUI display
+
     /**
      * @return the question query.
      */

@@ -1,7 +1,5 @@
 package view;
 
-import controller.SkeletonGame;
-
 import javax.swing.*;
 import java.awt.*;
 

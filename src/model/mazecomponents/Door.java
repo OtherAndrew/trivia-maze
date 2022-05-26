@@ -2,7 +2,6 @@ package model.mazecomponents;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Arrays;
 
 import static model.mazecomponents.State.*;
 
@@ -76,34 +75,11 @@ public class Door implements Serializable {
         myRoom2.addDoor(myDirection2, this);
     }
 
-    /**
-     * Determines if this door connects to a room.
-     *
-     * @param theRoom the room to check for connection
-     * @return if theRoom connects to this door.
-     */
-    public boolean connects(final Room theRoom) {
-        return myRoom1.equals(theRoom) || myRoom2.equals(theRoom);
-    }
-
     public Room getOtherSide(final Room theRoom) {
         Room result = null;
         if (myRoom1.equals(theRoom)) result = myRoom2;
         else if (myRoom2.equals(theRoom)) result = myRoom1;
         return result;
-    }
-
-    /**
-     * Gets the direction of this door in a room.
-     *
-     * @param theRoom the room to check.
-     * @return the wall this door is on.
-     */
-    public Direction getDirection(final Room theRoom) {
-        Direction direction = null;
-        if (myRoom1.equals(theRoom)) direction = myDirection1;
-        else if (myRoom2.equals(theRoom)) direction = myDirection2;
-        return direction;
     }
 
     /**
