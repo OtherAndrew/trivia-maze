@@ -31,6 +31,14 @@ public class Maze implements Serializable {
      */
     public static final char WALL = '█';
     /**
+     * Maze height in number of rooms.
+     */
+    private final int myHeight;
+    /**
+     * Maze width in number of rooms.
+     */
+    private final int myWidth;
+    /**
      * The rooms in the maze.
      */
     private Room[][] myRooms;
@@ -47,6 +55,7 @@ public class Maze implements Serializable {
      */
     private Room myGoalLocation;
 
+
     /**
      * Constructs a maze of arbitrary size.
      *
@@ -55,6 +64,8 @@ public class Maze implements Serializable {
      */
     public Maze(final int theRows, final int theCols) {
         myRooms = generateRoomMatrix(theRows, theCols);
+        myWidth = myRooms[0].length;
+        myHeight = myRooms.length;
         myQuestionMap = new HashMap<>();
         myPlayerLocation = chooseRandomRoom();
         myPlayerLocation.visit();
@@ -79,30 +90,50 @@ public class Maze implements Serializable {
         return roomMatrix;
     }
 
+    /**
+     * Chooses a random room from the maze.
+     *
+     * @return a random room from the maze.
+     */
     private Room chooseRandomRoom() {
         final Random rand = new Random();
         final int x, y;
         if (rand.nextBoolean()) {
-            x = rand.nextInt(myRooms.length - 2) + 1;
-            if (rand.nextBoolean()) y = 0;
-            else y = myRooms[0].length - 1;
+            x = rand.nextInt(myHeight - 2) + 1;
+            if (rand.nextBoolean()) {
+                y = 0;
+            } else {
+                y = myWidth - 1;
+            }
         } else {
-            y = rand.nextInt(myRooms[0].length);
-            if (rand.nextBoolean()) x = 0;
-            else x = myRooms.length - 1;
+            y = rand.nextInt(myWidth);
+            if (rand.nextBoolean()) {
+                x = 0;
+            } else {
+                x = myHeight - 1;
+            }
         }
         return myRooms[x][y];
     }
 
+    /**
+     * Picks a random room from the maze that is at least half a maze
+     * length/width away from the given room.
+     *
+     * @param theRoom the room to compare to.
+     * @return a room that is at least half a maze length/width away from the
+     * given room
+     */
     private Room chooseExit(final Room theRoom) {
         Room exit;
         do {
             exit = chooseRandomRoom();
-        } while ((Math.abs(theRoom.getX() - exit.getX()) <= myRooms.length / 2)
-                && (Math.abs(theRoom.getY() - exit.getY()) <= myRooms[0].length / 2));
+        } while ((Math.abs(theRoom.getX() - exit.getX())
+                    <= myHeight / 2)
+                && (Math.abs(theRoom.getY() - exit.getY())
+                    <= myWidth / 2));
         return exit;
     }
-
 
     /**
      * Generates a list of doors for every possible door position.
@@ -111,9 +142,9 @@ public class Maze implements Serializable {
      */
     private LinkedList<Door> generatePossibleDoors() {
         final LinkedList<Door> doors = new LinkedList<>();
-        for (int row = 0; row < myRooms.length; row++) {
+        for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myRooms[row].length; col++) {
-                if (row + 1 < myRooms.length) {
+                if (row + 1 < myHeight) {
                     doors.push(new Door(myRooms[row][col], SOUTH,
                             myRooms[row + 1][col], NORTH));
                 }
@@ -146,6 +177,14 @@ public class Maze implements Serializable {
             }
         }
         qf.cleanUp();
+    }
+
+    public int getWidth() {
+        return myWidth;
+    }
+
+    public int getHeight() {
+        return myHeight;
     }
 
     /**
@@ -351,7 +390,7 @@ public class Maze implements Serializable {
      */
     private char[][] generateWallMatrix() {
         final char[][] mazeFrame =
-                new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
+                new char[myHeight * 2 + 1][myWidth * 2 + 1];
         for (char[] row : mazeFrame) Arrays.fill(row, WALL);
         return mazeFrame;
     }
