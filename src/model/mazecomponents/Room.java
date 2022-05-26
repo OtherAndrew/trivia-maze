@@ -22,13 +22,13 @@ public class Room implements Serializable {
      */
     public static final char VISITED_SYMBOL = '.';
     /**
-     * X-coordinate.
+     * Row position.
      */
-    private final int myX;
+    private final int myRow;
     /**
-     * Y-coordinate.
+     * Column position.
      */
-    private final int myY;
+    private final int myCol;
     /**
      * The doors in each cardinal direction.
      */
@@ -45,12 +45,18 @@ public class Room implements Serializable {
     /**
      * Constructor for a Room instance.
      *
-     * @param theX the Room's x-coordinate.
-     * @param theY the Room's y-coordinate.
+     * @param theRow the Room's row position.
+     * @param theCol the Room's column position.
      */
-    public Room(final int theX, final int theY) {
-        myX = theX;
-        myY = theY;
+    public Room(final int theRow, final int theCol)
+            throws IllegalArgumentException{
+        if (theRow < 0 || theCol < 0) {
+            throw new IllegalArgumentException(
+                    "coordinates passed to Room cannot be less than 0"
+                    + " (passed values: " + theRow + ", " + theCol + ")");
+        }
+        myRow = theRow;
+        myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
         mySymbol = UNVISITED_SYMBOL;
@@ -59,19 +65,19 @@ public class Room implements Serializable {
     /**
      * Gets this Room's x-coordinate.
      *
-     * @return an integer representing the Room's x-coordinate.
+     * @return an integer representing the Room's row position.
      */
-    public int getX() {
-        return myX;
+    public int getRow() {
+        return myRow;
     }
 
     /**
      * Gets this Room's y-coordinate.
      *
-     * @return an integer representing the Room's y-coordinate.
+     * @return an integer representing the Room's column position.
      */
-    public int getY() {
-        return myY;
+    public int getCol() {
+        return myCol;
     }
 
     /**

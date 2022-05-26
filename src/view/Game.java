@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package view;
 
 import javax.swing.*;
@@ -61,3 +62,11 @@ public class Game {
         Game game = new Game();
     }
 }
+=======
+package view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+>>>>>>> 90b18585b7facb2fa6edd17437b5e3028c4b0c48

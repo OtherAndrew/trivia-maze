@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import static model.mazecomponents.Direction.*;
+import static model.mazecomponents.State.*;
 
 /**
  * Maze is a class that represents a maze with doors.
@@ -25,11 +26,19 @@ public class Maze implements Serializable {
     /**
      * Represents the player position.
      */
-    public static final char PLAYER_SYMBOL = 0;
+    public static final char PLAYER_SYMBOL = '+';
     /**
      * Represents maze walls.
      */
     public static final char WALL = '█';
+    /**
+     * Number of rows.
+     */
+    private int myHeight;
+    /**
+     * Number of columns.
+     */
+    private int myWidth;
     /**
      * The rooms in the maze.
      */
@@ -48,18 +57,33 @@ public class Maze implements Serializable {
     private Room myGoalLocation;
 
     /**
-     * Constructs a maze of arbitrary size.
+     * Constructs a maze of arbitrary size greater than 3 x 3.
      *
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
      */
-    public Maze(final int theRows, final int theCols) {
+    public Maze(final int theRows, final int theCols)
+            throws IllegalArgumentException {
+        if (theRows < 3 || theCols < 3) {
+            throw new IllegalArgumentException(
+                    "dimensions passed to Maze cannot be less than 3."
+                    + " (passed values: " + theRows + ", " + theCols + ")");
+        }
         myRooms = generateRoomMatrix(theRows, theCols);
+        myHeight = myRooms.length;
+        myWidth = myRooms[0].length;
         myQuestionMap = new HashMap<>();
         myPlayerLocation = chooseRandomRoom();
         myPlayerLocation.visit();
         myGoalLocation = chooseExit(myPlayerLocation);
         generateMaze(generatePossibleDoors());
+    }
+
+    /**
+     * Constructs a maze of minimum size (3 x 3).
+     */
+    public Maze() {
+        this(3, 3);
     }
 
     /**
@@ -79,30 +103,48 @@ public class Maze implements Serializable {
         return roomMatrix;
     }
 
+    /**
+     * Chooses a random room from the maze.
+     *
+     * @return a random room from the maze.
+     */
     private Room chooseRandomRoom() {
         final Random rand = new Random();
-        final int x, y;
+        final int row, col;
         if (rand.nextBoolean()) {
-            x = rand.nextInt(myRooms.length - 2) + 1;
-            if (rand.nextBoolean()) y = 0;
-            else y = myRooms[0].length - 1;
+            row = rand.nextInt(myHeight - 2) + 1;
+            if (rand.nextBoolean()) {
+                col = 0;
+            } else {
+                col = myWidth - 1;
+            }
         } else {
-            y = rand.nextInt(myRooms[0].length);
-            if (rand.nextBoolean()) x = 0;
-            else x = myRooms.length - 1;
+            col = rand.nextInt(myWidth);
+            if (rand.nextBoolean()) {
+                row = 0;
+            } else {
+                row = myHeight - 1;
+            }
         }
-        return myRooms[x][y];
+        return myRooms[row][col];
     }
 
+    /**
+     * Picks a random room from the maze that is at least half a maze
+     * length/width away from the given room.
+     *
+     * @param theRoom the room to compare to.
+     * @return a room that is at least half a maze length/width away from the
+     * given room
+     */
     private Room chooseExit(final Room theRoom) {
         Room exit;
         do {
             exit = chooseRandomRoom();
-        } while ((Math.abs(theRoom.getX() - exit.getX()) <= myRooms.length / 2)
-                && (Math.abs(theRoom.getY() - exit.getY()) <= myRooms[0].length / 2));
+        } while ((Math.abs(theRoom.getRow() - exit.getRow()) <= myHeight / 2)
+                && (Math.abs(theRoom.getCol() - exit.getCol()) <= myWidth / 2));
         return exit;
     }
-
 
     /**
      * Generates a list of doors for every possible door position.
@@ -111,13 +153,13 @@ public class Maze implements Serializable {
      */
     private LinkedList<Door> generatePossibleDoors() {
         final LinkedList<Door> doors = new LinkedList<>();
-        for (int row = 0; row < myRooms.length; row++) {
-            for (int col = 0; col < myRooms[row].length; col++) {
-                if (row + 1 < myRooms.length) {
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                if (row + 1 < myHeight) {
                     doors.push(new Door(myRooms[row][col], SOUTH,
                             myRooms[row + 1][col], NORTH));
                 }
-                if (col + 1 < myRooms[row].length) {
+                if (col + 1 < myWidth) {
                     doors.push(new Door(myRooms[row][col], EAST,
                             myRooms[row][col + 1], WEST));
                 }
@@ -142,66 +184,104 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-//                myQuestionMap.put(door, qf.createQuestion());
+                // myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
     }
 
     /**
-     * Moves the player to an adjacent room based on the direction.
+     * Gets the maze width.
+     *
+     * @return the width of the maze.
+     */
+    public int getWidth() {
+        return myWidth;
+    }
+
+    /**
+     * Gets the maze height.
+     *
+     * @return the height of the maze.
+     */
+    public int getHeight() {
+        return myHeight;
+    }
+
+    /**
+     * Attempts to move the player in the specified direction. If an adjacent
+     * room exists in the direction and the door is open, then the player will
+     * be moved to the adjacent room. If an adjacent room exists in the
+     * direction but the door is closed, then the player will remain in place
+     * and the door itself will be returned. If an adjacent room does not exist
+     * the player will also remain in place.
+     *
+     * @param theDirection the direction to attempt movement in.
+     * @return a door, if the door in the direction is closed.
+     */
+    public Optional<Door> move(final Direction theDirection) {
+        Optional<Door> out = Optional.empty();
+        if (myPlayerLocation.hasDoor(theDirection)) {
+            final Door door = myPlayerLocation.getDoor(theDirection);
+            if (door.getState() == CLOSED) {
+                out = Optional.of(door);
+            } else if (door.getState() == OPEN) {
+                movePlayer(theDirection);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Changes the state of a closed door based on the truth value of a question
+     * and answer. If a correct answer is provided then the door will be
+     * opened. If an incorrect answer is provided then the door will be locked.
+     * If the door is open or locked then nothing happens.
+     *
+     * @param theDoor the door to change the state of.
+     * @param theQuestion the question the player answered.
+     * @param theAnswer the answer the player provided.
+     */
+    public void changeDoorState(final Door theDoor,
+                                final Question theQuestion,
+                                final String theAnswer) {
+        if (theDoor.getState() == CLOSED) {
+            if (theQuestion.checkAnswer(theAnswer)) {
+                theDoor.setState(OPEN);
+            } else {
+                theDoor.setState(LOCKED);
+            }
+        }
+    }
+
+    /**
+     * Moves the player to an adjacent room based on the direction. If the move
+     * is not possible the player stays where they are.
      *
      * @param theDirection the direction to move the player in.
-     * @return if the move was successful.
      */
-    public boolean move(final Direction theDirection) {
-        boolean successfulMove = false;
-        final int x = myPlayerLocation.getX();
-        final int y = myPlayerLocation.getY();
-        State doorState = myPlayerLocation.getDoorState(theDirection);
-        if (doorState == State.OPEN || doorState == State.CLOSED) {
-            successfulMove = true;
+    private void movePlayer(final Direction theDirection) {
+        if (myPlayerLocation.getDoorState(theDirection) == OPEN) {
+            final int row = myPlayerLocation.getRow();
+            final int col = myPlayerLocation.getCol();
             switch (theDirection) {
-                case NORTH -> myPlayerLocation = myRooms[x][y - 1];
-                case EAST -> myPlayerLocation = myRooms[x + 1][y];
-                case SOUTH -> myPlayerLocation = myRooms[x][y + 1];
-                case WEST -> myPlayerLocation = myRooms[x - 1][y];
+                case NORTH -> myPlayerLocation = myRooms[row - 1][col];
+                case SOUTH -> myPlayerLocation = myRooms[row + 1][col];
+                case EAST -> myPlayerLocation = myRooms[row][col + 1];
+                case WEST -> myPlayerLocation = myRooms[row][col - 1];
             }
             myPlayerLocation.visit();
         }
-        return successfulMove;
     }
 
-
     /**
-     * Gets the question associated with the door in the specified location.
+     * Gets the question associated with the specified door.
      *
-     * @param theDirection the direction to look in
+     * @param theDoor the door to retrieve a question for.
      * @return the question associated with the door in the specified location.
      */
-    public Optional<Question> getQuestion(final Direction theDirection) {
-        return Optional.ofNullable(myQuestionMap.get(myPlayerLocation.getDoor(theDirection)));
-    }
-
-    /**
-     * Gets the door state in the direction specified.
-     *
-     * @param theDirection the direction to look in
-     * @return the state of the door in the direction.
-     */
-    public State getDoorState(final Direction theDirection) {
-        return Optional.ofNullable(myPlayerLocation.getDoorState(theDirection)).orElse(State.WALL);
-    }
-
-    /**
-     * Alters specified Door in the player's Room to specified State.
-     *
-     * @param theDirection the Direction of the Door.
-     * @param theState     the new State of the Door.
-     */
-    public void changeDoorState(final Direction theDirection,
-                                final State theState) {
-        Optional.ofNullable(myPlayerLocation.getDoor(theDirection)).ifPresent(door -> door.setState(theState));
+    public Question getQuestion(final Door theDoor) {
+        return myQuestionMap.get(theDoor);
     }
 
     /**
@@ -245,6 +325,7 @@ public class Maze implements Serializable {
 
         @Serial
         private static final long serialVersionUID = -4739895132858153478L;
+
         /**
          * The rooms in the maze.
          */
@@ -292,6 +373,8 @@ public class Maze implements Serializable {
 
     private void restore(final Memento theMemento) {
         myRooms = theMemento.mySavedRooms;
+        myHeight = myRooms.length;
+        myWidth = myRooms[0].length;
         myQuestionMap = theMemento.mySavedQuestionMap;
         myPlayerLocation = theMemento.mySavedPlayerLocation;
         myGoalLocation = theMemento.mySavedGoalLocation;
@@ -313,6 +396,16 @@ public class Maze implements Serializable {
         return numVisited;
     }
 
+    public int getStateNum(final State theState) {
+        int numMatching = 0;
+        for (Door door : myQuestionMap.keySet()) {
+            if (door.getState() == theState) {
+                numMatching++;
+            }
+        }
+        return numMatching;
+    }
+
     /**
      * Returns a String representation of the maze.
      *
@@ -322,9 +415,9 @@ public class Maze implements Serializable {
     public String toString() {
         final char[][] out = generateWallMatrix();
         for (int row = 1, mazeRow = 0; row < out.length - 1;
-             row += 2, mazeRow++) {
+                row += 2, mazeRow++) {
             for (int col = 1, mazeCol = 0; col < out[row].length - 1;
-                 col += 2, mazeCol++) {
+                    col += 2, mazeCol++) {
                 final Room currentRoom = myRooms[mazeRow][mazeCol];
                 if (currentRoom.equals(myPlayerLocation)) {
                     out[row][col] = PLAYER_SYMBOL;
@@ -350,9 +443,10 @@ public class Maze implements Serializable {
      * @return a matrix of walls based on the size of the maze.
      */
     private char[][] generateWallMatrix() {
-        final char[][] mazeFrame =
-                new char[myRooms.length * 2 + 1][myRooms[0].length * 2 + 1];
-        for (char[] row : mazeFrame) Arrays.fill(row, WALL);
+        final char[][] mazeFrame = new char[myHeight * 2 + 1][myWidth * 2 + 1];
+        for (char[] row : mazeFrame) {
+            Arrays.fill(row, WALL);
+        }
         return mazeFrame;
     }
 
@@ -364,7 +458,9 @@ public class Maze implements Serializable {
      */
     private String concatenateMatrix(final char[][] theMatrix) {
         final StringJoiner sj = new StringJoiner("\n");
-        for (char[] row : theMatrix) sj.add(String.valueOf(row));
+        for (char[] row : theMatrix) {
+            sj.add(String.valueOf(row));
+        }
         return sj.toString();
     }
 
@@ -373,6 +469,7 @@ public class Maze implements Serializable {
         Random r = new Random();
         Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
         System.out.println(maze);
+//        maze.quickSave();
         maze.quickLoad();
         System.out.println(maze);
     }
