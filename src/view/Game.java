@@ -6,8 +6,9 @@ import java.awt.*;
 public class Game {
 
     private JFrame myFrame;
-    private JPanel myMapPanel, myDirectionPanel, myQuestionPanel, myAnswerPanle;
+    private JPanel myMapPanel, myDirectionPanel, myQuestionPanel, myAnswerPanel;
     private JButton myRoomButton, myMapButton, myEastButton, myWestButton, myNorthButton, mySouthButton;
+    private JLabel myQuestion;
     private final String myTitle = "Trivia Maze", myWindowIconPath = "assets\\Landing_page_01.png";
     private final Dimension myPreferredSize = new Dimension(1000,1000);
 
@@ -22,12 +23,25 @@ public class Game {
 
         // Top left
         myMapPanel = new JPanel();
+        myMapPanel.setBackground(new Color(255, 44,56));
         // TODO Show current room and highlight doors
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 250;
-        gbc.gridy = 0;
+
+        gbc.ipady = 500;
+        gbc.ipadx = myFrame.getWidth()/2;
         gbc.gridx = 0;
-        myFrame.add(myMapPanel);
+        gbc.gridy = 0;
+        myFrame.add(myMapPanel, gbc);
+        gbc.ipady = 0;
+        gbc.ipadx = 0;
+
+        // Top right
+        myQuestionPanel = new JPanel();
+
+        myQuestion = new JLabel("The question"); // Get the question corresponding to selected door and display it
+        myQuestionPanel.add(myQuestion, BorderLayout.CENTER);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        myFrame.add(myQuestionPanel, gbc);
 
         // Lower left
         myDirectionPanel = new JPanel(new GridLayout(1, 4));
@@ -40,13 +54,12 @@ public class Game {
         myDirectionPanel.add(myNorthButton);
         myDirectionPanel.add(mySouthButton);
         myDirectionPanel.add(myWestButton);
-        gbc.gridy = 1;
         gbc.gridx = 0;
-        myFrame.add(myDirectionPanel);
-
-        // Top right
+        gbc.gridy = 1;
+        myFrame.add(myDirectionPanel, gbc);
 
         // Lower right
+
 
 
 
