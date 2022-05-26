@@ -34,11 +34,11 @@ public class Maze implements Serializable {
     /**
      * Number of rows.
      */
-    private final int myHeight;
+    private int myHeight;
     /**
      * Number of columns.
      */
-    private final int myWidth;
+    private int myWidth;
     /**
      * The rooms in the maze.
      */
@@ -70,8 +70,8 @@ public class Maze implements Serializable {
                     + " (passed values: " + theRows + ", " + theCols + ")");
         }
         myRooms = generateRoomMatrix(theRows, theCols);
-        myWidth = myRooms[0].length;
         myHeight = myRooms.length;
+        myWidth = myRooms[0].length;
         myQuestionMap = new HashMap<>();
         myPlayerLocation = chooseRandomRoom();
         myPlayerLocation.visit();
@@ -110,23 +110,23 @@ public class Maze implements Serializable {
      */
     private Room chooseRandomRoom() {
         final Random rand = new Random();
-        final int x, y;
+        final int row, col;
         if (rand.nextBoolean()) {
-            x = rand.nextInt(myHeight - 2) + 1;
+            row = rand.nextInt(myHeight - 2) + 1;
             if (rand.nextBoolean()) {
-                y = 0;
+                col = 0;
             } else {
-                y = myWidth - 1;
+                col = myWidth - 1;
             }
         } else {
-            y = rand.nextInt(myWidth);
+            col = rand.nextInt(myWidth);
             if (rand.nextBoolean()) {
-                x = 0;
+                row = 0;
             } else {
-                x = myHeight - 1;
+                row = myHeight - 1;
             }
         }
-        return myRooms[x][y];
+        return myRooms[row][col];
     }
 
     /**
@@ -184,7 +184,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                myQuestionMap.put(door, qf.createQuestion());
+                // myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -325,6 +325,7 @@ public class Maze implements Serializable {
 
         @Serial
         private static final long serialVersionUID = -4739895132858153478L;
+
         /**
          * The rooms in the maze.
          */
@@ -372,6 +373,8 @@ public class Maze implements Serializable {
 
     private void restore(final Memento theMemento) {
         myRooms = theMemento.mySavedRooms;
+        myHeight = myRooms.length;
+        myWidth = myRooms[0].length;
         myQuestionMap = theMemento.mySavedQuestionMap;
         myPlayerLocation = theMemento.mySavedPlayerLocation;
         myGoalLocation = theMemento.mySavedGoalLocation;
@@ -441,7 +444,9 @@ public class Maze implements Serializable {
      */
     private char[][] generateWallMatrix() {
         final char[][] mazeFrame = new char[myHeight * 2 + 1][myWidth * 2 + 1];
-        for (char[] row : mazeFrame) Arrays.fill(row, WALL);
+        for (char[] row : mazeFrame) {
+            Arrays.fill(row, WALL);
+        }
         return mazeFrame;
     }
 
@@ -462,8 +467,9 @@ public class Maze implements Serializable {
     // FOR TESTING
     public static void main(final String[] theArgs) {
         Random r = new Random();
-        Maze maze = new Maze(3, 3);
+        Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
         System.out.println(maze);
+//        maze.quickSave();
         maze.quickLoad();
         System.out.println(maze);
     }
