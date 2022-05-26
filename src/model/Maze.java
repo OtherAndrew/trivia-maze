@@ -26,7 +26,7 @@ public class Maze implements Serializable {
     /**
      * Represents the player position.
      */
-    public static final char PLAYER_SYMBOL = '●';
+    public static final char PLAYER_SYMBOL = 0;
     /**
      * Represents maze walls.
      */
