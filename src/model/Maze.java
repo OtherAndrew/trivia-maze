@@ -58,12 +58,19 @@ public class Maze implements Serializable {
 
 
     /**
-     * Constructs a maze of arbitrary size.
+     * Constructs a maze of arbitrary size. Supplied dimensions should be
+     * larger than 3.
      *
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
      */
-    public Maze(final int theRows, final int theCols) {
+    public Maze(final int theRows, final int theCols)
+            throws IllegalArgumentException {
+        if (theRows < 3 || theCols < 3) {
+            throw new IllegalArgumentException(
+                    "dimensions passed to Maze should be larger than 3."
+                    + " (passed values: " + theRows + ", " + theCols + ")");
+        }
         myRooms = generateRoomMatrix(theRows, theCols);
         myWidth = myRooms[0].length;
         myHeight = myRooms.length;
@@ -72,6 +79,13 @@ public class Maze implements Serializable {
         myPlayerLocation.visit();
         myGoalLocation = chooseExit(myPlayerLocation);
         generateMaze(generatePossibleDoors());
+    }
+
+    /**
+     * Constructs a maze of minimum size (3 x 3).
+     */
+    public Maze() {
+        this(3, 3);
     }
 
     /**
