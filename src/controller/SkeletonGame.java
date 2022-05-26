@@ -2,6 +2,7 @@ package controller;
 
 import model.Maze;
 import model.mazecomponents.Door;
+import model.mazecomponents.Room;
 import model.mazecomponents.State;
 import model.questions.Question;
 
@@ -14,7 +15,7 @@ import static model.mazecomponents.State.*;
 public class SkeletonGame {
 
     public static void game() {
-        Maze triviaMaze = new Maze();
+        Maze triviaMaze = new Maze(7, 7);
         Scanner s = new Scanner(System.in);
         Optional<Door> d = Optional.empty();
         System.out.println("Use WASD to move.");
@@ -23,10 +24,11 @@ public class SkeletonGame {
         System.out.println();
         while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
             System.out.println(triviaMaze);
+            Room playerLocation = triviaMaze.getPlayerLocation();
             System.out.println("Position: "
-                    + triviaMaze.getPlayerLocation().getRow()
+                    + playerLocation.getRow()
                     + ", "
-                    + triviaMaze.getPlayerLocation().getCol());
+                    + playerLocation.getCol());
             System.out.println("Visited rooms: " + triviaMaze.getNumVisited());
 //            System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
 //            System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
@@ -51,6 +53,7 @@ public class SkeletonGame {
                     case "e" -> {
                         door.setState(State.OPEN);
                         System.out.println("*** Opened. ***");
+                        triviaMaze.move(door.getDirection(playerLocation));
                     }
                 }
             }

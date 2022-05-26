@@ -113,18 +113,12 @@ public class Maze implements Serializable {
         final int x, y;
         if (rand.nextBoolean()) {
             x = rand.nextInt(myHeight - 2) + 1;
-            if (rand.nextBoolean()) {
-                y = 0;
-            } else {
-                y = myWidth - 1;
-            }
+            if (rand.nextBoolean()) y = 0;
+            else y = myWidth - 1;
         } else {
             y = rand.nextInt(myWidth);
-            if (rand.nextBoolean()) {
-                x = 0;
-            } else {
-                x = myHeight - 1;
-            }
+            if (rand.nextBoolean()) x = 0;
+            else x = myHeight - 1;
         }
         return myRooms[x][y];
     }
