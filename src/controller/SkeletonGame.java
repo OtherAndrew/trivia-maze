@@ -9,11 +9,12 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import static model.mazecomponents.Direction.*;
+import static model.mazecomponents.State.*;
 
 public class SkeletonGame {
 
     public static void game() {
-        Maze triviaMaze = new Maze(4, 3);
+        Maze triviaMaze = new Maze();
         Scanner s = new Scanner(System.in);
         Optional<Door> d = Optional.empty();
         System.out.println("Use WASD to move.");
@@ -27,6 +28,9 @@ public class SkeletonGame {
                     + ", "
                     + triviaMaze.getPlayerLocation().getCol());
             System.out.println("Visited rooms: " + triviaMaze.getNumVisited());
+//            System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
+//            System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
+//            System.out.println("Open doors: " + triviaMaze.getStateNum(OPEN));
             switch (s.nextLine()) {
                 case "w" -> d = triviaMaze.move(NORTH);
                 case "a" -> d = triviaMaze.move(WEST);
@@ -41,7 +45,7 @@ public class SkeletonGame {
 //                triviaMaze.changeDoorState(door, q, ans);
                 switch (ans) {
                     case "q" -> {
-                        door.setState(State.LOCKED);
+                        door.setState(LOCKED);
                         System.out.println("*** Locked. ***");
                     }
                     case "e" -> {

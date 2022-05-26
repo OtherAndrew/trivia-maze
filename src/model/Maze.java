@@ -393,6 +393,16 @@ public class Maze implements Serializable {
         return numVisited;
     }
 
+    public int getStateNum(final State theState) {
+        int numMatching = 0;
+        for (Door door : myQuestionMap.keySet()) {
+            if (door.getState() == theState) {
+                numMatching++;
+            }
+        }
+        return numMatching;
+    }
+
     /**
      * Returns a String representation of the maze.
      *
