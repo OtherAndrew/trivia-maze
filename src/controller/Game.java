@@ -1,7 +1,9 @@
 package controller;
 
 import model.Maze;
+import model.questions.Question;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import static model.mazecomponents.Direction.*;
@@ -9,19 +11,23 @@ import static model.mazecomponents.Direction.*;
 public class Game {
 
     public static void game() {
-        Maze triviaMaze = new Maze(3, 3);
+        Maze triviaMaze = new Maze(6, 6);
         Scanner s = new Scanner(System.in);
+        Optional<Question> q = Optional.empty();
         while (!triviaMaze.atGoal()) {
-            System.out.println(triviaMaze.toString());
+            System.out.println(triviaMaze);
             System.out.println(triviaMaze.getPlayerLocation().getRow() + ", " + triviaMaze.getPlayerLocation().getCol());
             switch (s.nextLine()) {
-                case "w" -> triviaMaze.move(NORTH);
-                case "a" -> triviaMaze.move(WEST);
-                case "s" -> triviaMaze.move(SOUTH);
-                case "d" -> triviaMaze.move(EAST);
+                case "w" -> q = triviaMaze.move(NORTH);
+                case "a" -> q = triviaMaze.move(WEST);
+                case "s" -> q = triviaMaze.move(SOUTH);
+                case "d" -> q = triviaMaze.move(EAST);
+            }
+            if (q.isPresent()) {
+                System.out.println(q);
             }
         }
-        System.out.println(triviaMaze.toString());
+        System.out.println(triviaMaze);
     }
 
     public static void main(String[] args) {

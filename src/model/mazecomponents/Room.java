@@ -22,11 +22,11 @@ public class Room implements Serializable {
      */
     public static final char VISITED_SYMBOL = '.';
     /**
-     * X-coordinate.
+     * Row position.
      */
     private final int myRow;
     /**
-     * Y-coordinate.
+     * Column position.
      */
     private final int myCol;
     /**
@@ -59,7 +59,7 @@ public class Room implements Serializable {
     /**
      * Gets this Room's x-coordinate.
      *
-     * @return an integer representing the Room's x-coordinate.
+     * @return an integer representing the Room's row position.
      */
     public int getRow() {
         return myRow;
@@ -68,7 +68,7 @@ public class Room implements Serializable {
     /**
      * Gets this Room's y-coordinate.
      *
-     * @return an integer representing the Room's y-coordinate.
+     * @return an integer representing the Room's column position.
      */
     public int getCol() {
         return myCol;
