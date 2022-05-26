@@ -2,6 +2,7 @@ package controller;
 
 import model.Maze;
 import model.mazecomponents.Door;
+import model.mazecomponents.Room;
 import model.mazecomponents.State;
 import model.questions.Question;
 
@@ -23,14 +24,11 @@ public class SkeletonGame {
         System.out.println();
         while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
             System.out.println(triviaMaze);
+            Room playerLocation = triviaMaze.getPlayerLocation();
             System.out.println("Position: "
-                    + triviaMaze.getPlayerLocation().getRow()
+                    + playerLocation.getRow()
                     + ", "
-                    + triviaMaze.getPlayerLocation().getCol());
-            System.out.println("Visited rooms: " + triviaMaze.getNumVisited());
-//            System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
-//            System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
-//            System.out.println("Open doors: " + triviaMaze.getStateNum(OPEN));
+                    + playerLocation.getCol());
             switch (s.nextLine()) {
                 case "w" -> d = triviaMaze.move(NORTH);
                 case "a" -> d = triviaMaze.move(WEST);
@@ -51,6 +49,7 @@ public class SkeletonGame {
                     case "e" -> {
                         door.setState(State.OPEN);
                         System.out.println("*** Opened. ***");
+                        triviaMaze.move(door.getDirection(playerLocation));
                     }
                 }
             }
@@ -62,6 +61,10 @@ public class SkeletonGame {
         if (triviaMaze.atGoal()) {
             System.out.println("*** Game won. ***");
         }
+        System.out.println("Rooms visited: " + triviaMaze.getNumVisited());
+        System.out.println("Doors opened: " + triviaMaze.getStateNum(OPEN));
+        System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
+        System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
     }
 
     public static void main(String[] args) {
