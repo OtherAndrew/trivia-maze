@@ -2,9 +2,7 @@ package model.questions;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class ChoiceSelect extends Question implements Serializable {
 
@@ -60,5 +58,17 @@ public class ChoiceSelect extends Question implements Serializable {
     @Override
     public boolean checkAnswer(final String theOption) {
         return myAnswers.get(theOption).isCorrect();
+    }
+
+    /**
+     * @return list of answers for question.
+     */
+    @Override
+    public List<String> getAnswers() {
+        final List<String> choiceList = new ArrayList<>(myAnswers.size());
+        for (String choice : myAnswers.keySet()) {
+            choiceList.add(myAnswers.get(choice).toString());
+        }
+        return choiceList;
     }
 }

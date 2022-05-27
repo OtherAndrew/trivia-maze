@@ -3,6 +3,7 @@ package model.questions;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShortAnswer extends Question implements Serializable {
 
@@ -37,5 +38,13 @@ public class ShortAnswer extends Question implements Serializable {
     @Override
     public boolean checkAnswer(final String theResponse) {
         return myAnswers.contains(theResponse);
+    }
+
+    /**
+     * @return list of answers for question.
+     */
+    @Override
+    public List<String> getAnswers() {
+        return new ArrayList<>(myAnswers);
     }
 }

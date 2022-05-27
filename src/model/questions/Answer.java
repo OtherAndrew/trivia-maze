@@ -21,10 +21,16 @@ public class Answer implements Serializable {
         myValidity = theValidity;
     }
 
+    /**
+     * @return if this answer is the correct one.
+     */
     public boolean isCorrect() {
         return myValidity;
     }
 
+    /**
+     * @return answer text.
+     */
     @Override
     public String toString() {
         return myAnswer;

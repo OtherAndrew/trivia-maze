@@ -2,6 +2,8 @@ package model.questions;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Question is a class that represents a question and its answer choices,
@@ -43,8 +45,27 @@ public abstract class Question implements Serializable {
     /**
      * @return the question query.
      */
-    @Override
-    public String toString() {
+    public String getQuery() {
         return myQuery;
     }
+
+    /**
+     * @return list of answers for question.
+     */
+    public abstract List<String> getAnswers();
+
+    /**
+     * @return question and answer choices as string.
+     */
+    @Override
+    public String toString() {
+        StringJoiner sj = new StringJoiner("\n");
+        sj.add(getQuery());
+        sj.add("\n");
+        for (String answer : getAnswers()) {
+            sj.add(answer);
+        }
+        return sj.toString();
+    }
+
 }
