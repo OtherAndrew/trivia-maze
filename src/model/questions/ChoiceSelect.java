@@ -41,14 +41,6 @@ public class ChoiceSelect extends Question implements Serializable {
     }
 
     /**
-     * @return the number of answer choices available.
-     */
-    @Override
-    public int numberOfChoices() {
-        return myAnswers.size();
-    }
-
-    /**
      * Checks if an answer submitted by a player to a true/false or multiple
      * choice question is true.
      *

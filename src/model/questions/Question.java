@@ -40,7 +40,9 @@ public abstract class Question implements Serializable {
     /**
      * @return the number of answer choices available.
      */
-    public abstract int numberOfChoices();
+    public int numberOfChoices() {
+        return getAnswers().size();
+    }
 
     /**
      * @return the question query.

@@ -24,11 +24,6 @@ public class ShortAnswer extends Question implements Serializable {
         myAnswers = theChoices;
     }
 
-    @Override
-    public int numberOfChoices() {
-        return myAnswers.size();
-    }
-
     /**
      * Checks to see if the answer to a short answer question is true.
      *
