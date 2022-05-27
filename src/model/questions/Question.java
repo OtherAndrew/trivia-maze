@@ -21,7 +21,7 @@ public abstract class Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theQuestion
+     * @param theQuestion the question to ask.
      */
     protected Question(final String theQuestion) {
         myQuery = theQuestion;
@@ -34,6 +34,11 @@ public abstract class Question implements Serializable {
      * @return if the option selected correct.
      */
     public abstract boolean checkAnswer(final String theAnswer);
+
+    /**
+     * @return the number of answer choices available.
+     */
+    public abstract int numberOfChoices();
 
     /**
      * @return the question query.

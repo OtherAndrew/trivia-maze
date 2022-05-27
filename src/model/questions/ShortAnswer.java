@@ -15,12 +15,17 @@ public class ShortAnswer extends Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theQuestion
-     * @param theChoices
+     * @param theQuestion the question to ask.
+     * @param theChoices the possible answer choices.
      */
     ShortAnswer(final String theQuestion, final ArrayList<String> theChoices) {
         super(theQuestion);
         myAnswers = theChoices;
+    }
+
+    @Override
+    public int numberOfChoices() {
+        return myAnswers.size();
     }
 
     /**

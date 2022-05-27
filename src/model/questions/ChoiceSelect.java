@@ -19,8 +19,8 @@ public class ChoiceSelect extends Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theQuestion
-     * @param theChoices
+     * @param theQuestion the question to ask.
+     * @param theChoices the answer choices.
      */
     ChoiceSelect(final String theQuestion, final LinkedList<Answer> theChoices) {
         super(theQuestion);
@@ -45,6 +45,7 @@ public class ChoiceSelect extends Question implements Serializable {
     /**
      * @return the number of answer choices available.
      */
+    @Override
     public int numberOfChoices() {
         return myAnswers.size();
     }
