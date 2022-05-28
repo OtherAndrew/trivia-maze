@@ -62,7 +62,7 @@ public class Maze implements Serializable {
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
      */
-    public Maze(final int theRows, final int theCols)  throws IllegalArgumentException {
+    public Maze(final int theRows, final int theCols) throws IllegalArgumentException {
         if (theRows < 3 || theCols < 3) {
             throw new IllegalArgumentException("dimensions passed to Maze " +
                     "cannot be less than 3. (passed values: " + theRows + ", " + theCols);
@@ -194,10 +194,27 @@ public class Maze implements Serializable {
         }
     }
 
+    /**
+     * Moves the player to an adjacent room in the specified direction.
+     *
+     * @param theDirection the direction to move the player.
+     */
     private void move(final Direction theDirection) {
         myPlayerLocation = myPlayerLocation.getOtherSide(theDirection);
     }
 
+    /**
+     * Changes the state of a closed door in the direction based on the player's
+     * response. If the player's response is correct then the door will be
+     * opened and the player is moved to the adjacent room in the direction.
+     * If the player's response is incorrect then the door will be locked and
+     * the player will remain in place. If the player is moved to the goal
+     * room then the game is won. If the locked door prevents movement to the
+     * goal then the game is lost.
+     *
+     * @param theDirection the direction to move in.
+     * @param theResponse the player's response.
+     */
     public void respond(final Direction theDirection,
                         final String theResponse) {
         if (myPlayerLocation.hasDoor(theDirection)
@@ -213,6 +230,12 @@ public class Maze implements Serializable {
         }
     }
 
+    /**
+     * Gets the question corresponding to the door in the specified direction.
+     *
+     * @param theDirection the direction the door is in.
+     * @return the question corresponding to the door.
+     */
     private Question getQuestion(final Direction theDirection) {
         return myQuestionMap.get(myPlayerLocation.getDoor(theDirection));
     }
@@ -322,9 +345,10 @@ public class Maze implements Serializable {
 
     /**
      * Determines the number of rooms visited by the player.
+     *
      * @return the number of rooms visited by the player.
      */
-    public int getNumVisited() {
+    public int getRoomVisitedNum() {
         int numVisited = 0;
         for (Room[] row : myRooms) {
             for (Room room : row) {
@@ -336,7 +360,13 @@ public class Maze implements Serializable {
         return numVisited;
     }
 
-    public int getStateNum(final State theState) {
+    /**
+     * Determines the number of doors that match the given state.
+     *
+     * @param theState the state to look for.
+     * @return the number of doors that match the state.
+     */
+    public int getDoorStateNum(final State theState) {
         int numMatching = 0;
         for (Door door : myQuestionMap.keySet()) {
             if (door.getState() == theState) {
