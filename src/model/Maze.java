@@ -293,7 +293,8 @@ public class Maze implements Serializable {
         }
     }
 
-    public void quickSave() {
+    public void save() {
+        final boolean quickSave = new File("saves").mkdir();
         save(new File("saves/quickSave.ser"));
     }
 
@@ -302,7 +303,7 @@ public class Maze implements Serializable {
                 myPlayerLocation, myGoalLocation), theSaveFile);
     }
 
-    public void quickLoad() {
+    public void load() {
         load(new File("saves/quickSave.ser"));
     }
 
@@ -408,8 +409,6 @@ public class Maze implements Serializable {
         Random r = new Random();
         Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
         System.out.println(maze);
-//        maze.quickSave();
-        maze.quickLoad();
-        System.out.println(maze);
+        maze.save();
     }
 }
