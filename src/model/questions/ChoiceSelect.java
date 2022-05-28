@@ -2,9 +2,7 @@ package model.questions;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class ChoiceSelect extends Question implements Serializable {
 
@@ -19,8 +17,8 @@ public class ChoiceSelect extends Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theQuestion
-     * @param theChoices
+     * @param theQuestion the question to ask.
+     * @param theChoices the answer choices.
      */
     ChoiceSelect(final String theQuestion, final LinkedList<Answer> theChoices) {
         super(theQuestion);
@@ -43,13 +41,6 @@ public class ChoiceSelect extends Question implements Serializable {
     }
 
     /**
-     * @return the number of answer choices available.
-     */
-    public int numberOfChoices() {
-        return myAnswers.size();
-    }
-
-    /**
      * Checks if an answer submitted by a player to a true/false or multiple
      * choice question is true.
      *
@@ -59,5 +50,17 @@ public class ChoiceSelect extends Question implements Serializable {
     @Override
     public boolean checkAnswer(final String theOption) {
         return myAnswers.get(theOption).isCorrect();
+    }
+
+    /**
+     * @return list of answers for question.
+     */
+    @Override
+    public List<String> getAnswers() {
+        final List<String> choiceList = new ArrayList<>(myAnswers.size());
+        for (String choice : myAnswers.keySet()) {
+            choiceList.add(myAnswers.get(choice).toString());
+        }
+        return choiceList;
     }
 }

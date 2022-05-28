@@ -3,6 +3,7 @@ package model.questions;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShortAnswer extends Question implements Serializable {
 
@@ -15,8 +16,8 @@ public class ShortAnswer extends Question implements Serializable {
      * resulting set of answers in the Question will be a shuffled version
      * of the set provided in arguments.
      *
-     * @param theQuestion
-     * @param theChoices
+     * @param theQuestion the question to ask.
+     * @param theChoices the possible answer choices.
      */
     ShortAnswer(final String theQuestion, final ArrayList<String> theChoices) {
         super(theQuestion);
@@ -32,5 +33,13 @@ public class ShortAnswer extends Question implements Serializable {
     @Override
     public boolean checkAnswer(final String theResponse) {
         return myAnswers.contains(theResponse);
+    }
+
+    /**
+     * @return list of answers for question.
+     */
+    @Override
+    public List<String> getAnswers() {
+        return new ArrayList<>(myAnswers);
     }
 }
