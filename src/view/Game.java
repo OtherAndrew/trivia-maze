@@ -99,7 +99,7 @@ public class Game {
 
     private JPanel drawMapDisplay() {
         final Random r = new Random();
-        final Maze maze = new Maze(r.nextInt(5) + 3, r.nextInt(5) + 3);
+        final Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
         System.out.println(maze);
         final char[][] mazeChar = maze.toCharArray();
 
