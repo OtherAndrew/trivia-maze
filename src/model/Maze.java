@@ -189,7 +189,6 @@ public class Maze implements Serializable {
                 // enable listeners for input which will indirectly call response
             } else if (doorState == OPEN) {
                 move(theDirection);
-                myPlayerLocation.visit();
             }
         }
     }
@@ -204,7 +203,8 @@ public class Maze implements Serializable {
                 && myPlayerLocation.getDoorState(theDirection) == CLOSED) {
             if (getQuestion(theDirection).checkAnswer(theResponse)) {
                 myPlayerLocation.setDoorState(theDirection, OPEN);
-                attemptMove(theDirection);
+                move(theDirection);
+                myPlayerLocation.visit();
                 atGoal();
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
