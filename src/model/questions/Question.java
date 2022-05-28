@@ -71,5 +71,4 @@ public abstract class Question implements Serializable {
         }
         return sj.toString();
     }
-
 }

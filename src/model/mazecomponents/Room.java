@@ -2,6 +2,7 @@ package model.mazecomponents;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -48,16 +49,17 @@ public class Room implements Serializable {
      * @param theRow the Room's row position.
      * @param theCol the Room's column position.
      */
-    public Room(final int theRow, final int theCol) {
+    public Room(final int theRow, final int theCol) throws IllegalArgumentException {
+        if (theRow < 0 || theCol < 0) {
+            throw new IllegalArgumentException(
+                    "Coordinates passed to Room cannot be less than 0"
+                            + " (passed values: " + theRow + ", " + theCol + ")");
+        }
         myRow = theRow;
         myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
         mySymbol = UNVISITED_SYMBOL;
-    }
-
-    public Room getOtherSide(final Direction theDirection) {
-        return getDoor(theDirection).getOtherSide(this);
     }
 
     /**
@@ -78,6 +80,10 @@ public class Room implements Serializable {
         return myCol;
     }
 
+    public Room getOtherSide(final Direction theDirection) {
+        return getDoor(theDirection).getOtherSide(this);
+    }
+
     /**
      * Gets the number of doors that connect to this room.
      *
@@ -92,8 +98,8 @@ public class Room implements Serializable {
      *
      * @return a map of Direction -> Door
      */
-    public Map<Direction, Door> getAllDoors() {
-        return myDoors;
+    public Collection<Door> getAllDoors() {
+        return myDoors.values();
     }
 
     /**
@@ -140,7 +146,6 @@ public class Room implements Serializable {
                              final State theState) {
         getDoor(theDirection).setState(theState);
     }
-
 
     /**
      * Visits this room.

@@ -48,7 +48,7 @@ public class BFSRunner {
 
             if (curRoom == theMaze.getGoalLocation()) return tracePath(cur);
 
-            for (Door door : curRoom.getAllDoors().values()) {
+            for (Door door : curRoom.getAllDoors()) {
                 if (door.getState() != State.LOCKED) {
                     final Room otherRoom = door.getOtherSide(curRoom);
                     if (!visited.containsValue(otherRoom))

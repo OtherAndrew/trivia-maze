@@ -62,7 +62,11 @@ public class Maze implements Serializable {
      * @param theRows the number of rows the maze should have.
      * @param theCols the number of columns the maze should have.
      */
-    public Maze(final int theRows, final int theCols) {
+    public Maze(final int theRows, final int theCols)  throws IllegalArgumentException {
+        if (theRows < 3 || theCols < 3) {
+            throw new IllegalArgumentException("dimensions passed to Maze " +
+                    "cannot be less than 3. (passed values: " + theRows + ", " + theCols);
+        }
         myHeight = theRows;
         myWidth = theCols;
         myRooms = generateRoomMatrix(theRows, theCols);
@@ -125,7 +129,8 @@ public class Maze implements Serializable {
      */
     private Room chooseExit() {
         Room exit;
-        do { exit = chooseRandomRoom();
+        do {
+            exit = chooseRandomRoom();
         } while ((Math.abs(myPlayerLocation.getRow() - exit.getRow()) <= myHeight / 2)
                 && (Math.abs(myPlayerLocation.getCol() - exit.getCol()) <= myWidth / 2));
         return exit;
@@ -176,14 +181,16 @@ public class Maze implements Serializable {
     }
 
     public void attemptMove(final Direction theDirection) {
-        State doorState = myPlayerLocation.getDoorState(theDirection);
-        if (doorState == CLOSED) {
-            getQuestion(theDirection);
-            // Tell GUI to display the question and answer choices
-            // enable listeners for input which will indirectly call response
-        } else if (doorState == OPEN) {
-            move(theDirection);
-            myPlayerLocation.visit();
+        if (myPlayerLocation.hasDoor(theDirection)) {
+            State doorState = myPlayerLocation.getDoorState(theDirection);
+            if (doorState == CLOSED) {
+                getQuestion(theDirection); // PLACEHOLDER
+                // Tell GUI to display the question and answer choices
+                // enable listeners for input which will indirectly call response
+            } else if (doorState == OPEN) {
+                move(theDirection);
+                myPlayerLocation.visit();
+            }
         }
     }
 
@@ -191,38 +198,23 @@ public class Maze implements Serializable {
         myPlayerLocation = myPlayerLocation.getOtherSide(theDirection);
     }
 
-    public void response(final Direction theDirection,
-                         final String theResponse) {
-        if (getQuestion(theDirection).checkAnswer(theResponse)) {
-            myPlayerLocation.setDoorState(theDirection, OPEN);
-            attemptMove(theDirection);
-            atGoal();
-        } else {
-            myPlayerLocation.setDoorState(theDirection, LOCKED);
-            gameLoss();
+    public void respond(final Direction theDirection,
+                        final String theResponse) {
+        if (myPlayerLocation.hasDoor(theDirection)
+                && myPlayerLocation.getDoorState(theDirection) == CLOSED) {
+            if (getQuestion(theDirection).checkAnswer(theResponse)) {
+                myPlayerLocation.setDoorState(theDirection, OPEN);
+                attemptMove(theDirection);
+                atGoal();
+            } else {
+                myPlayerLocation.setDoorState(theDirection, LOCKED);
+                gameLoss();
+            }
         }
     }
 
     private Question getQuestion(final Direction theDirection) {
         return myQuestionMap.get(myPlayerLocation.getDoor(theDirection));
-    }
-
-    /**
-     * Gets the room where the goal is located.
-     *
-     * @return the goal location.
-     */
-    public Room getGoalLocation() {
-        return myGoalLocation;
-    }
-
-    /**
-     * Gets the room where the player is located.
-     *
-     * @return the player location.
-     */
-    public Room getPlayerLocation() {
-        return myPlayerLocation;
     }
 
     /**
@@ -248,6 +240,24 @@ public class Maze implements Serializable {
 
     private void endGame(final boolean theWin) {
         // Tells GUI to show end of game frames
+    }
+
+    /**
+     * Gets the room where the goal is located.
+     *
+     * @return the goal location.
+     */
+    public Room getGoalLocation() {
+        return myGoalLocation;
+    }
+
+    /**
+     * Gets the room where the player is located.
+     *
+     * @return the player location.
+     */
+    public Room getPlayerLocation() {
+        return myPlayerLocation;
     }
 
     public static class Memento implements Serializable {
