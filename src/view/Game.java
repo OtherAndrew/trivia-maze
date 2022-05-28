@@ -107,13 +107,14 @@ public class Game {
         for (char[] row : maze.toCharArray()) {
             for (char space : row) {
                 JComponent tile = new JPanel();
+                tile.setForeground(Color.GRAY);
                 switch (space) {
                     case Maze.WALL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
                     case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.CYAN);
                     case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
-                    case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.WHITE);
-                    case Door.CLOSED_SYMBOL -> tile.setBackground(Color.GRAY);
-                    case Room.UNVISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
+                    case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
+                    case Door.CLOSED_SYMBOL -> tile.setBackground(Color.DARK_GRAY);
+                    case Room.UNVISITED_SYMBOL -> tile.setBackground(Color.GRAY);
                 }
                 myMapDisplay.add(tile);
             }
