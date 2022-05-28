@@ -107,16 +107,13 @@ public class Game {
         for (char[] row : maze.toCharArray()) {
             for (char space : row) {
                 JComponent tile = new JPanel();
-                tile.setMaximumSize(new Dimension(50, 50));
                 switch (space) {
-                    case Maze.WALL -> tile.setBackground(Color.BLACK);
+                    case Maze.WALL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
                     case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.CYAN);
                     case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
-                    case Door.OPEN_SYMBOL -> tile.setBackground(Color.WHITE);
+                    case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.WHITE);
                     case Door.CLOSED_SYMBOL -> tile.setBackground(Color.GRAY);
-                    case Door.LOCKED_SYMBOL -> tile.setBackground(Color.DARK_GRAY);
                     case Room.UNVISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
-                    case Room.VISITED_SYMBOL -> tile.setBackground(Color.BLUE);
                 }
                 myMapDisplay.add(tile);
             }
