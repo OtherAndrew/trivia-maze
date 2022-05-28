@@ -6,6 +6,7 @@ import model.mazecomponents.Room;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class Game {
 
@@ -97,7 +98,8 @@ public class Game {
     }
 
     private JPanel drawMapDisplay() {
-        final Maze maze = new Maze(5, 5);
+        final Random r = new Random();
+        final Maze maze = new Maze(r.nextInt(5) + 3, r.nextInt(5) + 3);
         System.out.println(maze);
         final char[][] mazeChar = maze.toCharArray();
 
