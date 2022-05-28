@@ -14,13 +14,14 @@ import java.util.Scanner;
 public class Game {
 
     private JFrame myFrame;
-    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay;
+    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel;
     private JButton myRoomButton, myMapButton, myEastButton, myWestButton, myNorthButton, mySouthButton;
-    private JLabel myQuestion;
+
+    private JTextArea myQuestion;
     private JRadioButton[] myAnswerButtons;
     private ButtonGroup myAnswerButtonsGroup;
     private final String myTitle = "Trivia Maze", myWindowIconPath = "assets\\Landing_page_01.png";
-    private final Dimension myPreferredSize = new Dimension(1000,1000);
+    private final Dimension myPreferredSize = new Dimension(720,600);
 
     public Game() {
         myFrame = new JFrame(myTitle);
@@ -34,7 +35,7 @@ public class Game {
         myMapPanel.setBackground(new Color(0, 0,0));
         // TODO Show current room and highlight doors
 
-
+        JPanel controls = new JPanel(new BorderLayout());
 
         // Left half
 
@@ -50,10 +51,11 @@ public class Game {
         // read string to 2d array of char
         for (char[] row : maze.toCharArray()) {
             for (char space : row) {
-                JButton tile = new JButton();
+                JComponent tile = new JPanel();
+                tile.setMaximumSize(new Dimension(50, 50));
                 switch (space) {
                     case Maze.WALL -> tile.setBackground(Color.BLACK);
-                    case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.RED);
+                    case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.CYAN);
                     case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
                     case Door.OPEN_SYMBOL -> tile.setBackground(Color.WHITE);
                     case Door.CLOSED_SYMBOL -> tile.setBackground(Color.GRAY);
@@ -66,7 +68,7 @@ public class Game {
         }
 
 
-        myMapPanel.add(myMapDisplay, BorderLayout.CENTER);
+        myFrame.add(myMapDisplay, BorderLayout.CENTER);
 
 
         // Bottom Left
@@ -86,24 +88,27 @@ public class Game {
         myDirectionPanel.add(new JPanel());
         myDirectionPanel.add(mySouthButton);
         myDirectionPanel.add(new JPanel());
-        myMapPanel.add(myDirectionPanel, BorderLayout.SOUTH);
+
+        controls.add(myDirectionPanel, BorderLayout.SOUTH);
 
 
 
-        myFrame.add(myMapPanel, BorderLayout.CENTER);
+//        myFrame.add(myMapPanel);
 
         // Right Half
         // Top Right
         myQuestionAnswerPanel = new JPanel(new BorderLayout());
 
+        myQuestion = new JTextArea();
+        myQuestion.setLineWrap(true);
+        myQuestion.setText("Cat's Paw heels, manufactured by Biltrite and first available in 1904, are instantly recognizable on vintage footwear due to their bright white no-slip rubber dots and asymmetrical semi-circles along the edges of the heels creating the Cat's Paw shape. Even more recognizable is this iconic American brand's bright red packaging for the heels that featured a black cat on the side.");
         // TODO Get the question corresponding to selected door and display it
-        myQuestion = new JLabel("The question");
 
-        myQuestionAnswerPanel.add(myQuestion, BorderLayout.NORTH);
+        myQuestionAnswerPanel.add(myQuestion, BorderLayout.CENTER);
 
         // Bottom Right
         int numberOfAnswers = 4; // TODO get the number of answers from controller
-        myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers, 1));
+        myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers + 2, 1));
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
@@ -113,10 +118,14 @@ public class Game {
         for (int i = 0; i < numberOfAnswers; i++) {
             myAnswerPanel.add(myAnswerButtons[i]);
         }
+        myAnswerPanel.add(new JButton("Submit"));
+        JPanel buffer = new JPanel();
+        myAnswerPanel.add(buffer);
         myQuestionAnswerPanel.add(myAnswerPanel, BorderLayout.SOUTH);
 
 
-        myFrame.add(myQuestionAnswerPanel, BorderLayout.EAST);
+        controls.add(myQuestionAnswerPanel, BorderLayout.CENTER);
+        myFrame.add(controls, BorderLayout.EAST);
 
 
 
