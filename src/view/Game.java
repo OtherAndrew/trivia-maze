@@ -107,12 +107,14 @@ public class Game {
         myQuestionAnswerPanel.add(myQuestion, BorderLayout.CENTER);
 
         // Bottom Right
-        int numberOfAnswers = 4; // TODO get the number of answers from controller
+        final String[] answerArray = {"Augustus Ludlow", "Shinki Hikaku", "John Lofgren", "Wabash"};
+
+        int numberOfAnswers = answerArray.length; // TODO get the number of answers from controller
         myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers + 2, 1));
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
-            myAnswerButtons[i] = new JRadioButton(Integer.toString(i));
+            myAnswerButtons[i] = new JRadioButton(answerArray[i]);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
         }
         for (int i = 0; i < numberOfAnswers; i++) {
