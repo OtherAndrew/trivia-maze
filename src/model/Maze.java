@@ -377,12 +377,11 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Returns a String representation of the maze.
+     * Returns a 2D character array representation of the maze.
      *
-     * @return a String representation of the maze.
+     * @return a 2D character array representation of the maze.
      */
-    @Override
-    public String toString() {
+    public char[][] toCharArray() {
         final char[][] out = generateWallMatrix();
         for (int row = 1, mazeRow = 0; row < out.length - 1;
                 row += 2, mazeRow++) {
@@ -404,7 +403,7 @@ public class Maze implements Serializable {
                 }
             }
         }
-        return concatenateMatrix(out);
+        return out;
     }
 
     /**
@@ -418,6 +417,16 @@ public class Maze implements Serializable {
             Arrays.fill(row, WALL);
         }
         return mazeFrame;
+    }
+
+    /**
+     * Returns a String representation of the maze.
+     *
+     * @return a String representation of the maze.
+     */
+    @Override
+    public String toString() {
+        return concatenateMatrix(toCharArray());
     }
 
     /**
