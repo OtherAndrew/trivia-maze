@@ -5,13 +5,22 @@ import model.mazecomponents.Door;
 import model.mazecomponents.Room;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Random;
 
+import static model.Maze.*;
+import static model.mazecomponents.Room.*;
+import static model.mazecomponents.Door.*;
+
+
+
 public class Game {
 
+    final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
+
     private JFrame myFrame;
-    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel;
+    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel, myOuterDirectionPanel;
     private JButton myRoomButton, myMapButton, myEastButton, myWestButton, myNorthButton, mySouthButton;
 
     private JTextArea myQuestion;
@@ -27,13 +36,11 @@ public class Game {
         myFrame.setSize(myPreferredSize);
         myFrame.setLocationRelativeTo(null);
 
-        // TODO Show current room and highlight doors
 
         // Left half
 //        final String mazePlaceholder = Files.readString(Path.of("src/view/assets/mazePlaceholder.txt"));
         final Random r = new Random();
         final Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
-
 //        maze.setAllDoors(State.OPEN);
         System.out.println(maze);
         myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
@@ -41,6 +48,9 @@ public class Game {
 
         // Right
         JPanel sidebar = new JPanel(new BorderLayout());
+        // MINIMAP
+//        sidebar.add(drawMapDisplay(maze.toCharArray()), BorderLayout.NORTH);
+//        sidebar.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.NORTH);
         sidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         sidebar.add(drawQAPanel(), BorderLayout.CENTER);
         myFrame.add(sidebar, BorderLayout.EAST);
@@ -55,19 +65,28 @@ public class Game {
         // TODO Get the question corresponding to selected door and display it
         myQuestion = new JTextArea();
         myQuestion.setLineWrap(true);
-        myQuestion.setText("Cat's Paw heels, manufactured by Biltrite and first available in 1904, are instantly recognizable on vintage footwear due to their bright white no-slip rubber dots and asymmetrical semi-circles along the edges of the heels creating the Cat's Paw shape. Even more recognizable is this iconic American brand's bright red packaging for the heels that featured a black cat on the side.");
+        myQuestion.setWrapStyleWord(true);
+        myQuestion.setEditable(false);
+        myQuestion.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        // SAMPLE TEXT
+        myQuestion.setText("Where does the majority of the world's apples come from?");
+
         myQuestionAnswerPanel.add(myQuestion, BorderLayout.CENTER);
 
         // Bottom
+
         myQuestionAnswerPanel.add(drawAnswerPanel(), BorderLayout.SOUTH);
+        myQuestionAnswerPanel.setBorder(PADDING);
         return myQuestionAnswerPanel;
     }
 
     private JPanel drawAnswerPanel() {
-        final String[] answerArray = {"Augustus Ludlow", "Shinki Hikaku", "John Lofgren", "Wabash"};
+        // SAMPLE ANSWER ARRAY
+        final String[] answerArray = {"Wisconsin", "Washington", "Canada", "California"};
 
-        int numberOfAnswers = answerArray.length; // TODO get the number of answers from controller
-        myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers + 2, 1));
+        int numberOfAnswers = answerArray.length;
+        // TODO get the number of answers from controller, do text input or radio buttons
+        myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers + 1, 1));
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
@@ -78,8 +97,6 @@ public class Game {
             myAnswerPanel.add(myAnswerButtons[i]);
         }
         myAnswerPanel.add(new JButton("Submit"));
-        JPanel buffer = new JPanel();
-        myAnswerPanel.add(buffer);
         return myAnswerPanel;
     }
 
@@ -100,37 +117,45 @@ public class Game {
         myDirectionPanel.add(new JPanel());
         myDirectionPanel.add(mySouthButton);
         myDirectionPanel.add(new JPanel());
+
+        myDirectionPanel.setBorder(PADDING);
         return myDirectionPanel;
     }
 
-    private JPanel drawMapDisplay(char[][] mazeChar) {
-
-        myMapDisplay = new JPanel(new GridLayout(mazeChar.length, mazeChar[0].length));
-
-        // read string to 2d array of char
-        for (char[] row : mazeChar) {
+    /**
+     * Draws a JPanel based on the character array input.
+     *
+     * @param theCharArray a character array representing one or more rooms
+     *                     in the maze.
+     * @return a JPanel that displays the character array as a series of tiles.
+     */
+    private JPanel drawMapDisplay(final char[][] theCharArray) {
+        myMapDisplay = new JPanel(
+                new GridLayout(theCharArray.length, theCharArray[0].length));
+        for (char[] row : theCharArray) {
             for (char space : row) {
-                JComponent tile = new JPanel();
-                tile.setForeground(Color.GRAY);
+                // TODO: decide on appearance for tiles
+                final JComponent tile = new JPanel();
                 switch (space) {
                     case Maze.PLAYER_SYMBOL -> {
-                        tile.setBackground(Color.LIGHT_GRAY);
-                        tile.setLayout(new BorderLayout());
-                        JLabel player = new JLabel("YOU");
+                        final JLabel player = new JLabel("YOU");
                         player.setHorizontalAlignment(SwingConstants.CENTER);
                         player.setForeground(Color.BLACK);
+                        tile.setBackground(Color.LIGHT_GRAY);
+                        tile.setLayout(new BorderLayout());
                         tile.add(player, BorderLayout.CENTER);
                     }
-                    case Maze.WALL_SYMBOL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
-                    case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
-                    case Maze.START_SYMBOL -> tile.setBackground(Color.RED);
-                    case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
-                    case Door.CLOSED_SYMBOL -> tile.setBackground(Color.DARK_GRAY);
-                    case Room.UNVISITED_SYMBOL -> tile.setBackground(Color.GRAY);
+                    case WALL_SYMBOL, LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
+                    case GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
+                    case START_SYMBOL -> tile.setBackground(Color.RED);
+                    case OPEN_SYMBOL, VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
+                    case CLOSED_SYMBOL -> tile.setBackground(Color.DARK_GRAY);
+                    case UNVISITED_SYMBOL -> tile.setBackground(Color.GRAY);
                 }
                 myMapDisplay.add(tile);
             }
         }
+        myMapDisplay.setBorder(PADDING);
         return myMapDisplay;
     }
 
