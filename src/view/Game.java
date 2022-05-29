@@ -31,7 +31,11 @@ public class Game {
 
         // Left half
 //        final String mazePlaceholder = Files.readString(Path.of("src/view/assets/mazePlaceholder.txt"));
-        myFrame.add(drawMapDisplay(), BorderLayout.CENTER);
+        final Random r = new Random();
+        final Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
+        System.out.println(maze);
+//        myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
+        myFrame.add(drawMapDisplay(maze.toCharArray()), BorderLayout.CENTER);
 
         // Right
         JPanel sidebar = new JPanel(new BorderLayout());
@@ -97,16 +101,12 @@ public class Game {
         return myDirectionPanel;
     }
 
-    private JPanel drawMapDisplay() {
-        final Random r = new Random();
-        final Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
-        System.out.println(maze);
-        final char[][] mazeChar = maze.toCharArray();
+    private JPanel drawMapDisplay(char[][] mazeChar) {
 
         myMapDisplay = new JPanel(new GridLayout(mazeChar.length, mazeChar[0].length));
 
         // read string to 2d array of char
-        for (char[] row : maze.toCharArray()) {
+        for (char[] row : mazeChar) {
             for (char space : row) {
                 JComponent tile = new JPanel();
                 tile.setForeground(Color.GRAY);

@@ -382,7 +382,7 @@ public class Maze implements Serializable {
      * @return a 2D character array representation of the maze.
      */
     public char[][] toCharArray() {
-        final char[][] out = generateWallMatrix();
+        final char[][] out = generateWallMatrix(myHeight, myWidth);
         for (int row = 1, mazeRow = 0; row < out.length - 1;
                 row += 2, mazeRow++) {
             for (int col = 1, mazeCol = 0; col < out[row].length - 1;
@@ -410,9 +410,11 @@ public class Maze implements Serializable {
      * Constructs a matrix of walls based on the size of the maze.
      *
      * @return a matrix of walls based on the size of the maze.
+     * @param theHeight the number of rows in the maze.
+     * @param theWidth the number of columns in the maze.
      */
-    private char[][] generateWallMatrix() {
-        final char[][] mazeFrame = new char[myHeight * 2 + 1][myWidth * 2 + 1];
+    private char[][] generateWallMatrix(int theHeight, int theWidth) {
+        final char[][] mazeFrame = new char[theHeight * 2 + 1][theWidth * 2 + 1];
         for (char[] row : mazeFrame) {
             Arrays.fill(row, WALL);
         }
@@ -443,11 +445,47 @@ public class Maze implements Serializable {
         return sj.toString();
     }
 
+    /**
+     * Returns a representation of the Room the player is in along with the
+     * doors and walls immediately surrounding it.
+     *
+     * @return a representation of the player room.
+     */
+    public char[][] playerRoomToCharArray() {
+        final char[][] out = generateWallMatrix(1, 1);
+        out[1][1] = PLAYER_SYMBOL;
+        if (myPlayerLocation.hasDoor(NORTH)) {
+            out[0][1] = myPlayerLocation.getDoor(NORTH).toChar();
+        }
+        if (myPlayerLocation.hasDoor(SOUTH)) {
+            out[2][1] = myPlayerLocation.getDoor(SOUTH).toChar();
+        }
+        if (myPlayerLocation.hasDoor(EAST)) {
+            out[1][2] = myPlayerLocation.getDoor(EAST).toChar();
+        }
+        if (myPlayerLocation.hasDoor(WEST)) {
+            out[1][0] = myPlayerLocation.getDoor(WEST).toChar();
+        }
+        return out;
+    }
+
+    /**
+     * Returns a representation of the Room the player is in along with the
+     * doors and walls immediately surrounding it.
+     *
+     * @return a representation of the player room.
+     */
+    public String playerRoomToString() {
+        return concatenateMatrix(playerRoomToCharArray());
+    }
+
     // FOR TESTING
     public static void main(final String[] theArgs) {
         Random r = new Random();
         Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
         System.out.println(maze);
+        System.out.println();
+        System.out.println(maze.playerRoomToString());
         maze.save();
     }
 }
