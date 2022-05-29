@@ -3,7 +3,6 @@ package view;
 import model.Maze;
 import model.mazecomponents.Door;
 import model.mazecomponents.Room;
-import model.mazecomponents.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,7 +113,7 @@ public class Game {
                 JComponent tile = new JPanel();
                 tile.setForeground(Color.GRAY);
                 switch (space) {
-                    case Maze.WALL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
+                    case Maze.WALL_SYMBOL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
                     case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.CYAN);
                     case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
                     case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
