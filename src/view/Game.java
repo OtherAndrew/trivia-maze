@@ -36,11 +36,10 @@ public class Game {
         myFrame.setSize(myPreferredSize);
         myFrame.setLocationRelativeTo(null);
 
-
         // Left half
 //        final String mazePlaceholder = Files.readString(Path.of("src/view/assets/mazePlaceholder.txt"));
         final Random r = new Random();
-        final Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
+        final Maze maze = new Maze(r.nextInt(6) + 3, r.nextInt(6) + 3);
 //        maze.setAllDoors(State.OPEN);
         System.out.println(maze);
         myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
@@ -49,8 +48,8 @@ public class Game {
         // Right
         JPanel sidebar = new JPanel(new BorderLayout());
         // MINIMAP
-//        sidebar.add(drawMapDisplay(maze.toCharArray()), BorderLayout.NORTH);
-//        sidebar.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.NORTH);
+        // TODO: option select for minimap?
+        sidebar.add(drawMapDisplay(maze.toCharArray(), 10), BorderLayout.NORTH);
         sidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         sidebar.add(drawQAPanel(), BorderLayout.CENTER);
         myFrame.add(sidebar, BorderLayout.EAST);
@@ -127,15 +126,19 @@ public class Game {
      *
      * @param theCharArray a character array representing one or more rooms
      *                     in the maze.
+     * @param theTileSize the preferred tile size for the output.
      * @return a JPanel that displays the character array as a series of tiles.
      */
-    private JPanel drawMapDisplay(final char[][] theCharArray) {
+    private JPanel drawMapDisplay(final char[][] theCharArray, final int theTileSize) {
         myMapDisplay = new JPanel(
                 new GridLayout(theCharArray.length, theCharArray[0].length));
         for (char[] row : theCharArray) {
             for (char space : row) {
                 // TODO: decide on appearance for tiles
                 final JComponent tile = new JPanel();
+                if (theTileSize > 0) {
+                    tile.setPreferredSize(new Dimension(theTileSize, theTileSize));
+                }
                 switch (space) {
                     case Maze.PLAYER_SYMBOL -> {
                         final JLabel player = new JLabel("YOU");
@@ -157,6 +160,10 @@ public class Game {
         }
         myMapDisplay.setBorder(PADDING);
         return myMapDisplay;
+    }
+
+    private JPanel drawMapDisplay(final char[][] theCharArray) {
+        return drawMapDisplay(theCharArray, 0);
     }
 
     public static void main(String[] args) {
