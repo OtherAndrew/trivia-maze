@@ -113,8 +113,15 @@ public class Game {
                 JComponent tile = new JPanel();
                 tile.setForeground(Color.GRAY);
                 switch (space) {
+                    case Maze.PLAYER_SYMBOL -> {
+                        tile.setBackground(Color.LIGHT_GRAY);
+                        tile.setLayout(new BorderLayout());
+                        JLabel player = new JLabel("YOU");
+                        player.setHorizontalAlignment(SwingConstants.CENTER);
+                        player.setForeground(Color.BLACK);
+                        tile.add(player, BorderLayout.CENTER);
+                    }
                     case Maze.WALL_SYMBOL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
-                    case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.CYAN);
                     case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
                     case Maze.START_SYMBOL -> tile.setBackground(Color.RED);
                     case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
