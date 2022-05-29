@@ -1,40 +1,44 @@
-//package controller;
-//
-//import model.Maze;
-//import model.mazecomponents.Door;
-//import model.mazecomponents.Room;
-//import model.mazecomponents.State;
-//import model.questions.Question;
-//
-//import java.util.Optional;
-//import java.util.Scanner;
-//
-//import static model.mazecomponents.Direction.*;
-//import static model.mazecomponents.State.*;
-//
-//public class SkeletonGame {
-//
-//    public static void game() {
-//        Maze triviaMaze = new Maze();
-//        Scanner s = new Scanner(System.in);
-//        Optional<Door> d = Optional.empty();
-//        System.out.println("Use WASD to move.");
+package controller;
+
+import model.Maze;
+import model.mazecomponents.Door;
+import model.mazecomponents.Room;
+import model.mazecomponents.State;
+import model.questions.Question;
+
+import java.util.Optional;
+import java.util.Random;
+import java.util.Scanner;
+
+import static model.mazecomponents.Direction.*;
+import static model.mazecomponents.State.*;
+
+public class SkeletonGame {
+
+    public static void game() {
+        Random r = new Random();
+        final int dim = r.nextInt(7) + 3;
+        Maze triviaMaze = new Maze(3, 3);
+        Scanner s = new Scanner(System.in);
+        System.out.println("Use WASD to move.");
 //        System.out.println("Lock doors with q.");
 //        System.out.println("Unlock doors with e.");
-//        System.out.println();
-//        while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
-//            System.out.println(triviaMaze);
-//            Room playerLocation = triviaMaze.getPlayerLocation();
-//            System.out.println("Position: "
-//                    + playerLocation.getRow()
-//                    + ", "
-//                    + playerLocation.getCol());
-//            switch (s.nextLine()) {
-//                case "w" -> d = triviaMaze.move(NORTH);
-//                case "a" -> d = triviaMaze.move(WEST);
-//                case "s" -> d = triviaMaze.move(SOUTH);
-//                case "d" -> d = triviaMaze.move(EAST);
-//            }
+        triviaMaze.setAllDoors(OPEN);
+        System.out.println();
+        while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
+            System.out.println(triviaMaze.playerRoomToString());
+//            System.out.println(triviaMaze.playerRoomToString());
+            Room playerLocation = triviaMaze.getPlayerLocation();
+            System.out.println("Position: "
+                    + playerLocation.getRow()
+                    + ", "
+                    + playerLocation.getCol());
+            switch (s.nextLine()) {
+                case "w" -> triviaMaze.attemptMove(NORTH);
+                case "a" -> triviaMaze.attemptMove(WEST);
+                case "s" -> triviaMaze.attemptMove(SOUTH);
+                case "d" -> triviaMaze.attemptMove(EAST);
+            }
 //            if (d.isPresent()) {
 //                Door door = d.get();
 //                Question q = triviaMaze.getQuestion(door);
@@ -53,21 +57,21 @@
 //                    }
 //                }
 //            }
-//        }
-//        System.out.println(triviaMaze);
-//        if (triviaMaze.gameLoss()) {
-//            System.out.println("*** Game lost. ***");
-//        }
-//        if (triviaMaze.atGoal()) {
-//            System.out.println("*** Game won. ***");
-//        }
-//        System.out.println("Rooms visited: " + triviaMaze.getNumVisited());
-//        System.out.println("Doors opened: " + triviaMaze.getStateNum(OPEN));
-//        System.out.println("Closed doors: " + triviaMaze.getStateNum(CLOSED));
-//        System.out.println("Locked doors: " + triviaMaze.getStateNum(LOCKED));
-//    }
-//
-//    public static void main(String[] args) {
-//        game();
-//    }
-//}
+        }
+        System.out.println(triviaMaze);
+        if (triviaMaze.gameLoss()) {
+            System.out.println("*** Game lost. ***");
+        }
+        if (triviaMaze.atGoal()) {
+            System.out.println("*** Game won. ***");
+        }
+        System.out.println("Rooms visited: " + triviaMaze.getRoomVisitedNum());
+        System.out.println("Doors opened: " + triviaMaze.getDoorStateNum(OPEN));
+        System.out.println("Closed doors: " + triviaMaze.getDoorStateNum(CLOSED));
+        System.out.println("Locked doors: " + triviaMaze.getDoorStateNum(LOCKED));
+    }
+
+    public static void main(String[] args) {
+        game();
+    }
+}

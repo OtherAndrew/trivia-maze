@@ -28,9 +28,13 @@ public class Maze implements Serializable {
      */
     public static final char PLAYER_SYMBOL = '+';
     /**
+     * Represents the start position.
+     */
+    public static final char START_SYMBOL = '*';
+    /**
      * Represents maze walls.
      */
-    public static final char WALL = '█';
+    public static final char WALL_SYMBOL = '█';
     /**
      * Number of rows.
      */
@@ -52,6 +56,10 @@ public class Maze implements Serializable {
      */
     private Room myPlayerLocation;
     /**
+     * The start location.
+     */
+    private Room myStartLocation;
+    /**
      * The goal location.
      */
     private Room myGoalLocation;
@@ -71,7 +79,8 @@ public class Maze implements Serializable {
         myWidth = theCols;
         myRooms = generateRoomMatrix(theRows, theCols);
         myQuestionMap = new HashMap<>();
-        myPlayerLocation = chooseRandomRoom();
+        myStartLocation = chooseRandomRoom();
+        myPlayerLocation = myStartLocation;
         myPlayerLocation.visit();
         myGoalLocation = chooseExit();
         generateMaze(generatePossibleDoors());
@@ -200,6 +209,7 @@ public class Maze implements Serializable {
      */
     private void move(final Direction theDirection) {
         myPlayerLocation = myPlayerLocation.getOtherSide(theDirection);
+        myPlayerLocation.visit();
     }
 
     /**
@@ -221,7 +231,6 @@ public class Maze implements Serializable {
             if (getQuestion(theDirection).checkAnswer(theResponse)) {
                 myPlayerLocation.setDoorState(theDirection, OPEN);
                 move(theDirection);
-                myPlayerLocation.visit();
                 atGoal();
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
@@ -243,22 +252,30 @@ public class Maze implements Serializable {
     /**
      * Checks if player has reached the goal room.
      *
+     * @return if the player reached the goal.
      */
-    public void atGoal() {
+    public boolean atGoal() {
+        boolean win = false;
         if (myPlayerLocation == myGoalLocation) {
+            win = true;
             endGame(true);
         }
+        return win;
     }
 
     /**
      * Determines if there is no longer a viable path to the goal, meaning
      * the game is lost.
      *
+     * @return if the game is lost.
      */
-    public void gameLoss() {
+    public boolean gameLoss() {
+        boolean loss = false;
         if (BFSRunner.findPath(this).isEmpty()) {
+            loss = true;
             endGame(false);
         }
+        return loss;
     }
 
     private void endGame(final boolean theWin) {
@@ -274,6 +291,12 @@ public class Maze implements Serializable {
         return myGoalLocation;
     }
 
+    /**
+     * Gets the room where the start is located.
+     */
+    public Room getStartLocation() {
+        return myStartLocation;
+    }
     /**
      * Gets the room where the player is located.
      *
@@ -304,15 +327,21 @@ public class Maze implements Serializable {
          * The goal location.
          */
         private final Room mySavedGoalLocation;
+        /**
+         * The start location.
+         */
+        private final Room mySavedStartLocation;
 
         private Memento(final Room[][] theRooms,
                         final Map<Door, Question> theQuestionMap,
                         final Room thePlayerLocation,
-                        final Room theGoalLocation) {
+                        final Room theGoalLocation,
+                        final Room theStartLocation) {
             mySavedRooms = theRooms;
             mySavedQuestionMap = theQuestionMap;
             mySavedPlayerLocation = thePlayerLocation;
             mySavedGoalLocation = theGoalLocation;
+            mySavedStartLocation = theStartLocation;
         }
     }
 
@@ -323,7 +352,7 @@ public class Maze implements Serializable {
 
     public void save(final File theSaveFile) {
         Serializer.save(new Memento(myRooms, myQuestionMap,
-                myPlayerLocation, myGoalLocation), theSaveFile);
+                myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
     }
 
     public void load() {
@@ -341,6 +370,7 @@ public class Maze implements Serializable {
         myQuestionMap = theMemento.mySavedQuestionMap;
         myPlayerLocation = theMemento.mySavedPlayerLocation;
         myGoalLocation = theMemento.mySavedGoalLocation;
+        myStartLocation = theMemento.mySavedStartLocation;
     }
 
     /**
@@ -403,6 +433,8 @@ public class Maze implements Serializable {
                     out[row][col] = PLAYER_SYMBOL;
                 } else if (currentRoom.equals(myGoalLocation)) {
                     out[row][col] = GOAL_SYMBOL;
+                } else if (currentRoom.equals(myStartLocation)) {
+                    out[row][col] = START_SYMBOL;
                 } else {
                     out[row][col] = currentRoom.toChar();
                 }
@@ -427,7 +459,7 @@ public class Maze implements Serializable {
     private char[][] generateWallMatrix(final int theHeight, final int theWidth) {
         final char[][] mazeFrame = new char[theHeight * 2 + 1][theWidth * 2 + 1];
         for (char[] row : mazeFrame) {
-            Arrays.fill(row, WALL);
+            Arrays.fill(row, WALL_SYMBOL);
         }
         return mazeFrame;
     }
