@@ -140,8 +140,8 @@ public class Maze implements Serializable {
         Room exit;
         do {
             exit = chooseRandomRoom();
-        } while ((Math.abs(myPlayerLocation.getRow() - exit.getRow()) <= myHeight / 2)
-                && (Math.abs(myPlayerLocation.getCol() - exit.getCol()) <= myWidth / 2));
+        } while ((Math.abs(myStartLocation.getRow() - exit.getRow()) <= myHeight / 2)
+                && (Math.abs(myStartLocation.getCol() - exit.getCol()) <= myWidth / 2));
         return exit;
     }
 

@@ -116,6 +116,7 @@ public class Game {
                     case Maze.WALL_SYMBOL, Door.LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
                     case Maze.PLAYER_SYMBOL -> tile.setBackground(Color.CYAN);
                     case Maze.GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
+                    case Maze.START_SYMBOL -> tile.setBackground(Color.RED);
                     case Door.OPEN_SYMBOL, Room.VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
                     case Door.CLOSED_SYMBOL -> tile.setBackground(Color.DARK_GRAY);
                     case Room.UNVISITED_SYMBOL -> tile.setBackground(Color.GRAY);
