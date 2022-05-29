@@ -116,7 +116,7 @@ public class Door implements Serializable {
      */
     public void setState(final State theState) {
         myState = theState;
-        switch (theState) {
+        switch (myState) {
             case CLOSED -> mySymbol = CLOSED_SYMBOL;
             case OPEN -> mySymbol = OPEN_SYMBOL;
             case LOCKED -> mySymbol = LOCKED_SYMBOL;

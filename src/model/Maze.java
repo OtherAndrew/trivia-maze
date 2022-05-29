@@ -174,7 +174,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                // myQuestionMap.put(door, qf.createQuestion());
+                 myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -377,6 +377,17 @@ public class Maze implements Serializable {
     }
 
     /**
+     * Sets all doors in the maze to the given state.
+     *
+     * @param theState the desired state for each door.
+     */
+    public void setAllDoors(final State theState) {
+        for (Door door : myQuestionMap.keySet()) {
+            door.setState(theState);
+        }
+    }
+
+    /**
      * Returns a 2D character array representation of the maze.
      *
      * @return a 2D character array representation of the maze.
@@ -413,7 +424,7 @@ public class Maze implements Serializable {
      * @param theHeight the number of rows in the maze.
      * @param theWidth the number of columns in the maze.
      */
-    private char[][] generateWallMatrix(int theHeight, int theWidth) {
+    private char[][] generateWallMatrix(final int theHeight, final int theWidth) {
         final char[][] mazeFrame = new char[theHeight * 2 + 1][theWidth * 2 + 1];
         for (char[] row : mazeFrame) {
             Arrays.fill(row, WALL);
@@ -483,6 +494,9 @@ public class Maze implements Serializable {
     public static void main(final String[] theArgs) {
         Random r = new Random();
         Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
+        System.out.println(maze);
+        System.out.println();
+        maze.setAllDoors(LOCKED);
         System.out.println(maze);
         System.out.println();
         System.out.println(maze.playerRoomToString());

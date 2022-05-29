@@ -3,6 +3,7 @@ package view;
 import model.Maze;
 import model.mazecomponents.Door;
 import model.mazecomponents.Room;
+import model.mazecomponents.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,9 +34,11 @@ public class Game {
 //        final String mazePlaceholder = Files.readString(Path.of("src/view/assets/mazePlaceholder.txt"));
         final Random r = new Random();
         final Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
+
+//        maze.setAllDoors(State.OPEN);
         System.out.println(maze);
-//        myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
-        myFrame.add(drawMapDisplay(maze.toCharArray()), BorderLayout.CENTER);
+        myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
+//        myFrame.add(drawMapDisplay(maze.toCharArray()), BorderLayout.CENTER);
 
         // Right
         JPanel sidebar = new JPanel(new BorderLayout());
