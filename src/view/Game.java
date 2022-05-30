@@ -273,7 +273,8 @@ public class Game implements ActionListener {
                 final JLabel player = new JLabel("YOU");
                 player.setHorizontalAlignment(SwingConstants.CENTER);
                 player.setForeground(Color.BLACK);
-                tile.setBackground(TRAVERSABLE_COLOR);
+                if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
+                else tile.setBackground(TRAVERSABLE_COLOR);
                 tile.setLayout(new BorderLayout());
                 tile.add(player, BorderLayout.CENTER);
             }
