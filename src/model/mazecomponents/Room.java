@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static model.mazecomponents.State.*;
+
 /**
  * Room is a class that represents a space in the maze that the player can
  * occupy. Each room may be connected by at most four doors.
@@ -153,6 +155,11 @@ public class Room implements Serializable {
     public void visit() {
         myVisited = true;
         mySymbol = VISITED_SYMBOL;
+        for (Door door : myDoors.values()) {
+            if (door.getState() == UNDISCOVERED) {
+                door.setState(CLOSED);
+            }
+        }
     }
 
     /**

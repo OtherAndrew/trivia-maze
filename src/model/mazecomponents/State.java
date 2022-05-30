@@ -8,6 +8,7 @@ public enum State {
      *   a question
      * - Open: Able to be passed through freely, does not show a question.
      * - Locked: Unable to be passed through or opened. Will show a question.
+     * - Undiscovered: Unable to be passed through or opened. does not show a question.
      */
-    CLOSED, OPEN, LOCKED
+    CLOSED, OPEN, LOCKED, UNDISCOVERED
 }

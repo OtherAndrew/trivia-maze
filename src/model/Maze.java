@@ -81,9 +81,9 @@ public class Maze implements Serializable {
         myQuestionMap = new HashMap<>();
         myStartLocation = chooseRandomRoom();
         myPlayerLocation = myStartLocation;
-        myPlayerLocation.visit();
         myGoalLocation = chooseExit();
         generateMaze(generatePossibleDoors());
+        myPlayerLocation.visit();
     }
 
     /**
@@ -528,10 +528,10 @@ public class Maze implements Serializable {
         Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
         System.out.println(maze);
         System.out.println();
-        maze.setAllDoors(LOCKED);
-        System.out.println(maze);
-        System.out.println();
-        System.out.println(maze.playerRoomToString());
+//        maze.setAllDoors(LOCKED);
+//        System.out.println(maze);
+//        System.out.println();
+//        System.out.println(maze.playerRoomToString());
         maze.save();
     }
 }

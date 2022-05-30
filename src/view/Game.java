@@ -1,8 +1,6 @@
 package view;
 
 import model.Maze;
-import model.mazecomponents.Door;
-import model.mazecomponents.Room;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,6 +16,14 @@ import static model.mazecomponents.Door.*;
 public class Game {
 
     final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
+    public static final Color NON_TRAVERSABLE_COLOR = Color.BLACK;
+    public static final Color GOAL_COLOR = Color.GREEN;
+    public static final Color START_COLOR = new Color(128, 0, 0);
+    public static final Color TRAVERSABLE_COLOR = Color.LIGHT_GRAY;
+    public static final Color CLOSED_COLOR = Color.DARK_GRAY;
+    public static final Color UNVISITED_COLOR = Color.GRAY;
+    public static final String[] CONTROL_TEXT = {"UP", "LEFT", "RIGHT", "DOWN"};
+
 
     private JFrame myFrame;
     private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel, myOuterDirectionPanel;
@@ -39,7 +45,8 @@ public class Game {
         // Left half
 //        final String mazePlaceholder = Files.readString(Path.of("src/view/assets/mazePlaceholder.txt"));
         final Random r = new Random();
-        final Maze maze = new Maze(r.nextInt(6) + 3, r.nextInt(6) + 3);
+//        final Maze maze = new Maze(r.nextInt(7) + 3, r.nextInt(7) + 3);
+        final Maze maze = new Maze(10, 10);
 //        maze.setAllDoors(State.OPEN);
         System.out.println(maze);
         myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
@@ -48,8 +55,8 @@ public class Game {
         // Right
         JPanel sidebar = new JPanel(new BorderLayout());
         // MINIMAP
-        // TODO: option select for minimap?
-        sidebar.add(drawMapDisplay(maze.toCharArray(), 10), BorderLayout.NORTH);
+        // TODO: omniscence select for minimap?
+        sidebar.add(drawMapDisplay(maze.toCharArray(), 10, false), BorderLayout.NORTH);
         sidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         sidebar.add(drawQAPanel(), BorderLayout.CENTER);
         myFrame.add(sidebar, BorderLayout.EAST);
@@ -122,48 +129,106 @@ public class Game {
     }
 
     /**
-     * Draws a JPanel based on the character array input.
+     * Draws a map display from the character array representation of one or
+     * more rooms.
      *
      * @param theCharArray a character array representing one or more rooms
      *                     in the maze.
-     * @param theTileSize the preferred tile size for the output.
+     * @param theTileSize the preferred tile size for the output. If <= 0 then
+     *                    no preferred sizing will be applied.
+     * @param theOmniscient if the output should display an omniscient view.
      * @return a JPanel that displays the character array as a series of tiles.
      */
-    private JPanel drawMapDisplay(final char[][] theCharArray, final int theTileSize) {
+    private JPanel drawMapDisplay(final char[][] theCharArray, final int theTileSize,
+                                  final boolean theOmniscient) {
         myMapDisplay = new JPanel(
                 new GridLayout(theCharArray.length, theCharArray[0].length));
         for (char[] row : theCharArray) {
             for (char space : row) {
-                // TODO: decide on appearance for tiles
-                final JComponent tile = new JPanel();
-                if (theTileSize > 0) {
-                    tile.setPreferredSize(new Dimension(theTileSize, theTileSize));
-                }
-                switch (space) {
-                    case Maze.PLAYER_SYMBOL -> {
-                        final JLabel player = new JLabel("YOU");
-                        player.setHorizontalAlignment(SwingConstants.CENTER);
-                        player.setForeground(Color.BLACK);
-                        tile.setBackground(Color.LIGHT_GRAY);
-                        tile.setLayout(new BorderLayout());
-                        tile.add(player, BorderLayout.CENTER);
-                    }
-                    case WALL_SYMBOL, LOCKED_SYMBOL -> tile.setBackground(Color.BLACK);
-                    case GOAL_SYMBOL -> tile.setBackground(Color.GREEN);
-                    case START_SYMBOL -> tile.setBackground(Color.RED);
-                    case OPEN_SYMBOL, VISITED_SYMBOL -> tile.setBackground(Color.LIGHT_GRAY);
-                    case CLOSED_SYMBOL -> tile.setBackground(Color.DARK_GRAY);
-                    case UNVISITED_SYMBOL -> tile.setBackground(Color.GRAY);
-                }
-                myMapDisplay.add(tile);
+                myMapDisplay.add(buildTile(space, theTileSize, theOmniscient));
             }
         }
         myMapDisplay.setBorder(PADDING);
         return myMapDisplay;
     }
 
+    /**
+     * Draws a map display from the character array representation of one or
+     * more rooms with no preferred tile size.
+     *
+     * @param theCharArray a character array representing one or more rooms
+     *                     in the maze.
+     * @param theOmniscient if the output should display an omniscient view.
+     * @return a JPanel that displays the character array as a series of tiles.
+     */
+    private JPanel drawMapDisplay(final char[][] theCharArray, final boolean theOmniscient) {
+        return drawMapDisplay(theCharArray, 0, theOmniscient);
+    }
+
+    /**
+     * Draws an omniscient map display with a preferred tile size.
+     *
+     * @param theCharArray a character array representing one or more rooms
+     *                     in the maze.
+     * @param theTileSize the preferred tile size for the output. If <= 0 then
+     *                    no preferred sizing will be applied.
+     * @return
+     */
+    private JPanel drawMapDisplay(final char[][] theCharArray, final int theTileSize) {
+        return drawMapDisplay(theCharArray, theTileSize, true);
+    }
+
+    /**
+     * Draws an omniscient map display with no preferred tile size.
+     *
+     * @param theCharArray a character array representing one or more rooms
+     *                     in the maze.
+     * @return a JPanel that displays the character array as a series of tiles.
+     */
     private JPanel drawMapDisplay(final char[][] theCharArray) {
-        return drawMapDisplay(theCharArray, 0);
+        return drawMapDisplay(theCharArray, 0, true);
+    }
+
+    /**
+     * Returns a tile based on the given parameters.
+     *
+     * @param theChar the character representation of the tile.
+     * @param theTileSize the preferred size of the tile. If <= 0 then
+     *                    no preferred sizing will be applied.
+     * @param theOmniscient if an omniscient view is desired.
+     * @return a maze tile.
+     */
+    // TODO: decide on appearance for tiles
+    private JComponent buildTile(final char theChar, final int theTileSize,
+                                 final boolean theOmniscient) {
+        final JComponent tile = new JPanel();
+        if (theTileSize > 0) {
+            tile.setPreferredSize(new Dimension(theTileSize, theTileSize));
+        }
+        switch (theChar) {
+            case Maze.PLAYER_SYMBOL -> {
+                final JLabel player = new JLabel("YOU");
+                player.setHorizontalAlignment(SwingConstants.CENTER);
+                player.setForeground(Color.BLACK);
+                tile.setBackground(TRAVERSABLE_COLOR);
+                tile.setLayout(new BorderLayout());
+                tile.add(player, BorderLayout.CENTER);
+            }
+            case UNDISCOVERED_SYMBOL -> {
+                if (theOmniscient) tile.setBackground(CLOSED_COLOR);
+                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+            }
+            case UNVISITED_SYMBOL -> {
+                if (theOmniscient) tile.setBackground(UNVISITED_COLOR);
+                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+            }
+            case WALL_SYMBOL, LOCKED_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
+            case OPEN_SYMBOL, VISITED_SYMBOL -> tile.setBackground(TRAVERSABLE_COLOR);
+            case START_SYMBOL -> tile.setBackground(START_COLOR);
+            case CLOSED_SYMBOL -> tile.setBackground(CLOSED_COLOR);
+            case GOAL_SYMBOL -> tile.setBackground(GOAL_COLOR);
+        }
+        return tile;
     }
 
     public static void main(String[] args) {

@@ -14,17 +14,21 @@ public class Door implements Serializable {
     @Serial
     private static final long serialVersionUID = -6572203977734228079L;
     /**
-     * Representation for closed door.
+     * Representation of closed door.
      */
-    public static final char CLOSED_SYMBOL = '#';
+    public static final char CLOSED_SYMBOL = '/';
     /**
-     * Representation for locked door.
+     * Representation of locked door.
      */
     public static final char LOCKED_SYMBOL = 'X';
     /**
-     * Representation for open door.
+     * Representation of open door.
      */
     public static final char OPEN_SYMBOL = 'O';
+    /**
+     * Representation of undiscovered door.
+     */
+    public static final char UNDISCOVERED_SYMBOL = '#';
     /**
      * The first room the door connects to.
      */
@@ -60,7 +64,7 @@ public class Door implements Serializable {
      */
     public Door(final Room theRoom1, final Direction theDirection1,
                 final Room theRoom2, final Direction theDirection2) {
-        setState(CLOSED);
+        setState(UNDISCOVERED);
         myRoom1 = theRoom1;
         myDirection1 = theDirection1;
         myRoom2 = theRoom2;
@@ -118,8 +122,9 @@ public class Door implements Serializable {
         myState = theState;
         switch (myState) {
             case CLOSED -> mySymbol = CLOSED_SYMBOL;
-            case OPEN -> mySymbol = OPEN_SYMBOL;
             case LOCKED -> mySymbol = LOCKED_SYMBOL;
+            case OPEN -> mySymbol = OPEN_SYMBOL;
+            case UNDISCOVERED -> mySymbol = UNDISCOVERED_SYMBOL;
         }
     }
 
