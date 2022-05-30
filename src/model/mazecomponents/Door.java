@@ -16,7 +16,7 @@ public class Door implements Serializable {
     /**
      * Representation of closed door.
      */
-    public static final char CLOSED_SYMBOL = '/';
+    public static final char CLOSED_SYMBOL = '\\';
     /**
      * Representation of locked door.
      */

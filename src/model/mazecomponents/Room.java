@@ -146,7 +146,9 @@ public class Room implements Serializable {
 
     public void setDoorState(final Direction theDirection,
                              final State theState) {
-        getDoor(theDirection).setState(theState);
+        if (hasDoor(theDirection)) {
+            getDoor(theDirection).setState(theState);
+        }
     }
 
     /**

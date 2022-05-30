@@ -1,16 +1,20 @@
 package view;
 
 import model.Maze;
+import model.mazecomponents.Direction;
+import model.mazecomponents.State;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static model.Maze.*;
 import static model.mazecomponents.Room.*;
 import static model.mazecomponents.Door.*;
 
-public class Game {
+public class Game implements ActionListener {
 
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
     public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0, 10, 0);
@@ -24,8 +28,10 @@ public class Game {
     public static final String[] CONTROL_TEXT = {"UP", "LEFT", "RIGHT", "DOWN"};
 
 
+    final Maze maze = new Maze(10, 10);
+
     private JFrame myFrame;
-    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel, myOuterDirectionPanel;
+    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel, myOuterDirectionPanel, myMinimapDisplay, mySidebar;
     private JButton myRoomButton, myMapButton, myEastButton, myWestButton, myNorthButton, mySouthButton;
 
     private JTextArea myQuestion;
@@ -43,25 +49,57 @@ public class Game {
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Left
-        final Maze maze = new Maze(10, 10);
 //        System.out.println(maze);
-        final JPanel mapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
+        myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
 //        final JPanel mapDisplay = drawMapDisplay(maze.toCharArray());
-        mapDisplay.setBorder(PADDING);
-        myFrame.add(mapDisplay, BorderLayout.CENTER);
+        myMapDisplay.setBorder(PADDING);
+        myFrame.add(myMapDisplay, BorderLayout.CENTER);
 
         // Right
-        JPanel sidebar = new JPanel(new BorderLayout());
+        mySidebar = new JPanel(new BorderLayout());
         // MINIMAP
         // TODO: omniscence select for minimap?
-        final JPanel minimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
-        sidebar.add(minimapDisplay, BorderLayout.NORTH);
-        sidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
-        sidebar.add(drawQAPanel(), BorderLayout.CENTER);
-        sidebar.setBorder(PADDING);
-        myFrame.add(sidebar, BorderLayout.EAST);
+        myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
+        mySidebar.add(myMinimapDisplay, BorderLayout.NORTH);
+        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
+        mySidebar.add(drawQAPanel(), BorderLayout.CENTER);
+        mySidebar.setBorder(PADDING);
+        myFrame.add(mySidebar, BorderLayout.EAST);
 
+        addActionListeners();
         myFrame.setVisible(true);
+    }
+
+    public void actionPerformed(final ActionEvent theEvent) {
+        final String sourceName = ((AbstractButton) theEvent.getSource()).getText();
+        switch (sourceName) {
+            case "Up" -> doMove(Direction.NORTH);
+            case "Down" -> doMove(Direction.SOUTH);
+            case "Left" -> doMove(Direction.WEST);
+            case "Right" -> doMove(Direction.EAST);
+        }
+        myFrame.remove(myMapDisplay);
+        myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
+        myFrame.add(myMapDisplay, BorderLayout.CENTER);
+        mySidebar.remove(myMinimapDisplay);
+        myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
+        mySidebar.add(myMinimapDisplay, BorderLayout.NORTH);
+
+        myFrame.revalidate();
+        myFrame.repaint();
+    }
+
+    private void addActionListeners () {
+        myEastButton.addActionListener(this);
+        myNorthButton.addActionListener(this);
+        mySouthButton.addActionListener(this);
+        myWestButton.addActionListener(this);
+    }
+
+    private void doMove(final Direction theDirection) {
+        maze.getPlayerLocation().setDoorState(theDirection, State.OPEN);
+        maze.attemptMove(theDirection);
+        System.out.println(maze);
     }
 
     private JPanel drawQAPanel() {
@@ -141,14 +179,14 @@ public class Game {
      */
     private JPanel drawMapDisplay(final char[][] theCharArray, final int theTileSize,
                                   final boolean theOmniscient) {
-        myMapDisplay = new JPanel(
+        final JPanel mapDisplay = new JPanel(
                 new GridLayout(theCharArray.length, theCharArray[0].length));
         for (char[] row : theCharArray) {
             for (char space : row) {
-                myMapDisplay.add(buildTile(space, theTileSize, theOmniscient));
+                mapDisplay.add(buildTile(space, theTileSize, theOmniscient));
             }
         }
-        return myMapDisplay;
+        return mapDisplay;
     }
 
     /**
