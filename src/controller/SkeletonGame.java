@@ -23,11 +23,11 @@ public class SkeletonGame {
         System.out.println("Use WASD to move.");
 //        System.out.println("Lock doors with q.");
 //        System.out.println("Unlock doors with e.");
-//        triviaMaze.setAllDoors(OPEN);
+        triviaMaze.setAllDoors(OPEN);
         System.out.println();
         while (!triviaMaze.atGoal() && !triviaMaze.gameLoss()) {
-            System.out.println(triviaMaze.toString());
-//            System.out.println(triviaMaze.playerRoomToString());
+//            System.out.println(triviaMaze.toString());
+            System.out.println(triviaMaze.playerRoomToString());
             Room playerLocation = triviaMaze.getPlayerLocation();
             System.out.println("Position: "
                     + playerLocation.getRow()

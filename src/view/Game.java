@@ -15,10 +15,12 @@ import static model.mazecomponents.Door.*;
 
 public class Game {
 
-    final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
+    public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
+    public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0, 10, 0);
     public static final Color NON_TRAVERSABLE_COLOR = Color.BLACK;
-    public static final Color GOAL_COLOR = Color.GREEN;
-    public static final Color START_COLOR = new Color(128, 0, 0);
+    public static final Color GOAL_COLOR = Color.decode("#66ff33");
+    public static final Color START_COLOR = Color.decode("#3366ff");
+    public static final Color LOCKED_COLOR = Color.decode("#cc3300");
     public static final Color TRAVERSABLE_COLOR = Color.LIGHT_GRAY;
     public static final Color CLOSED_COLOR = Color.DARK_GRAY;
     public static final Color UNVISITED_COLOR = Color.GRAY;
@@ -41,24 +43,25 @@ public class Game {
         myFrame.setLayout(new BorderLayout());
         myFrame.setSize(myPreferredSize);
         myFrame.setLocationRelativeTo(null);
+        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        // Left half
-//        final String mazePlaceholder = Files.readString(Path.of("src/view/assets/mazePlaceholder.txt"));
-        final Random r = new Random();
-//        final Maze maze = new Maze(r.nextInt(7) + 3, r.nextInt(7) + 3);
+        // Left
         final Maze maze = new Maze(10, 10);
-//        maze.setAllDoors(State.OPEN);
-        System.out.println(maze);
-        myFrame.add(drawMapDisplay(maze.playerRoomToCharArray()), BorderLayout.CENTER);
-//        myFrame.add(drawMapDisplay(maze.toCharArray()), BorderLayout.CENTER);
+//        System.out.println(maze);
+        final JPanel mapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
+//        final JPanel mapDisplay = drawMapDisplay(maze.toCharArray());
+        mapDisplay.setBorder(PADDING);
+        myFrame.add(mapDisplay, BorderLayout.CENTER);
 
         // Right
         JPanel sidebar = new JPanel(new BorderLayout());
         // MINIMAP
         // TODO: omniscence select for minimap?
-        sidebar.add(drawMapDisplay(maze.toCharArray(), 10, false), BorderLayout.NORTH);
+        final JPanel minimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
+        sidebar.add(minimapDisplay, BorderLayout.NORTH);
         sidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         sidebar.add(drawQAPanel(), BorderLayout.CENTER);
+        sidebar.setBorder(PADDING);
         myFrame.add(sidebar, BorderLayout.EAST);
 
         myFrame.setVisible(true);
@@ -82,7 +85,7 @@ public class Game {
         // Bottom
 
         myQuestionAnswerPanel.add(drawAnswerPanel(), BorderLayout.SOUTH);
-        myQuestionAnswerPanel.setBorder(PADDING);
+        myQuestionAnswerPanel.setBorder(VERTICAL_PADDING);
         return myQuestionAnswerPanel;
     }
 
@@ -124,7 +127,7 @@ public class Game {
         myDirectionPanel.add(mySouthButton);
         myDirectionPanel.add(new JPanel());
 
-        myDirectionPanel.setBorder(PADDING);
+        myDirectionPanel.setBorder(VERTICAL_PADDING);
         return myDirectionPanel;
     }
 
@@ -148,7 +151,6 @@ public class Game {
                 myMapDisplay.add(buildTile(space, theTileSize, theOmniscient));
             }
         }
-        myMapDisplay.setBorder(PADDING);
         return myMapDisplay;
     }
 
@@ -222,8 +224,12 @@ public class Game {
                 if (theOmniscient) tile.setBackground(UNVISITED_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
-            case WALL_SYMBOL, LOCKED_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
+            case LOCKED_SYMBOL -> {
+                if (theOmniscient) tile.setBackground(LOCKED_COLOR);
+                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+            }
             case OPEN_SYMBOL, VISITED_SYMBOL -> tile.setBackground(TRAVERSABLE_COLOR);
+            case WALL_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
             case START_SYMBOL -> tile.setBackground(START_COLOR);
             case CLOSED_SYMBOL -> tile.setBackground(CLOSED_COLOR);
             case GOAL_SYMBOL -> tile.setBackground(GOAL_COLOR);
