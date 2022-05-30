@@ -255,12 +255,21 @@ public class Maze implements Serializable {
      * @return if the player reached the goal.
      */
     public boolean atGoal() {
-        boolean win = false;
-        if (myPlayerLocation == myGoalLocation) {
-            win = true;
+        boolean atGoal = false;
+        if (atRoom(myGoalLocation)) {
+            atGoal = true;
             endGame(true);
         }
-        return win;
+        return atGoal;
+    }
+
+    /**
+     * Checks if player is in the start room.
+     *
+     * @return if the player is at the start room.
+     */
+    public boolean atStart() {
+        return atRoom(myStartLocation);
     }
 
     /**
@@ -276,6 +285,16 @@ public class Maze implements Serializable {
             endGame(false);
         }
         return loss;
+    }
+
+    /**
+     * Determines if the player is in the specified room.
+     *
+     * @param theRoom the room to look in.
+     * @return if the player is in the room.
+     */
+    public boolean atRoom(final Room theRoom) {
+        return myPlayerLocation == theRoom;
     }
 
     private void endGame(final boolean theWin) {
