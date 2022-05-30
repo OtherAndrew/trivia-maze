@@ -9,26 +9,29 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.StringJoiner;
 
 import static model.Maze.*;
 import static model.mazecomponents.Room.*;
 import static model.mazecomponents.Door.*;
+import static model.mazecomponents.State.*;
 
 public class Game implements ActionListener {
-
+    // https://www.w3schools.com/html/tryit.asp?filename=tryhtml_color_names
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
     public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0, 10, 0);
     public static final Color NON_TRAVERSABLE_COLOR = Color.BLACK;
-    public static final Color GOAL_COLOR = Color.decode("#66ff33");
-    public static final Color START_COLOR = Color.decode("#3366ff");
-    public static final Color LOCKED_COLOR = Color.decode("#cc3300");
+    public static final Color GOAL_COLOR = Color.decode("#3cb371");
+    public static final Color START_COLOR = Color.decode("#1e90ff");
+    public static final Color LOCKED_COLOR = Color.decode("#ff6347");
+    public static final Color CLOSED_COLOR = Color.decode("#6a5acd");
+    public static final Color UNDISCOVERED_COLOR = Color.DARK_GRAY;
     public static final Color TRAVERSABLE_COLOR = Color.LIGHT_GRAY;
-    public static final Color CLOSED_COLOR = Color.DARK_GRAY;
     public static final Color UNVISITED_COLOR = Color.GRAY;
     public static final String[] CONTROL_TEXT = {"UP", "LEFT", "RIGHT", "DOWN"};
 
 
-    final Maze maze = new Maze(10, 10);
+    final Maze maze = new Maze(6, 6);
 
     private JFrame myFrame;
     private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel, myAnswerPanel, myMapDisplay, myQuestionPanel, myOuterDirectionPanel, myMinimapDisplay, mySidebar;
@@ -78,13 +81,10 @@ public class Game implements ActionListener {
             case "Left" -> doMove(Direction.WEST);
             case "Right" -> doMove(Direction.EAST);
         }
+
         myFrame.remove(myMapDisplay);
         myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
-        mySidebar.remove(myMinimapDisplay);
-        myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
-        mySidebar.add(myMinimapDisplay, BorderLayout.NORTH);
-
         myFrame.revalidate();
         myFrame.repaint();
     }
@@ -96,10 +96,36 @@ public class Game implements ActionListener {
         myWestButton.addActionListener(this);
     }
 
+    private void removeActionListeners () {
+        myEastButton.removeActionListener(this);
+        myNorthButton.removeActionListener(this);
+        mySouthButton.removeActionListener(this);
+        myWestButton.removeActionListener(this);
+    }
+
     private void doMove(final Direction theDirection) {
         maze.getPlayerLocation().setDoorState(theDirection, State.OPEN);
         maze.attemptMove(theDirection);
-        System.out.println(maze);
+        mySidebar.remove(myMinimapDisplay);
+        if (maze.atGoal()) {
+            final StringJoiner sj = new StringJoiner("\n");
+            sj.add("YOU WON!");
+            sj.add("");
+            sj.add("Rooms visited: " + maze.getRoomVisitedNum());
+            sj.add("Rooms not visited: " + maze.getRoomNotVisitedNum());
+            sj.add("");
+            sj.add("Opened doors: " + maze.getDoorStateNum(OPEN));
+            sj.add("Closed doors: " + maze.getDoorStateNum(CLOSED));
+            sj.add("Locked doors: " + maze.getDoorStateNum(LOCKED));
+            sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
+            myQuestion.setText(sj.toString());
+            myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, true);
+            removeActionListeners();
+        } else {
+            myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
+        }
+        mySidebar.add(myMinimapDisplay, BorderLayout.NORTH);
+//        System.out.println(maze);
     }
 
     private JPanel drawQAPanel() {
@@ -252,7 +278,7 @@ public class Game implements ActionListener {
                 tile.add(player, BorderLayout.CENTER);
             }
             case UNDISCOVERED_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(CLOSED_COLOR);
+                if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
             case UNVISITED_SYMBOL -> {

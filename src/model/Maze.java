@@ -391,6 +391,23 @@ public class Maze implements Serializable {
     }
 
     /**
+     * Determines the number of rooms not visited by the player.
+     *
+     * @return the number of rooms not visited by the player.
+     */
+    public int getRoomNotVisitedNum() {
+        int numNotVisited = 0;
+        for (Room[] row : myRooms) {
+            for (Room room : row) {
+                if (!room.isVisited()) {
+                    numNotVisited++;
+                }
+            }
+        }
+        return numNotVisited;
+    }
+
+    /**
      * Determines the number of doors that match the given state.
      *
      * @param theState the state to look for.
