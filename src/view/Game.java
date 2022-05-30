@@ -84,6 +84,7 @@ public class Game implements ActionListener {
 
         myFrame.remove(myMapDisplay);
         myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
+        myMapDisplay.setBorder(PADDING);
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
         myFrame.revalidate();
         myFrame.repaint();
