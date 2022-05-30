@@ -274,6 +274,7 @@ public class Game implements ActionListener {
                 player.setHorizontalAlignment(SwingConstants.CENTER);
                 player.setForeground(Color.BLACK);
                 if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
+                else if (maze.getPlayerLocation() == maze.getStartLocation()) tile.setBackground(START_COLOR);
                 else tile.setBackground(TRAVERSABLE_COLOR);
                 tile.setLayout(new BorderLayout());
                 tile.add(player, BorderLayout.CENTER);
