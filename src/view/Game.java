@@ -281,14 +281,14 @@ public class Game implements ActionListener {
                 tile.setLayout(new BorderLayout());
                 tile.add(player, BorderLayout.CENTER);
             }
-            case UNDISCOVERED_SYMBOL -> {
+            case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
                 if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
-            case UNVISITED_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(UNVISITED_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
-            }
+//            case UNVISITED_SYMBOL -> {
+//                if (theOmniscient) tile.setBackground(UNVISITED_COLOR);
+//                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+//            }
             case LOCKED_SYMBOL -> {
                 if (theOmniscient) tile.setBackground(LOCKED_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
