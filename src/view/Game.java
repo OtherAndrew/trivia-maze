@@ -270,7 +270,8 @@ public class Game implements ActionListener {
         }
         switch (theChar) {
             case Maze.PLAYER_SYMBOL -> {
-                final JLabel player = new JLabel("YOU");
+                final JLabel player = new JLabel("@");
+                if (theTileSize <= 0) player.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 50));
                 player.setHorizontalAlignment(SwingConstants.CENTER);
                 player.setForeground(Color.BLACK);
                 if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
