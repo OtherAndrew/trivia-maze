@@ -109,13 +109,6 @@ public class Game {
         myEastButton.addActionListener(theDirections[1]);
         mySouthButton.addActionListener(theDirections[2]);
         myWestButton.addActionListener(theDirections[3]);
-
-        myFrame.remove(myMapDisplay);
-        myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
-        myMapDisplay.setBorder(PADDING);
-        myFrame.add(myMapDisplay, BorderLayout.CENTER);
-        myFrame.revalidate();
-        myFrame.repaint();
     }
 
     private void disableButtonActionListeners() {
