@@ -18,7 +18,7 @@ public class Welcome {
         myFrame.setTitle("Trivia Maze");
         myWindowIcon = new ImageIcon(myWindowIconPath);
         myFrame.setIconImage(myWindowIcon.getImage());
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setResizable(false);
         myFrame.setSize(myFrameWidth, myFrameHeight);
         myFrame.setVisible(true);

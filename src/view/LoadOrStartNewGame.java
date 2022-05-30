@@ -16,7 +16,7 @@ public class LoadOrStartNewGame {
         myFrame = new JFrame();
         myFrame.setTitle("Trivia Maze");
         // TODO set background to be "Landing_Page_01.png"
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setResizable(false);
         myFrame.setSize(myFrameWidth, myFrameHeight);
 

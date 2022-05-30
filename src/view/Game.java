@@ -5,13 +5,10 @@ import model.Maze;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Random;
 
 import static model.Maze.*;
 import static model.mazecomponents.Room.*;
 import static model.mazecomponents.Door.*;
-
-
 
 public class Game {
 
@@ -39,9 +36,9 @@ public class Game {
 
     public Game() {
         myFrame = new JFrame(myTitle);
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         myFrame.setLayout(new BorderLayout());
         myFrame.setSize(myPreferredSize);
+        myFrame.setResizable(false);
         myFrame.setLocationRelativeTo(null);
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
