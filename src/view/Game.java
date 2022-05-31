@@ -301,10 +301,7 @@ public class Game {
                 if (theOmniscient) tile.setBackground(GOAL_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
-            case LOCKED_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(LOCKED_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
-            }
+            case LOCKED_SYMBOL -> tile.setBackground(LOCKED_COLOR);
             case WALL_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
             case START_SYMBOL -> tile.setBackground(START_COLOR);
             case CLOSED_SYMBOL -> tile.setBackground(CLOSED_COLOR);
