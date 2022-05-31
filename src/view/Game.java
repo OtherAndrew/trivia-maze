@@ -59,18 +59,11 @@ public class Game {
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Left
-//        System.out.println(maze);
-        myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
-//        final JPanel mapDisplay = drawMapDisplay(maze.toCharArray());
-        myMapDisplay.setBorder(PADDING);
+        myMapDisplay = drawMapDisplay(maze.toCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
 
         // Right
         mySidebar = new JPanel(new BorderLayout());
-        // MINIMAP
-        // TODO: omniscience select for minimap?
-        myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
-        mySidebar.add(myMinimapDisplay, BorderLayout.NORTH);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.add(drawQAPanel(), BorderLayout.CENTER);
         mySidebar.setBorder(PADDING);
@@ -96,9 +89,6 @@ public class Game {
         @Override
         public void actionPerformed(final ActionEvent e) {
             doMove(myDirection);
-            myFrame.remove(myMapDisplay);
-            myMapDisplay = drawMapDisplay(maze.playerRoomToCharArray());
-            myFrame.add(myMapDisplay, BorderLayout.CENTER);
             myFrame.revalidate();
             myFrame.repaint();
         }
@@ -139,7 +129,7 @@ public class Game {
     private void doMove(final Direction theDirection) {
         maze.getPlayerLocation().setDoorState(theDirection, State.OPEN);
         maze.attemptMove(theDirection);
-        mySidebar.remove(myMinimapDisplay);
+        myFrame.remove(myMapDisplay);
         if (maze.atGoal()) {
             final StringJoiner sj = new StringJoiner("\n");
             sj.add("YOU WON!");
@@ -152,14 +142,13 @@ public class Game {
             sj.add("Locked doors: " + maze.getDoorStateNum(LOCKED));
             sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
             myQuestion.setText(sj.toString());
-            myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, true);
+            myMapDisplay = drawMapDisplay(maze.toCharArray(), true);
             disableButtonActionListeners();
             disableKeyboardBindings();
         } else {
-            myMinimapDisplay = drawMapDisplay(maze.toCharArray(), 10, false);
+            myMapDisplay = drawMapDisplay(maze.toCharArray());
         }
-        mySidebar.add(myMinimapDisplay, BorderLayout.NORTH);
-//        System.out.println(maze);
+        myFrame.add(myMapDisplay, BorderLayout.CENTER);
     }
 
     private JPanel drawQAPanel() {
@@ -179,7 +168,6 @@ public class Game {
         myQuestionAnswerPanel.add(myQuestion, BorderLayout.CENTER);
 
         // Bottom
-
         myQuestionAnswerPanel.add(drawAnswerPanel(), BorderLayout.SOUTH);
         myQuestionAnswerPanel.setBorder(VERTICAL_PADDING);
         return myQuestionAnswerPanel;
@@ -235,52 +223,24 @@ public class Game {
      *
      * @param theCharArray  a character array representing one or more rooms
      *                      in the maze.
-     * @param theTileSize   the preferred tile size for the output. If <= 0 then
-     *                      no preferred sizing will be applied.
      * @param theOmniscient if the output should display an omniscient view.
      * @return a JPanel that displays the character array as a series of tiles.
      */
     private JPanel drawMapDisplay(final char[][] theCharArray,
-                                  final int theTileSize,
                                   final boolean theOmniscient) {
         final JPanel mapDisplay =
                 new JPanel(new GridLayout(theCharArray.length,
                         theCharArray[0].length));
         for (char[] row : theCharArray) {
             for (char space : row) {
-                mapDisplay.add(buildTile(space, theTileSize, theOmniscient));
+                mapDisplay.add(buildTile(space, theOmniscient));
             }
         }
+        mapDisplay.setBorder(PADDING);
         return mapDisplay;
     }
 
-    /**
-     * Draws a map display from the character array representation of one or
-     * more rooms with no preferred tile size.
-     *
-     * @param theCharArray  a character array representing one or more rooms
-     *                      in the maze.
-     * @param theOmniscient if the output should display an omniscient view.
-     * @return a JPanel that displays the character array as a series of tiles.
-     */
-    private JPanel drawMapDisplay(final char[][] theCharArray,
-                                  final boolean theOmniscient) {
-        return drawMapDisplay(theCharArray, 0, theOmniscient);
-    }
 
-    /**
-     * Draws an omniscient map display with a preferred tile size.
-     *
-     * @param theCharArray a character array representing one or more rooms
-     *                     in the maze.
-     * @param theTileSize  the preferred tile size for the output. If <= 0 then
-     *                     no preferred sizing will be applied.
-     * @return
-     */
-    private JPanel drawMapDisplay(final char[][] theCharArray,
-                                  final int theTileSize) {
-        return drawMapDisplay(theCharArray, theTileSize, true);
-    }
 
     /**
      * Draws an omniscient map display with no preferred tile size.
@@ -290,30 +250,22 @@ public class Game {
      * @return a JPanel that displays the character array as a series of tiles.
      */
     private JPanel drawMapDisplay(final char[][] theCharArray) {
-        return drawMapDisplay(theCharArray, 0, true);
+        return drawMapDisplay(theCharArray,false);
     }
 
     /**
      * Returns a tile based on the given parameters.
      *
      * @param theChar       the character representation of the tile.
-     * @param theTileSize   the preferred size of the tile. If <= 0 then
-     *                      no preferred sizing will be applied.
      * @param theOmniscient if an omniscient view is desired.
      * @return a maze tile.
      */
     // TODO: decide on appearance for tiles
-    private JComponent buildTile(final char theChar, final int theTileSize,
-                                 final boolean theOmniscient) {
+    private JComponent buildTile(final char theChar, final boolean theOmniscient) {
         final JComponent tile = new JPanel();
-        if (theTileSize > 0) {
-            tile.setPreferredSize(new Dimension(theTileSize, theTileSize));
-        }
         switch (theChar) {
             case Maze.PLAYER_SYMBOL -> {
                 final JLabel player = new JLabel(String.valueOf(PLAYER_SYMBOL));
-                if (theTileSize <= 0)
-                    player.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 50));
                 player.setHorizontalAlignment(SwingConstants.CENTER);
                 player.setForeground(Color.BLACK);
                 if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
@@ -326,20 +278,19 @@ public class Game {
                 if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
-//            case UNVISITED_SYMBOL -> {
-//                if (theOmniscient) tile.setBackground(UNVISITED_COLOR);
-//                else tile.setBackground(NON_TRAVERSABLE_COLOR);
-//            }
+            case OPEN_SYMBOL, VISITED_SYMBOL ->
+                    tile.setBackground(TRAVERSABLE_COLOR);
+            case GOAL_SYMBOL -> {
+                if (theOmniscient) tile.setBackground(GOAL_COLOR);
+                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+            }
             case LOCKED_SYMBOL -> {
                 if (theOmniscient) tile.setBackground(LOCKED_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
-            case OPEN_SYMBOL, VISITED_SYMBOL ->
-                    tile.setBackground(TRAVERSABLE_COLOR);
             case WALL_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
             case START_SYMBOL -> tile.setBackground(START_COLOR);
             case CLOSED_SYMBOL -> tile.setBackground(CLOSED_COLOR);
-            case GOAL_SYMBOL -> tile.setBackground(GOAL_COLOR);
         }
         return tile;
     }
