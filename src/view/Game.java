@@ -34,6 +34,7 @@ public class Game {
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
     public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
     public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
+    public static final Font QUESTION_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
 
     int r = new Random().nextInt(3) + 4;
     final Maze maze = new Maze(r, r);
@@ -51,7 +52,6 @@ public class Game {
 
     public Game() {
         myFrame = drawFrame();
-
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
@@ -185,9 +185,7 @@ public class Game {
         myQuestionArea.setLineWrap(true);
         myQuestionArea.setWrapStyleWord(true);
         myQuestionArea.setEditable(false);
-        myQuestionArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        // SAMPLE TEXT
-//        myQuestionArea.setText();
+        myQuestionArea.setFont(QUESTION_FONT);
         myQuestionArea.setText(theQueryText);
         return myQuestionArea;
     }
@@ -309,10 +307,7 @@ public class Game {
                 if (theOmniscient) tile.setBackground(GOAL_COLOR);
                 else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
-            case LOCKED_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(LOCKED_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
-            }
+            case LOCKED_SYMBOL -> tile.setBackground(LOCKED_COLOR);
             case WALL_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
             case START_SYMBOL -> tile.setBackground(START_COLOR);
             case CLOSED_SYMBOL -> tile.setBackground(CLOSED_COLOR);
