@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Random;
 import java.util.StringJoiner;
 
 import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
@@ -30,14 +31,14 @@ public class Game {
     public static final Color UNDISCOVERED_COLOR = Color.DARK_GRAY;
     public static final Color TRAVERSABLE_COLOR = Color.LIGHT_GRAY;
     public static final Color UNVISITED_COLOR = Color.GRAY;
-    public static final String[] CONTROL_TEXT = {"UP", "LEFT", "RIGHT", "DOWN"};
+    public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
-
-    final Maze maze = new Maze(6, 6);
+    int r = new Random().nextInt(3) + 4;
+    final Maze maze = new Maze(r, r);
 
     private JFrame myFrame;
     private JPanel myMapDisplay, mySidebar, myQuestionAnswerPanel, myAnswerPanel, myDirectionPanel;
-    private JButton myEastButton, myWestButton, myNorthButton, mySouthButton;
+    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton;
 
     private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
@@ -206,25 +207,24 @@ public class Game {
     }
 
     private JPanel drawDirectionControls() {
-        myDirectionPanel = new JPanel(new GridLayout(3, 3));
-        myEastButton = new JButton("Right");
-        myNorthButton = new JButton("Up");
-        mySouthButton = new JButton("Down");
-        myWestButton = new JButton("Left");
-        // TODO Add action listeners to buttons
+        final JPanel directionControls = new JPanel(new GridLayout(3, 3));
+        myNorthButton = new JButton(DIRECTION_TEXT[0]);
+        myWestButton = new JButton(DIRECTION_TEXT[1]);
+        myEastButton = new JButton(DIRECTION_TEXT[2]);
+        mySouthButton = new JButton(DIRECTION_TEXT[3]);
 
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(myNorthButton);
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(myWestButton);
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(myEastButton);
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(mySouthButton);
-        myDirectionPanel.add(new JPanel());
+        directionControls.add(new JPanel());
+        directionControls.add(myNorthButton);
+        directionControls.add(new JPanel());
+        directionControls.add(myWestButton);
+        directionControls.add(new JPanel());
+        directionControls.add(myEastButton);
+        directionControls.add(new JPanel());
+        directionControls.add(mySouthButton);
+        directionControls.add(new JPanel());
 
-        myDirectionPanel.setBorder(VERTICAL_PADDING);
-        return myDirectionPanel;
+        directionControls.setBorder(VERTICAL_PADDING);
+        return directionControls;
     }
 
     /**
