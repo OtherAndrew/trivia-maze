@@ -14,8 +14,7 @@ import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
 import static model.Maze.*;
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.Door.*;
-import static model.mazecomponents.Room.UNVISITED_SYMBOL;
-import static model.mazecomponents.Room.VISITED_SYMBOL;
+import static model.mazecomponents.Room.*;
 import static model.mazecomponents.State.*;
 
 public class Game {
@@ -37,13 +36,10 @@ public class Game {
     final Maze maze = new Maze(6, 6);
 
     private JFrame myFrame;
-    private JPanel myMapPanel, myDirectionPanel, myQuestionAnswerPanel,
-            myAnswerPanel, myMapDisplay, myQuestionPanel,
-            myOuterDirectionPanel, myMinimapDisplay, mySidebar;
-    private JButton myRoomButton, myMapButton, myEastButton, myWestButton,
-            myNorthButton, mySouthButton;
+    private JPanel myMapDisplay, mySidebar, myQuestionAnswerPanel, myAnswerPanel, myDirectionPanel;
+    private JButton myEastButton, myWestButton, myNorthButton, mySouthButton;
 
-    private JTextArea myQuestion;
+    private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
     private ButtonGroup myAnswerButtonsGroup;
     private final String myTitle = "Trivia Maze", myWindowIconPath = "assets" +
@@ -51,12 +47,7 @@ public class Game {
     private final Dimension myPreferredSize = new Dimension(720, 600);
 
     public Game() {
-        myFrame = new JFrame(myTitle);
-        myFrame.setLayout(new BorderLayout());
-        myFrame.setSize(myPreferredSize);
-        myFrame.setResizable(false);
-        myFrame.setLocationRelativeTo(null);
-        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        myFrame = drawFrame(myTitle, myPreferredSize);
 
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
@@ -64,8 +55,11 @@ public class Game {
 
         // Right
         mySidebar = new JPanel(new BorderLayout());
-        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
-        mySidebar.add(drawQAPanel(), BorderLayout.CENTER);
+        myQuestionArea = drawQuestionArea();
+        myQuestionAnswerPanel = drawQAPanel(myQuestionArea);
+        mySidebar.add(myQuestionAnswerPanel, BorderLayout.CENTER);
+        myDirectionPanel = drawDirectionControls();
+        mySidebar.add(myDirectionPanel, BorderLayout.SOUTH);
         mySidebar.setBorder(PADDING);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
@@ -76,6 +70,17 @@ public class Game {
         addButtonActionListeners(north, east, south, west);
         addKeyboardBindings(north, east, south, west);
         myFrame.setVisible(true);
+    }
+
+    private JFrame drawFrame(final String theTitle,
+                             final Dimension thePreferredSize) {
+        final JFrame frame = new JFrame(theTitle);
+        frame.setLayout(new BorderLayout());
+        frame.setSize(thePreferredSize);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        return frame;
     }
 
     private class updateGui extends AbstractAction {
@@ -141,7 +146,7 @@ public class Game {
             sj.add("Closed doors: " + maze.getDoorStateNum(CLOSED));
             sj.add("Locked doors: " + maze.getDoorStateNum(LOCKED));
             sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
-            myQuestion.setText(sj.toString());
+            myQuestionArea.setText(sj.toString());
             myMapDisplay = drawMapDisplay(maze.toCharArray(), true);
             disableButtonActionListeners();
             disableKeyboardBindings();
@@ -151,26 +156,31 @@ public class Game {
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
     }
 
-    private JPanel drawQAPanel() {
+    private JPanel drawQAPanel(final JTextArea theQuestionArea) {
         // Top
-        myQuestionAnswerPanel = new JPanel(new BorderLayout());
+        final JPanel qaPanel = new JPanel(new BorderLayout());
 
         // TODO Get the question corresponding to selected door and display it
-        myQuestion = new JTextArea();
-        myQuestion.setLineWrap(true);
-        myQuestion.setWrapStyleWord(true);
-        myQuestion.setEditable(false);
-        myQuestion.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        // SAMPLE TEXT
-        myQuestion.setText("Where does the majority of the world's apples " +
-                "come from?");
+        drawQuestionArea();
 
-        myQuestionAnswerPanel.add(myQuestion, BorderLayout.CENTER);
+        qaPanel.add(theQuestionArea, BorderLayout.CENTER);
 
         // Bottom
-        myQuestionAnswerPanel.add(drawAnswerPanel(), BorderLayout.SOUTH);
-        myQuestionAnswerPanel.setBorder(VERTICAL_PADDING);
-        return myQuestionAnswerPanel;
+        qaPanel.add(drawAnswerPanel(), BorderLayout.SOUTH);
+        qaPanel.setBorder(VERTICAL_PADDING);
+        return qaPanel;
+    }
+
+    private JTextArea drawQuestionArea() {
+        final JTextArea questionArea = new JTextArea();
+        questionArea.setLineWrap(true);
+        questionArea.setWrapStyleWord(true);
+        questionArea.setEditable(false);
+        questionArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        // SAMPLE TEXT
+        questionArea.setText("Where does the majority of the world's apples " +
+                "come from?");
+        return questionArea;
     }
 
     private JPanel drawAnswerPanel() {
