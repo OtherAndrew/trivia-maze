@@ -32,6 +32,8 @@ public class Game {
     public static final Color TRAVERSABLE_COLOR = Color.LIGHT_GRAY;
     public static final Color UNVISITED_COLOR = Color.GRAY;
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
+    public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
+    public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
 
     int r = new Random().nextInt(3) + 4;
     final Maze maze = new Maze(r, r);
@@ -48,19 +50,15 @@ public class Game {
     private final Dimension myPreferredSize = new Dimension(720, 600);
 
     public Game() {
-        myFrame = drawFrame(myTitle, myPreferredSize);
+        myFrame = drawFrame();
 
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
-
         // Right
         mySidebar = new JPanel(new BorderLayout());
-        myQuestionArea = drawQuestionArea();
-        myQuestionAnswerPanel = drawQAPanel(myQuestionArea);
-        mySidebar.add(myQuestionAnswerPanel, BorderLayout.CENTER);
-        myDirectionPanel = drawDirectionControls();
-        mySidebar.add(myDirectionPanel, BorderLayout.SOUTH);
+        mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
+        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(PADDING);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
@@ -78,15 +76,14 @@ public class Game {
      *
      * @return the window frame.
      */
-    private JFrame drawFrame(final String theTitle,
-                             final Dimension thePreferredSize) {
-        final JFrame frame = new JFrame(theTitle);
-        frame.setLayout(new BorderLayout());
-        frame.setSize(thePreferredSize);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        return frame;
+    private JFrame drawFrame() {
+        myFrame = new JFrame(myTitle);
+        myFrame.setLayout(new BorderLayout());
+        myFrame.setSize(myPreferredSize);
+        myFrame.setResizable(false);
+        myFrame.setLocationRelativeTo(null);
+        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        return myFrame;
     }
 
     private class updateGui extends AbstractAction {
@@ -166,22 +163,15 @@ public class Game {
      * Draws the question/answer panel from a query and an array of answers.
      *
      * @param theQueryText the query.
-     * @param theAnswerText a set of answers.
+     * @param theAnswerArray a set of answers.
      * @return the question/answer panel.
      */
-    private JPanel drawQAPanel(final JTextArea theQuestionArea) {
-        // Top
-        final JPanel qaPanel = new JPanel(new BorderLayout());
-
-        // TODO Get the question corresponding to selected door and display it
-        drawQuestionArea();
-
-        qaPanel.add(theQuestionArea, BorderLayout.CENTER);
-
-        // Bottom
-        qaPanel.add(drawAnswerPanel(), BorderLayout.SOUTH);
-        qaPanel.setBorder(VERTICAL_PADDING);
-        return qaPanel;
+    private JPanel drawQAPanel(final String theQueryText, final String[] theAnswerArray) {
+        myQuestionAnswerPanel = new JPanel(new BorderLayout());
+        myQuestionAnswerPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
+        myQuestionAnswerPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
+        myQuestionAnswerPanel.setBorder(VERTICAL_PADDING);
+        return myQuestionAnswerPanel;
     }
 
     /**
@@ -190,32 +180,35 @@ public class Game {
      * @param theQueryText the text the question area should contain.
      * @return the question area.
      */
-    private JTextArea drawQuestionArea() {
-        final JTextArea questionArea = new JTextArea();
-        questionArea.setLineWrap(true);
-        questionArea.setWrapStyleWord(true);
-        questionArea.setEditable(false);
-        questionArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+    private JTextArea drawQuestionArea(final String theQueryText) {
+        myQuestionArea = new JTextArea();
+        myQuestionArea.setLineWrap(true);
+        myQuestionArea.setWrapStyleWord(true);
+        myQuestionArea.setEditable(false);
+        myQuestionArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         // SAMPLE TEXT
-        questionArea.setText("Where does the majority of the world's apples " +
-                "come from?");
-        return questionArea;
+//        myQuestionArea.setText();
+        myQuestionArea.setText(theQueryText);
+        return myQuestionArea;
+    }
+
+    /**
+     * Draws blank question area.
+     *
+     * @return the question area.
+     */
+    private JTextArea drawQuestionArea() {
+        return drawQuestionArea("");
     }
 
     // TODO do text input or radio buttons based on input
-    private JPanel drawAnswerPanel() {
-        // SAMPLE ANSWER ARRAY
-        final String[] answerArray = {"Wisconsin", "Washington", "Canada",
-                "California"};
-
-        int numberOfAnswers = answerArray.length;
-        // TODO get the number of answers from controller, do text input or
-        //  radio buttons
+    private JPanel drawAnswerPanel(final String[] theAnswerArray) {
+        int numberOfAnswers = theAnswerArray.length;
         myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers + 1, 1));
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
-            myAnswerButtons[i] = new JRadioButton(answerArray[i]);
+            myAnswerButtons[i] = new JRadioButton(theAnswerArray[i]);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
         }
         for (int i = 0; i < numberOfAnswers; i++) {
@@ -231,24 +224,24 @@ public class Game {
      * @return the direction control panel.
      */
     private JPanel drawDirectionControls() {
-        final JPanel directionControls = new JPanel(new GridLayout(3, 3));
+        myDirectionPanel = new JPanel(new GridLayout(3, 3));
         myNorthButton = new JButton(DIRECTION_TEXT[0]);
         myWestButton = new JButton(DIRECTION_TEXT[1]);
         myEastButton = new JButton(DIRECTION_TEXT[2]);
         mySouthButton = new JButton(DIRECTION_TEXT[3]);
 
-        directionControls.add(new JPanel());
-        directionControls.add(myNorthButton);
-        directionControls.add(new JPanel());
-        directionControls.add(myWestButton);
-        directionControls.add(new JPanel());
-        directionControls.add(myEastButton);
-        directionControls.add(new JPanel());
-        directionControls.add(mySouthButton);
-        directionControls.add(new JPanel());
+        myDirectionPanel.add(new JPanel());
+        myDirectionPanel.add(myNorthButton);
+        myDirectionPanel.add(new JPanel());
+        myDirectionPanel.add(myWestButton);
+        myDirectionPanel.add(new JPanel());
+        myDirectionPanel.add(myEastButton);
+        myDirectionPanel.add(new JPanel());
+        myDirectionPanel.add(mySouthButton);
+        myDirectionPanel.add(new JPanel());
 
-        directionControls.setBorder(VERTICAL_PADDING);
-        return directionControls;
+        myDirectionPanel.setBorder(VERTICAL_PADDING);
+        return myDirectionPanel;
     }
 
     /**
@@ -274,10 +267,8 @@ public class Game {
         return mapDisplay;
     }
 
-
-
     /**
-     * Draws an omniscient map display with no preferred tile size.
+     * Draws a map display showing the discovered rooms and doors.
      *
      * @param theCharArray a character array representing one or more rooms
      *                     in the maze.
