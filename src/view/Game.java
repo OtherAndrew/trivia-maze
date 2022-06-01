@@ -25,15 +25,18 @@ public class Game {
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
 
     // https://draculatheme.com/contribute
-    public static final Color BUTTON_TEXT_COLOR = Color.decode("#101010");
-    public static final Color CLOSED_COLOR = Color.decode("#bd93f9");
-    public static final Color GOAL_COLOR = Color.decode("#50fa7b");
-    public static final Color LOCKED_COLOR = Color.decode("#ff5555");
-    public static final Color NON_TRAVERSABLE_COLOR = Color.decode("#282a36");
-    public static final Color START_COLOR = Color.decode("#ffb86c");
-    public static final Color TEXT_COLOR = Color.decode("#f8f8f2");
-    public static final Color TRAVERSABLE_COLOR = Color.decode("#6272a4");
-    public static final Color UNDISCOVERED_COLOR = Color.decode("#44475a");
+    public static final Color RED = Color.decode("#ff5555");
+    public static final Color ORANGE = Color.decode("#ffb86c");
+    public static final Color YELLOW = Color.decode("#f1fa8c");
+    public static final Color GREEN = Color.decode("#50fa7b");
+    public static final Color CYAN = Color.decode("#8be9fd");
+    public static final Color PURPLE = Color.decode("#bd93f9");
+    public static final Color PINK = Color.decode("#ff79c6");
+    public static final Color WHITE = Color.decode("#f8f8f2");
+    public static final Color LIGHT_GREY = Color.decode("#6272a4");
+    public static final Color MID_GREY = Color.decode("#44475a");
+    public static final Color DARK_GREY = Color.decode("#282a36");
+    public static final Color BLACK = Color.decode("#101010");
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
@@ -69,7 +72,7 @@ public class Game {
         mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(SIDEBAR_PADDING);
-        mySidebar.setBackground(UNDISCOVERED_COLOR);
+        mySidebar.setBackground(MID_GREY);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
         final updateGui north = new updateGui(NORTH);
@@ -91,7 +94,7 @@ public class Game {
         myFrame.setLayout(new BorderLayout());
         myFrame.setSize(myPreferredSize);
         myFrame.getRootPane().setBorder(PADDING);
-        myFrame.setBackground(UNDISCOVERED_COLOR);
+        myFrame.setBackground(MID_GREY);
         myFrame.setResizable(false);
         myFrame.setLocationRelativeTo(null);
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -183,7 +186,7 @@ public class Game {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
-        myQAPanel.setBackground(UNDISCOVERED_COLOR);
+        myQAPanel.setBackground(MID_GREY);
         return myQAPanel;
     }
 
@@ -195,7 +198,7 @@ public class Game {
      */
     private JPanel drawQuestionArea(final String theQueryText) {
         myQuestionPanel = new JPanel(new BorderLayout());
-        myQuestionPanel.setBackground(NON_TRAVERSABLE_COLOR);
+        myQuestionPanel.setBackground(DARK_GREY);
         myQuestionPanel.setBorder(PADDING);
 
         myQuestionArea = new JTextArea();
@@ -204,8 +207,8 @@ public class Game {
         myQuestionArea.setEditable(false);
         myQuestionArea.setFont(QUESTION_FONT);
         myQuestionArea.setText(theQueryText);
-        myQuestionArea.setBackground(NON_TRAVERSABLE_COLOR);
-        myQuestionArea.setForeground(TEXT_COLOR);
+        myQuestionArea.setBackground(DARK_GREY);
+        myQuestionArea.setForeground(WHITE);
         myQuestionPanel.add(myQuestionArea, BorderLayout.CENTER);
         return myQuestionPanel;
     }
@@ -224,23 +227,23 @@ public class Game {
         int numberOfAnswers = theAnswerArray.length;
         myAnswerPanel = new JPanel(new BorderLayout());
         myAnswerPanel.setBorder(ANSWER_PADDING);
-        myAnswerPanel.setBackground(UNDISCOVERED_COLOR);
+        myAnswerPanel.setBackground(MID_GREY);
         myAnswerButtonPanel = new JPanel(new GridLayout(numberOfAnswers, 1));
         myAnswerButtonPanel.setBorder(PADDING);
-        myAnswerButtonPanel.setBackground(NON_TRAVERSABLE_COLOR);
+        myAnswerButtonPanel.setBackground(DARK_GREY);
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
             myAnswerButtons[i] = new JRadioButton(theAnswerArray[i]);
-            myAnswerButtons[i].setBackground(NON_TRAVERSABLE_COLOR);
-            myAnswerButtons[i].setForeground(TEXT_COLOR);
+            myAnswerButtons[i].setBackground(DARK_GREY);
+            myAnswerButtons[i].setForeground(WHITE);
             myAnswerButtons[i].setFont(ANSWER_FONT);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myAnswerButtonPanel.add(myAnswerButtons[i]);
         }
         mySubmitButton = new JButton("Submit");
-        mySubmitButton.setBackground(TRAVERSABLE_COLOR);
-        mySubmitButton.setForeground(BUTTON_TEXT_COLOR);
+        mySubmitButton.setBackground(LIGHT_GREY);
+        mySubmitButton.setForeground(BLACK);
         mySubmitButton.setFont(ANSWER_FONT);
         myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
         myAnswerPanel.add(mySubmitButton, BorderLayout.SOUTH);
@@ -262,14 +265,14 @@ public class Game {
                 {myNorthButton, myWestButton, myEastButton, mySouthButton};
         for (JButton button : directionButtons) {
             addBufferPanel();
-            button.setForeground(BUTTON_TEXT_COLOR);
-            button.setBackground(TRAVERSABLE_COLOR);
+            button.setForeground(BLACK);
+            button.setBackground(LIGHT_GREY);
             button.setFont(ANSWER_FONT);
             myDirectionPanel.add(button);
         }
         addBufferPanel();
         myDirectionPanel.setBorder(DIRECTION_PADDING);
-        myDirectionPanel.setBackground(UNDISCOVERED_COLOR);
+        myDirectionPanel.setBackground(MID_GREY);
         return myDirectionPanel;
     }
 
@@ -278,7 +281,7 @@ public class Game {
      */
     private void addBufferPanel() {
         final JPanel buffer = new JPanel();
-        buffer.setBackground(UNDISCOVERED_COLOR);
+        buffer.setBackground(MID_GREY);
         myDirectionPanel.add(buffer);
     }
 
@@ -301,7 +304,7 @@ public class Game {
                 mapDisplay.add(buildTile(space, theOmniscient));
             }
         }
-        mapDisplay.setBackground(UNDISCOVERED_COLOR);
+        mapDisplay.setBackground(MID_GREY);
         return mapDisplay;
     }
 
@@ -327,31 +330,31 @@ public class Game {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
             case Maze.PLAYER_SYMBOL -> {
-                if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
-                else if (maze.atStart()) tile.setBackground(START_COLOR);
-                else tile.setBackground(TRAVERSABLE_COLOR);
+                if (maze.atGoal()) tile.setBackground(GREEN);
+                else if (maze.atStart()) tile.setBackground(ORANGE);
+                else tile.setBackground(LIGHT_GREY);
                 tile.add(drawLabel("[]"), BorderLayout.CENTER);
             }
             case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+                if (theOmniscient) tile.setBackground(MID_GREY);
+                else tile.setBackground(DARK_GREY);
             }
             case GOAL_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(GOAL_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+                if (theOmniscient) tile.setBackground(GREEN);
+                else tile.setBackground(DARK_GREY);
             }
             case LOCKED_SYMBOL -> {
-                tile.setBackground(LOCKED_COLOR);
+                tile.setBackground(RED);
                 tile.add(drawLabel("X"), BorderLayout.CENTER);
             }
             case CLOSED_SYMBOL -> {
-                tile.setBackground(CLOSED_COLOR);
+                tile.setBackground(PURPLE);
                 tile.add(drawLabel("?"), BorderLayout.CENTER);
             }
             case OPEN_SYMBOL, VISITED_SYMBOL ->
-                    tile.setBackground(TRAVERSABLE_COLOR);
-            case WALL_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
-            case START_SYMBOL ->  tile.setBackground(START_COLOR);
+                    tile.setBackground(LIGHT_GREY);
+            case WALL_SYMBOL -> tile.setBackground(DARK_GREY);
+            case START_SYMBOL ->  tile.setBackground(ORANGE);
         }
         return tile;
     }
@@ -365,7 +368,7 @@ public class Game {
     private JLabel drawLabel(final String theLabelText) {
         final JLabel output = new JLabel(theLabelText);
         output.setHorizontalAlignment(SwingConstants.CENTER);
-        output.setForeground(BUTTON_TEXT_COLOR);
+        output.setForeground(BLACK);
         output.setFont(TILE_FONT);
         return output;
     }
