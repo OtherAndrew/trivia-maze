@@ -143,7 +143,7 @@ public class Game {
             sj.add("YOU WON!");
             sj.add("");
             sj.add("Rooms visited: " + maze.getRoomVisitedNum());
-            sj.add("Rooms not visited: " + maze.getRoomNotVisitedNum());
+            sj.add("Rooms not visited: " + maze.getRoomVisitedNum(false));
             sj.add("");
             sj.add("Opened doors: " + maze.getDoorStateNum(OPEN));
             sj.add("Closed doors: " + maze.getDoorStateNum(CLOSED));

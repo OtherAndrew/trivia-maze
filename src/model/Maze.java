@@ -393,15 +393,18 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Determines the number of rooms visited by the player.
+     * Determines the number of rooms visited or not visited by the player.
      *
+     * @param theFindVisited if the method should find the number of visited
+     *                       rooms (true) or the number of unvisited rooms
+     *                       (false)
      * @return the number of rooms visited by the player.
      */
-    public int getRoomVisitedNum() {
+    public int getRoomVisitedNum(final boolean theFindVisited) {
         int numVisited = 0;
         for (Room[] row : myRooms) {
             for (Room room : row) {
-                if (room.isVisited()) {
+                if (room.isVisited() == theFindVisited) {
                     numVisited++;
                 }
             }
@@ -410,20 +413,12 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Determines the number of rooms not visited by the player.
+     * Determines the number of rooms visited by the player.
      *
-     * @return the number of rooms not visited by the player.
+     * @return the number of rooms visited by the player.
      */
-    public int getRoomNotVisitedNum() {
-        int numNotVisited = 0;
-        for (Room[] row : myRooms) {
-            for (Room room : row) {
-                if (!room.isVisited()) {
-                    numNotVisited++;
-                }
-            }
-        }
-        return numNotVisited;
+    public int getRoomVisitedNum() {
+        return getRoomVisitedNum(true);
     }
 
     /**
