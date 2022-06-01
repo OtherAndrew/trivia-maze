@@ -330,7 +330,7 @@ public class Game {
                 if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
                 else if (maze.atStart()) tile.setBackground(START_COLOR);
                 else tile.setBackground(TRAVERSABLE_COLOR);
-                tile.add(drawLabel("!"), BorderLayout.CENTER);
+                tile.add(drawLabel("[]"), BorderLayout.CENTER);
             }
             case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
                 if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
