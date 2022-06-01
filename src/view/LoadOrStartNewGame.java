@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import static view.AppTheme.*;
 
 public class LoadOrStartNewGame {
 
@@ -14,14 +15,17 @@ public class LoadOrStartNewGame {
 
     public LoadOrStartNewGame() {
         myFrame = new JFrame();
+        myFrame.setLayout(new BorderLayout());
+        myFrame.setBackground(MID_GREY);
         myFrame.setTitle("Trivia Maze");
         // TODO set background to be "Landing_Page_01.png"
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setResizable(false);
         myFrame.setSize(myFrameWidth, myFrameHeight);
 
-        myNewGameBtn = new JButton("New Game"); myLoadGameBtn = new JButton("Load Game");
-        myQuitBtn = new JButton("Quit");
+        myNewGameBtn = buildJButton("New Game");
+        myLoadGameBtn = buildJButton("Load Game");
+        myQuitBtn = buildJButton("Quit");
 
         myQuitBtn.addActionListener(theAction -> {
             System.exit(1);
@@ -37,7 +41,9 @@ public class LoadOrStartNewGame {
             myFrame.dispose();
         });
 
-        myNorthPanel = new JPanel(); myCenterEastPanel = new JPanel(); myCenterWestPanel = new JPanel();
+        myNorthPanel = new JPanel();
+        myCenterEastPanel = new JPanel();
+        myCenterWestPanel = new JPanel();
         myCenterCenterPanel = new JPanel();
 
         myCenterEastPanel.add(myNewGameBtn, BorderLayout.CENTER);

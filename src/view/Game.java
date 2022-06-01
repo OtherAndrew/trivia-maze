@@ -217,17 +217,11 @@ public class Game {
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
-            myAnswerButtons[i] = new JRadioButton(theAnswerArray[i]);
-            myAnswerButtons[i].setBackground(DARK_GREY);
-            myAnswerButtons[i].setForeground(WHITE);
-            myAnswerButtons[i].setFont(BUTTON_FONT);
+            myAnswerButtons[i] = buildJRadioButton(theAnswerArray[i]);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myAnswerButtonPanel.add(myAnswerButtons[i]);
         }
-        mySubmitButton = new JButton("Submit");
-        mySubmitButton.setBackground(LIGHT_GREY);
-        mySubmitButton.setForeground(BLACK);
-        mySubmitButton.setFont(BUTTON_FONT);
+        mySubmitButton = buildJButton("Submit");
         myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
         myAnswerPanel.add(mySubmitButton, BorderLayout.SOUTH);
         return myAnswerPanel;
@@ -240,20 +234,17 @@ public class Game {
      */
     private JPanel drawDirectionControls() {
         myDirectionPanel = new JPanel(new GridLayout(3, 3));
-        myNorthButton = new JButton(DIRECTION_TEXT[0]);
-        myWestButton = new JButton(DIRECTION_TEXT[1]);
-        myEastButton = new JButton(DIRECTION_TEXT[2]);
-        mySouthButton = new JButton(DIRECTION_TEXT[3]);
+        myNorthButton = buildJButton(DIRECTION_TEXT[0]);
+        myWestButton = buildJButton(DIRECTION_TEXT[1]);
+        myEastButton = buildJButton(DIRECTION_TEXT[2]);
+        mySouthButton = buildJButton(DIRECTION_TEXT[3]);
         final JButton[] directionButtons =
                 {myNorthButton, myWestButton, myEastButton, mySouthButton};
+        myDirectionPanel.add(drawBufferPanel());
         for (JButton button : directionButtons) {
-            addBufferPanel();
-            button.setForeground(BLACK);
-            button.setBackground(LIGHT_GREY);
-            button.setFont(BUTTON_FONT);
             myDirectionPanel.add(button);
+            myDirectionPanel.add(drawBufferPanel());
         }
-        addBufferPanel();
         myDirectionPanel.setBorder(DIRECTION_PADDING);
         myDirectionPanel.setBackground(MID_GREY);
         return myDirectionPanel;
@@ -262,10 +253,10 @@ public class Game {
     /**
      * Adds buffer panel to direction panel.
      */
-    private void addBufferPanel() {
+    private JPanel drawBufferPanel() {
         final JPanel buffer = new JPanel();
         buffer.setBackground(MID_GREY);
-        myDirectionPanel.add(buffer);
+        return buffer;
     }
 
     /**
