@@ -34,7 +34,7 @@ public final class AppTheme {
      */
     private AppTheme() {}
 
-    public static JButton buildJButton(final String theButtonText) {
+    public static JButton buildButton(final String theButtonText) {
         final JButton button = new JButton(theButtonText);
         button.setBackground(LIGHT_GREY);
         button.setForeground(BLACK);
@@ -42,7 +42,7 @@ public final class AppTheme {
         return button;
     }
 
-    public static JRadioButton buildJRadioButton(final String theButtonText) {
+    public static JRadioButton buildRadioButton(final String theButtonText) {
         final JRadioButton radioButton = new JRadioButton(theButtonText);
         radioButton.setBackground(DARK_GREY);
         radioButton.setForeground(WHITE);

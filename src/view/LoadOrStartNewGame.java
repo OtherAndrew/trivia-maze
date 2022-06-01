@@ -2,7 +2,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+
 import static view.AppTheme.*;
 
 public class LoadOrStartNewGame {
@@ -14,6 +14,7 @@ public class LoadOrStartNewGame {
     private final String myBackgroundPath = "assets\\Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
 
     public LoadOrStartNewGame() {
+        System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = new JFrame();
         myFrame.setLayout(new BorderLayout());
         myFrame.setBackground(MID_GREY);
@@ -23,9 +24,9 @@ public class LoadOrStartNewGame {
         myFrame.setResizable(false);
         myFrame.setSize(myFrameWidth, myFrameHeight);
 
-        myNewGameBtn = buildJButton("New Game");
-        myLoadGameBtn = buildJButton("Load Game");
-        myQuitBtn = buildJButton("Quit");
+        myNewGameBtn = buildButton("New Game");
+        myLoadGameBtn = buildButton("Load Game");
+        myQuitBtn = buildButton("Quit");
 
         myQuitBtn.addActionListener(theAction -> {
             System.exit(1);
@@ -55,6 +56,11 @@ public class LoadOrStartNewGame {
         myNorthPanel.add(myCenterWestPanel);
 
         myFrame.add(myNorthPanel, BorderLayout.SOUTH);
+//        JPanel center = new Game().drawMapDisplay(new Maze(5, 5).toCharArray(), true);
+//        myFrame.add(
+//                center
+//                , BorderLayout.CENTER
+//        );
 
         myFrame.setVisible(true);
     }

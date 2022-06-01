@@ -45,7 +45,7 @@ public class Game {
     private final Dimension myPreferredSize = new Dimension(720, 600);
 
     public Game() {
-        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = drawFrame();
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
@@ -217,11 +217,11 @@ public class Game {
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
-            myAnswerButtons[i] = buildJRadioButton(theAnswerArray[i]);
+            myAnswerButtons[i] = buildRadioButton(theAnswerArray[i]);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myAnswerButtonPanel.add(myAnswerButtons[i]);
         }
-        mySubmitButton = buildJButton("Submit");
+        mySubmitButton = buildButton("Submit");
         myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
         myAnswerPanel.add(mySubmitButton, BorderLayout.SOUTH);
         return myAnswerPanel;
@@ -234,10 +234,10 @@ public class Game {
      */
     private JPanel drawDirectionControls() {
         myDirectionPanel = new JPanel(new GridLayout(3, 3));
-        myNorthButton = buildJButton(DIRECTION_TEXT[0]);
-        myWestButton = buildJButton(DIRECTION_TEXT[1]);
-        myEastButton = buildJButton(DIRECTION_TEXT[2]);
-        mySouthButton = buildJButton(DIRECTION_TEXT[3]);
+        myNorthButton = buildButton(DIRECTION_TEXT[0]);
+        myWestButton = buildButton(DIRECTION_TEXT[1]);
+        myEastButton = buildButton(DIRECTION_TEXT[2]);
+        mySouthButton = buildButton(DIRECTION_TEXT[3]);
         final JButton[] directionButtons =
                 {myNorthButton, myWestButton, myEastButton, mySouthButton};
         myDirectionPanel.add(drawBufferPanel());
@@ -268,7 +268,7 @@ public class Game {
      * @param theOmniscient if the output should display an omniscient view.
      * @return a JPanel that displays the character array as a series of tiles.
      */
-    private JPanel drawMapDisplay(final char[][] theCharArray,
+    public JPanel drawMapDisplay(final char[][] theCharArray,
                                   final boolean theOmniscient) {
         final JPanel mapDisplay =
                 new JPanel(new GridLayout(theCharArray.length,
@@ -289,7 +289,7 @@ public class Game {
      *                     in the maze.
      * @return a JPanel that displays the character array as a series of tiles.
      */
-    private JPanel drawMapDisplay(final char[][] theCharArray) {
+    JPanel drawMapDisplay(final char[][] theCharArray) {
         return drawMapDisplay(theCharArray,false);
     }
 
