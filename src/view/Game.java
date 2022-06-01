@@ -288,29 +288,18 @@ public class Game {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
             case Maze.PLAYER_SYMBOL -> {
-                if (maze.atGoal()) {
-                    tile.setBackground(GOAL_COLOR);
-                } else if (maze.atStart()) {
-                    tile.setBackground(START_COLOR);
-                } else {
-                    tile.setBackground(TRAVERSABLE_COLOR);
-                }
+                if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
+                else if (maze.atStart()) tile.setBackground(START_COLOR);
+                else tile.setBackground(TRAVERSABLE_COLOR);
                 tile.add(drawLabel("!"), BorderLayout.CENTER);
             }
             case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
-                if (theOmniscient) {
-                    tile.setBackground(UNDISCOVERED_COLOR);
-                } else {
-                    tile.setBackground(NON_TRAVERSABLE_COLOR);
-                }
+                if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
+                else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
             case GOAL_SYMBOL -> {
-                if (theOmniscient) {
-                    tile.setBackground(GOAL_COLOR);
-                }
-                else {
-                    tile.setBackground(NON_TRAVERSABLE_COLOR);
-                }
+                if (theOmniscient) tile.setBackground(GOAL_COLOR);
+                else tile.setBackground(NON_TRAVERSABLE_COLOR);
             }
             case LOCKED_SYMBOL -> {
                 tile.setBackground(LOCKED_COLOR);
