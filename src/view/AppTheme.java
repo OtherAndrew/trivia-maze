@@ -21,11 +21,11 @@ public final class AppTheme {
     public static final Color DARK_GREY = Color.decode("#282a36");
     public static final Color BLACK = Color.decode("#101010");
 
-    public static final Font ANSWER_FONT =
+    public static final Font BUTTON_FONT =
             new Font(Font.SANS_SERIF, Font.BOLD, 12);
-    public static final Font QUESTION_FONT =
+    public static final Font TEXT_FONT =
             new Font(Font.SANS_SERIF, Font.BOLD, 15);
-    public static final Font TILE_FONT =
+    public static final Font MAP_TILE_FONT =
             new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     /**

@@ -188,7 +188,7 @@ public class Game {
         myQuestionArea.setLineWrap(true);
         myQuestionArea.setWrapStyleWord(true);
         myQuestionArea.setEditable(false);
-        myQuestionArea.setFont(QUESTION_FONT);
+        myQuestionArea.setFont(TEXT_FONT);
         myQuestionArea.setText(theQueryText);
         myQuestionArea.setBackground(DARK_GREY);
         myQuestionArea.setForeground(WHITE);
@@ -220,14 +220,14 @@ public class Game {
             myAnswerButtons[i] = new JRadioButton(theAnswerArray[i]);
             myAnswerButtons[i].setBackground(DARK_GREY);
             myAnswerButtons[i].setForeground(WHITE);
-            myAnswerButtons[i].setFont(ANSWER_FONT);
+            myAnswerButtons[i].setFont(BUTTON_FONT);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myAnswerButtonPanel.add(myAnswerButtons[i]);
         }
         mySubmitButton = new JButton("Submit");
         mySubmitButton.setBackground(LIGHT_GREY);
         mySubmitButton.setForeground(BLACK);
-        mySubmitButton.setFont(ANSWER_FONT);
+        mySubmitButton.setFont(BUTTON_FONT);
         myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
         myAnswerPanel.add(mySubmitButton, BorderLayout.SOUTH);
         return myAnswerPanel;
@@ -250,7 +250,7 @@ public class Game {
             addBufferPanel();
             button.setForeground(BLACK);
             button.setBackground(LIGHT_GREY);
-            button.setFont(ANSWER_FONT);
+            button.setFont(BUTTON_FONT);
             myDirectionPanel.add(button);
         }
         addBufferPanel();
@@ -352,7 +352,7 @@ public class Game {
         final JLabel output = new JLabel(theLabelText);
         output.setHorizontalAlignment(SwingConstants.CENTER);
         output.setForeground(BLACK);
-        output.setFont(TILE_FONT);
+        output.setFont(MAP_TILE_FONT);
         return output;
     }
 
