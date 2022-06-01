@@ -71,9 +71,9 @@ public class Maze implements Serializable {
      * @param theCols the number of columns the maze should have.
      */
     public Maze(final int theRows, final int theCols) throws IllegalArgumentException {
-        if (theRows < 3 || theCols < 3) {
+        if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
             throw new IllegalArgumentException("dimensions passed to Maze " +
-                    "cannot be less than 3. (passed values: " + theRows + ", " + theCols);
+                    "cannot be outside the range of 4-10 (passed values: " + theRows + ", " + theCols);
         }
         myHeight = theRows;
         myWidth = theCols;
