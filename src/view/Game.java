@@ -19,24 +19,28 @@ import static model.mazecomponents.Room.*;
 import static model.mazecomponents.State.*;
 
 public class Game {
-    //https://draculatheme.com/contribute
+
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
-    public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0,
-            10, 0);
-    public static final Color NON_TRAVERSABLE_COLOR = Color.decode("#282a36");
-    public static final Color GOAL_COLOR = Color.decode("#50fa7b");
-    public static final Color START_COLOR = Color.decode("#8be9fd");
-    public static final Color LOCKED_COLOR = Color.decode("#ff5555");
+    public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0, 10, 0);
+
+    // https://draculatheme.com/contribute
     public static final Color CLOSED_COLOR = Color.decode("#bd93f9");
-    public static final Color UNDISCOVERED_COLOR = Color.decode("#44475a");
+    public static final Color GOAL_COLOR = Color.decode("#50fa7b");
+    public static final Color LOCKED_COLOR = Color.decode("#ff5555");
+    public static final Color NON_TRAVERSABLE_COLOR = Color.decode("#282a36");
+    public static final Color START_COLOR = Color.decode("#ffb86c");
     public static final Color TRAVERSABLE_COLOR = Color.decode("#6272a4");
+    public static final Color UNDISCOVERED_COLOR = Color.decode("#44475a");
+
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
-    public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
-    public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
+
     public static final Font QUESTION_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
     public static final Font TILE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
-    int r = new Random().nextInt(3) + 4;
+    public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
+    public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
+
+    int r = new Random().nextInt(6) + 4;
     final Maze maze = new Maze(r, r);
 
     private JFrame myFrame;
