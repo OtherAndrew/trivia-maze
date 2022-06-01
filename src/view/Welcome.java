@@ -9,7 +9,8 @@ public class Welcome {
     private ImageIcon myWindowIcon;
     private JButton myButton;
     private final int myFrameWidth = 500, myFrameHeight = 500;
-    private final String myBackgroundPath = "Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
+    private final String myBackgroundPath = "resources\\Landing_Page_01.png",
+            myWindowIconPath = "resources\\App_Icon.png";
 
 
     // TODO add Landing_Page_01.png to the JButton, set vertical text position to bottom, make text breath, add action listener

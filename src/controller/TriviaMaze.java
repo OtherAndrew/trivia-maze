@@ -1,5 +1,9 @@
 package controller;
 
-public class TriviaMaze {
+import view.Welcome;
 
+public class TriviaMaze {
+    public static void main(final String[] theArgs) {
+        new Welcome();
+    }
 }

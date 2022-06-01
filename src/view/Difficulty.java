@@ -7,7 +7,7 @@ public class Difficulty {
     private JFrame myFrame;
     private ImageIcon myWindowIcon;
     private final int myFrameWidth = 500, myFrameHeight = 500;
-    private final String myWindowIconPath = "assets\\App_Icon.png";
+    private final String myWindowIconPath = "resources\\App_Icon.png";
 
 
 
