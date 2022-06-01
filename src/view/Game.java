@@ -30,6 +30,8 @@ public class Game {
     public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
     public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
 
+    private boolean myMovementEnabledStatus;
+
     int r = new Random().nextInt(6) + 4;
     final Maze maze = new Maze(r, r);
 
@@ -58,6 +60,7 @@ public class Game {
         mySidebar.setBackground(MID_GREY);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
+        setMovementEnabled(true);
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
         final updateGui south = new updateGui(SOUTH);
@@ -88,15 +91,18 @@ public class Game {
 
         private final Direction myDirection;
 
+
         private updateGui(final Direction theDirection) {
             myDirection = theDirection;
         }
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            doMove(myDirection);
-            myFrame.revalidate();
-            myFrame.repaint();
+            if (myMovementEnabledStatus) {
+                doMove(myDirection);
+                myFrame.revalidate();
+                myFrame.repaint();
+            }
         }
     }
 
@@ -105,13 +111,6 @@ public class Game {
         myEastButton.addActionListener(theDirections[1]);
         mySouthButton.addActionListener(theDirections[2]);
         myWestButton.addActionListener(theDirections[3]);
-    }
-
-    private void disableButtonActionListeners() {
-        myNorthButton.setEnabled(false);
-        myEastButton.setEnabled(false);
-        mySouthButton.setEnabled(false);
-        myWestButton.setEnabled(false);
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
@@ -128,8 +127,8 @@ public class Game {
         actionMap.put("moveWest", theDirections[3]);
     }
 
-    private void disableKeyboardBindings() {
-        myFrame.getRootPane().getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).clear();
+    private void setMovementEnabled(final boolean theStatus) {
+        myMovementEnabledStatus = theStatus;
     }
 
     private void doMove(final Direction theDirection) {
@@ -150,8 +149,7 @@ public class Game {
             sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
             myQuestionArea.setText(sj.toString());
             myMapDisplay = drawMapDisplay(maze.toCharArray(), true);
-            disableButtonActionListeners();
-            disableKeyboardBindings();
+            setMovementEnabled(false);
         } else {
             myMapDisplay = drawMapDisplay(maze.toCharArray(), false);
         }
