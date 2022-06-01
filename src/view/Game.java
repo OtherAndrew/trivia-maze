@@ -2,7 +2,6 @@ package view;
 
 import model.Maze;
 import model.mazecomponents.Direction;
-import model.mazecomponents.State;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -20,21 +19,25 @@ import static model.mazecomponents.State.*;
 
 public class Game {
 
+    public final static EmptyBorder BOTTOM_PADDING = new EmptyBorder(0, 0, 20, 0);
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
-    public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0, 10, 0);
+    public final static EmptyBorder TOP_PADDING = new EmptyBorder(7, 0, 0, 0);
 
     // https://draculatheme.com/contribute
+    public static final Color BUTTON_TEXT_COLOR = Color.decode("#151515");
     public static final Color CLOSED_COLOR = Color.decode("#bd93f9");
     public static final Color GOAL_COLOR = Color.decode("#50fa7b");
     public static final Color LOCKED_COLOR = Color.decode("#ff5555");
     public static final Color NON_TRAVERSABLE_COLOR = Color.decode("#282a36");
     public static final Color START_COLOR = Color.decode("#ffb86c");
+    public static final Color TEXT_COLOR = Color.decode("#f8f8f2");
     public static final Color TRAVERSABLE_COLOR = Color.decode("#6272a4");
     public static final Color UNDISCOVERED_COLOR = Color.decode("#44475a");
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
-    public static final Font QUESTION_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
+    public static final Font ANSWER_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 12);
+    public static final Font QUESTION_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 15);
     public static final Font TILE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
@@ -44,8 +47,8 @@ public class Game {
     final Maze maze = new Maze(r, r);
 
     private JFrame myFrame;
-    private JPanel myMapDisplay, mySidebar, myQuestionAnswerPanel, myAnswerPanel, myDirectionPanel;
-    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton;
+    private JPanel myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
+    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton;
 
     private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
@@ -55,6 +58,7 @@ public class Game {
     private final Dimension myPreferredSize = new Dimension(720, 600);
 
     public Game() {
+        System.setProperty("awt.useSystemAAFontSettings","on");
         myFrame = drawFrame();
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
@@ -64,6 +68,7 @@ public class Game {
         mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(PADDING);
+        mySidebar.setBackground(UNDISCOVERED_COLOR);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
         final updateGui north = new updateGui(NORTH);
@@ -172,11 +177,12 @@ public class Game {
      * @return the question/answer panel.
      */
     private JPanel drawQAPanel(final String theQueryText, final String[] theAnswerArray) {
-        myQuestionAnswerPanel = new JPanel(new BorderLayout());
-        myQuestionAnswerPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
-        myQuestionAnswerPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
-        myQuestionAnswerPanel.setBorder(VERTICAL_PADDING);
-        return myQuestionAnswerPanel;
+        myQAPanel = new JPanel(new BorderLayout());
+        myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
+        myQAPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
+        myQAPanel.setBorder(BOTTOM_PADDING);
+        myQAPanel.setBackground(UNDISCOVERED_COLOR);
+        return myQAPanel;
     }
 
     /**
@@ -185,14 +191,21 @@ public class Game {
      * @param theQueryText the text the question area should contain.
      * @return the question area.
      */
-    private JTextArea drawQuestionArea(final String theQueryText) {
+    private JPanel drawQuestionArea(final String theQueryText) {
+        myQuestionPanel = new JPanel(new BorderLayout());
+        myQuestionPanel.setBackground(NON_TRAVERSABLE_COLOR);
+        myQuestionPanel.setBorder(PADDING);
+
         myQuestionArea = new JTextArea();
         myQuestionArea.setLineWrap(true);
         myQuestionArea.setWrapStyleWord(true);
         myQuestionArea.setEditable(false);
         myQuestionArea.setFont(QUESTION_FONT);
         myQuestionArea.setText(theQueryText);
-        return myQuestionArea;
+        myQuestionArea.setBackground(NON_TRAVERSABLE_COLOR);
+        myQuestionArea.setForeground(TEXT_COLOR);
+        myQuestionPanel.add(myQuestionArea, BorderLayout.CENTER);
+        return myQuestionPanel;
     }
 
     /**
@@ -200,24 +213,35 @@ public class Game {
      *
      * @return the question area.
      */
-    private JTextArea drawQuestionArea() {
+    private JPanel drawQuestionArea() {
         return drawQuestionArea("");
     }
 
     // TODO do text input or radio buttons based on input
     private JPanel drawAnswerPanel(final String[] theAnswerArray) {
         int numberOfAnswers = theAnswerArray.length;
-        myAnswerPanel = new JPanel(new GridLayout(numberOfAnswers + 1, 1));
+        myAnswerPanel = new JPanel(new BorderLayout());
+        myAnswerPanel.setBorder(TOP_PADDING);
+        myAnswerPanel.setBackground(UNDISCOVERED_COLOR);
+        myAnswerButtonPanel = new JPanel(new GridLayout(numberOfAnswers, 1));
+        myAnswerButtonPanel.setBorder(PADDING);
+        myAnswerButtonPanel.setBackground(NON_TRAVERSABLE_COLOR);
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
             myAnswerButtons[i] = new JRadioButton(theAnswerArray[i]);
+            myAnswerButtons[i].setBackground(NON_TRAVERSABLE_COLOR);
+            myAnswerButtons[i].setForeground(TEXT_COLOR);
+            myAnswerButtons[i].setFont(ANSWER_FONT);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
+            myAnswerButtonPanel.add(myAnswerButtons[i]);
         }
-        for (int i = 0; i < numberOfAnswers; i++) {
-            myAnswerPanel.add(myAnswerButtons[i]);
-        }
-        myAnswerPanel.add(new JButton("Submit"));
+        mySubmitButton = new JButton("Submit");
+        mySubmitButton.setBackground(TRAVERSABLE_COLOR);
+        mySubmitButton.setForeground(BUTTON_TEXT_COLOR);
+        mySubmitButton.setFont(ANSWER_FONT);
+        myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
+        myAnswerPanel.add(mySubmitButton, BorderLayout.SOUTH);
         return myAnswerPanel;
     }
 
@@ -232,19 +256,28 @@ public class Game {
         myWestButton = new JButton(DIRECTION_TEXT[1]);
         myEastButton = new JButton(DIRECTION_TEXT[2]);
         mySouthButton = new JButton(DIRECTION_TEXT[3]);
-
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(myNorthButton);
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(myWestButton);
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(myEastButton);
-        myDirectionPanel.add(new JPanel());
-        myDirectionPanel.add(mySouthButton);
-        myDirectionPanel.add(new JPanel());
-
-        myDirectionPanel.setBorder(VERTICAL_PADDING);
+        final JButton[] directionButtons =
+                {myNorthButton, myWestButton, myEastButton, mySouthButton};
+        for (JButton button : directionButtons) {
+            addBufferPanel();
+            button.setForeground(BUTTON_TEXT_COLOR);
+            button.setBackground(TRAVERSABLE_COLOR);
+            button.setFont(ANSWER_FONT);
+            myDirectionPanel.add(button);
+        }
+        addBufferPanel();
+        myDirectionPanel.setBorder(BOTTOM_PADDING);
+        myDirectionPanel.setBackground(UNDISCOVERED_COLOR);
         return myDirectionPanel;
+    }
+
+    /**
+     * Adds buffer panel to direction panel.
+     */
+    private void addBufferPanel() {
+        final JPanel buffer = new JPanel();
+        buffer.setBackground(UNDISCOVERED_COLOR);
+        myDirectionPanel.add(buffer);
     }
 
     /**
@@ -267,6 +300,7 @@ public class Game {
             }
         }
         mapDisplay.setBorder(PADDING);
+        mapDisplay.setBackground(UNDISCOVERED_COLOR);
         return mapDisplay;
     }
 
@@ -330,7 +364,7 @@ public class Game {
     private JLabel drawLabel(final String theLabelText) {
         final JLabel output = new JLabel(theLabelText);
         output.setHorizontalAlignment(SwingConstants.CENTER);
-        output.setForeground(Color.BLACK);
+        output.setForeground(BUTTON_TEXT_COLOR);
         output.setFont(TILE_FONT);
         return output;
     }
