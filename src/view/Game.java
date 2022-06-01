@@ -21,7 +21,6 @@ import static view.AppTheme.*;
 public class Game {
 
     public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
-    public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
     public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
 
@@ -42,13 +41,12 @@ public class Game {
     private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
     private ButtonGroup myAnswerButtonsGroup;
-    private final String myTitle = "Trivia Maze", myWindowIconPath = "assets" +
+    private final String myWindowIconPath = "assets" +
             "\\Landing_page_01.png";
-    private final Dimension myPreferredSize = new Dimension(720, 600);
 
     public Game() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-        myFrame = drawFrame();
+        myFrame = buildFrame();
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
@@ -68,23 +66,6 @@ public class Game {
         addButtonActionListeners(north, east, south, west);
         addKeyboardBindings(north, east, south, west);
         myFrame.setVisible(true);
-    }
-
-    /**
-     * Draws the window frame.
-     *
-     * @return the window frame.
-     */
-    private JFrame drawFrame() {
-        myFrame = new JFrame(myTitle);
-        myFrame.setLayout(new BorderLayout());
-        myFrame.setSize(myPreferredSize);
-        myFrame.getRootPane().setBorder(PADDING);
-        myFrame.setBackground(MID_GREY);
-        myFrame.setResizable(false);
-        myFrame.setLocationRelativeTo(null);
-        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        return myFrame;
     }
 
     private class updateGui extends AbstractAction {
