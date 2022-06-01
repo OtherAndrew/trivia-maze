@@ -19,9 +19,9 @@ import static model.mazecomponents.State.*;
 
 public class Game {
 
-    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(20, 0, 10, 0);
+    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
-    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(10, 0, 10, 10);
+    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
 
     // https://draculatheme.com/contribute
@@ -48,7 +48,7 @@ public class Game {
     final Maze maze = new Maze(r, r);
 
     private JFrame myFrame;
-    private JPanel myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
+    private JPanel myFramePanel, myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton;
 
     private JTextArea myQuestionArea;
@@ -63,14 +63,14 @@ public class Game {
         myFrame = drawFrame();
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
-        myFrame.add(myMapDisplay, BorderLayout.CENTER);
+        myFramePanel.add(myMapDisplay, BorderLayout.CENTER);
         // Right
         mySidebar = new JPanel(new BorderLayout());
         mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(UNDISCOVERED_COLOR);
-        myFrame.add(mySidebar, BorderLayout.EAST);
+        myFramePanel.add(mySidebar, BorderLayout.EAST);
 
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
@@ -88,11 +88,14 @@ public class Game {
      */
     private JFrame drawFrame() {
         myFrame = new JFrame(myTitle);
-        myFrame.setLayout(new BorderLayout());
+        myFramePanel = new JPanel(new BorderLayout());
+        myFramePanel.setBorder(PADDING);
+        myFramePanel.setBackground(UNDISCOVERED_COLOR);
         myFrame.setSize(myPreferredSize);
         myFrame.setResizable(false);
         myFrame.setLocationRelativeTo(null);
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        myFrame.add(myFramePanel);
         return myFrame;
     }
 
@@ -299,7 +302,6 @@ public class Game {
                 mapDisplay.add(buildTile(space, theOmniscient));
             }
         }
-        mapDisplay.setBorder(PADDING);
         mapDisplay.setBackground(UNDISCOVERED_COLOR);
         return mapDisplay;
     }
