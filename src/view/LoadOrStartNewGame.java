@@ -2,7 +2,8 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+
+import static view.AppTheme.*;
 
 public class LoadOrStartNewGame {
 
@@ -13,15 +14,19 @@ public class LoadOrStartNewGame {
     private final String myBackgroundPath = "assets\\Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
 
     public LoadOrStartNewGame() {
+        System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = new JFrame();
+        myFrame.setLayout(new BorderLayout());
+        myFrame.setBackground(MID_GREY);
         myFrame.setTitle("Trivia Maze");
         // TODO set background to be "Landing_Page_01.png"
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setResizable(false);
         myFrame.setSize(myFrameWidth, myFrameHeight);
 
-        myNewGameBtn = new JButton("New Game"); myLoadGameBtn = new JButton("Load Game");
-        myQuitBtn = new JButton("Quit");
+        myNewGameBtn = buildButton("New Game");
+        myLoadGameBtn = buildButton("Load Game");
+        myQuitBtn = buildButton("Quit");
 
         myQuitBtn.addActionListener(theAction -> {
             System.exit(1);
@@ -37,7 +42,9 @@ public class LoadOrStartNewGame {
             myFrame.dispose();
         });
 
-        myNorthPanel = new JPanel(); myCenterEastPanel = new JPanel(); myCenterWestPanel = new JPanel();
+        myNorthPanel = new JPanel();
+        myCenterEastPanel = new JPanel();
+        myCenterWestPanel = new JPanel();
         myCenterCenterPanel = new JPanel();
 
         myCenterEastPanel.add(myNewGameBtn, BorderLayout.CENTER);
@@ -49,6 +56,11 @@ public class LoadOrStartNewGame {
         myNorthPanel.add(myCenterWestPanel);
 
         myFrame.add(myNorthPanel, BorderLayout.SOUTH);
+//        JPanel center = new Game().drawMapDisplay(new Maze(5, 5).toCharArray(), true);
+//        myFrame.add(
+//                center
+//                , BorderLayout.CENTER
+//        );
 
         myFrame.setVisible(true);
     }

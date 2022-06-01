@@ -1,5 +1,6 @@
 package view;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -32,4 +33,20 @@ public final class AppTheme {
      * Empty constructor
      */
     private AppTheme() {}
+
+    public static JButton buildButton(final String theButtonText) {
+        final JButton button = new JButton(theButtonText);
+        button.setBackground(LIGHT_GREY);
+        button.setForeground(BLACK);
+        button.setFont(BUTTON_FONT);
+        return button;
+    }
+
+    public static JRadioButton buildRadioButton(final String theButtonText) {
+        final JRadioButton radioButton = new JRadioButton(theButtonText);
+        radioButton.setBackground(DARK_GREY);
+        radioButton.setForeground(WHITE);
+        radioButton.setFont(BUTTON_FONT);
+        return radioButton;
+    }
 }
