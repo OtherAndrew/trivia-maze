@@ -19,22 +19,22 @@ import static model.mazecomponents.Room.*;
 import static model.mazecomponents.State.*;
 
 public class Game {
-    // https://www.w3schools.com/html/tryit.asp?filename=tryhtml_color_names
+    //https://draculatheme.com/contribute
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
     public final static EmptyBorder VERTICAL_PADDING = new EmptyBorder(10, 0,
             10, 0);
-    public static final Color NON_TRAVERSABLE_COLOR = Color.BLACK;
-    public static final Color GOAL_COLOR = Color.decode("#3cb371");
-    public static final Color START_COLOR = Color.decode("#1e90ff");
-    public static final Color LOCKED_COLOR = Color.decode("#ff6347");
-    public static final Color CLOSED_COLOR = Color.decode("#6a5acd");
-    public static final Color UNDISCOVERED_COLOR = Color.DARK_GRAY;
-    public static final Color TRAVERSABLE_COLOR = Color.LIGHT_GRAY;
-    public static final Color UNVISITED_COLOR = Color.GRAY;
+    public static final Color NON_TRAVERSABLE_COLOR = Color.decode("#282a36");
+    public static final Color GOAL_COLOR = Color.decode("#50fa7b");
+    public static final Color START_COLOR = Color.decode("#8be9fd");
+    public static final Color LOCKED_COLOR = Color.decode("#ff5555");
+    public static final Color CLOSED_COLOR = Color.decode("#bd93f9");
+    public static final Color UNDISCOVERED_COLOR = Color.decode("#44475a");
+    public static final Color TRAVERSABLE_COLOR = Color.decode("#6272a4");
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
     public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
     public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
     public static final Font QUESTION_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
+    public static final Font TILE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     int r = new Random().nextInt(3) + 4;
     final Maze maze = new Maze(r, r);
@@ -135,7 +135,8 @@ public class Game {
     }
 
     private void doMove(final Direction theDirection) {
-        maze.getPlayerLocation().setDoorState(theDirection, State.OPEN);
+        // TODO: remove line below for final revision
+        maze.getPlayerLocation().setDoorState(theDirection, OPEN);
         maze.attemptMove(theDirection);
         myFrame.remove(myMapDisplay);
         if (maze.atGoal()) {
@@ -154,7 +155,7 @@ public class Game {
             disableButtonActionListeners();
             disableKeyboardBindings();
         } else {
-            myMapDisplay = drawMapDisplay(maze.toCharArray());
+            myMapDisplay = drawMapDisplay(maze.toCharArray(), false);
         }
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
     }
@@ -283,36 +284,62 @@ public class Game {
      * @param theOmniscient if an omniscient view is desired.
      * @return a maze tile.
      */
-    // TODO: decide on appearance for tiles
     private JComponent buildTile(final char theChar, final boolean theOmniscient) {
-        final JComponent tile = new JPanel();
+        final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
             case Maze.PLAYER_SYMBOL -> {
-                final JLabel player = new JLabel(String.valueOf(PLAYER_SYMBOL));
-                player.setHorizontalAlignment(SwingConstants.CENTER);
-                player.setForeground(Color.BLACK);
-                if (maze.atGoal()) tile.setBackground(GOAL_COLOR);
-                else if (maze.atStart()) tile.setBackground(START_COLOR);
-                else tile.setBackground(TRAVERSABLE_COLOR);
-                tile.setLayout(new BorderLayout());
-                tile.add(player, BorderLayout.CENTER);
+                if (maze.atGoal()) {
+                    tile.setBackground(GOAL_COLOR);
+                } else if (maze.atStart()) {
+                    tile.setBackground(START_COLOR);
+                } else {
+                    tile.setBackground(TRAVERSABLE_COLOR);
+                }
+                tile.add(drawLabel("!"), BorderLayout.CENTER);
             }
             case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(UNDISCOVERED_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
+                if (theOmniscient) {
+                    tile.setBackground(UNDISCOVERED_COLOR);
+                } else {
+                    tile.setBackground(NON_TRAVERSABLE_COLOR);
+                }
+            }
+            case GOAL_SYMBOL -> {
+                if (theOmniscient) {
+                    tile.setBackground(GOAL_COLOR);
+                }
+                else {
+                    tile.setBackground(NON_TRAVERSABLE_COLOR);
+                }
+            }
+            case LOCKED_SYMBOL -> {
+                tile.setBackground(LOCKED_COLOR);
+                tile.add(drawLabel("X"), BorderLayout.CENTER);
+            }
+            case CLOSED_SYMBOL -> {
+                tile.setBackground(CLOSED_COLOR);
+                tile.add(drawLabel("?"), BorderLayout.CENTER);
             }
             case OPEN_SYMBOL, VISITED_SYMBOL ->
                     tile.setBackground(TRAVERSABLE_COLOR);
-            case GOAL_SYMBOL -> {
-                if (theOmniscient) tile.setBackground(GOAL_COLOR);
-                else tile.setBackground(NON_TRAVERSABLE_COLOR);
-            }
-            case LOCKED_SYMBOL -> tile.setBackground(LOCKED_COLOR);
             case WALL_SYMBOL -> tile.setBackground(NON_TRAVERSABLE_COLOR);
-            case START_SYMBOL -> tile.setBackground(START_COLOR);
-            case CLOSED_SYMBOL -> tile.setBackground(CLOSED_COLOR);
+            case START_SYMBOL ->  tile.setBackground(START_COLOR);
         }
         return tile;
+    }
+
+    /**
+     * Draws a label for a map tile with the specified text.
+     *
+     * @param theLabelText the text the label should display.
+     * @return a label with the specified text.
+     */
+    private JLabel drawLabel(final String theLabelText) {
+        final JLabel output = new JLabel(theLabelText);
+        output.setHorizontalAlignment(SwingConstants.CENTER);
+        output.setForeground(Color.BLACK);
+        output.setFont(TILE_FONT);
+        return output;
     }
 
     public static void main(String[] args) {
