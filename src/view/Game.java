@@ -16,6 +16,7 @@ import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.Door.*;
 import static model.mazecomponents.Room.*;
 import static model.mazecomponents.State.*;
+import static view.AppColor.*;
 
 public class Game {
 
@@ -23,20 +24,6 @@ public class Game {
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
     public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
-
-    // https://draculatheme.com/contribute
-    public static final Color RED = Color.decode("#ff5555");
-    public static final Color ORANGE = Color.decode("#ffb86c");
-    public static final Color YELLOW = Color.decode("#f1fa8c");
-    public static final Color GREEN = Color.decode("#50fa7b");
-    public static final Color CYAN = Color.decode("#8be9fd");
-    public static final Color PURPLE = Color.decode("#bd93f9");
-    public static final Color PINK = Color.decode("#ff79c6");
-    public static final Color WHITE = Color.decode("#f8f8f2");
-    public static final Color LIGHT_GREY = Color.decode("#6272a4");
-    public static final Color MID_GREY = Color.decode("#44475a");
-    public static final Color DARK_GREY = Color.decode("#282a36");
-    public static final Color BLACK = Color.decode("#101010");
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
