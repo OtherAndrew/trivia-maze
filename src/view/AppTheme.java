@@ -3,7 +3,7 @@ package view;
 import java.awt.*;
 
 /**
- * AppColor defines the shared colors and fonts for every GUI class.
+ * AppTheme defines the shared colors and fonts for every GUI class.
  * Colors are pulled from Dracula by Zeno Rocha
  * (https://draculatheme.com/contribute).
  */
