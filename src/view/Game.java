@@ -16,7 +16,7 @@ import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.Door.*;
 import static model.mazecomponents.Room.*;
 import static model.mazecomponents.State.*;
-import static view.AppColor.*;
+import static view.AppTheme.*;
 
 public class Game {
 
@@ -26,10 +26,6 @@ public class Game {
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
-
-    public static final Font ANSWER_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 12);
-    public static final Font QUESTION_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 15);
-    public static final Font TILE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
     public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
