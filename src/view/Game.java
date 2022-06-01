@@ -19,12 +19,13 @@ import static model.mazecomponents.State.*;
 
 public class Game {
 
-    public final static EmptyBorder BOTTOM_PADDING = new EmptyBorder(0, 0, 20, 0);
+    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(20, 0, 10, 0);
     public final static EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
-    public final static EmptyBorder TOP_PADDING = new EmptyBorder(7, 0, 0, 0);
+    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(10, 0, 10, 10);
+    public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
 
     // https://draculatheme.com/contribute
-    public static final Color BUTTON_TEXT_COLOR = Color.decode("#151515");
+    public static final Color BUTTON_TEXT_COLOR = Color.decode("#101010");
     public static final Color CLOSED_COLOR = Color.decode("#bd93f9");
     public static final Color GOAL_COLOR = Color.decode("#50fa7b");
     public static final Color LOCKED_COLOR = Color.decode("#ff5555");
@@ -67,7 +68,7 @@ public class Game {
         mySidebar = new JPanel(new BorderLayout());
         mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
-        mySidebar.setBorder(PADDING);
+        mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(UNDISCOVERED_COLOR);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
@@ -180,7 +181,6 @@ public class Game {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
-        myQAPanel.setBorder(BOTTOM_PADDING);
         myQAPanel.setBackground(UNDISCOVERED_COLOR);
         return myQAPanel;
     }
@@ -221,7 +221,7 @@ public class Game {
     private JPanel drawAnswerPanel(final String[] theAnswerArray) {
         int numberOfAnswers = theAnswerArray.length;
         myAnswerPanel = new JPanel(new BorderLayout());
-        myAnswerPanel.setBorder(TOP_PADDING);
+        myAnswerPanel.setBorder(ANSWER_PADDING);
         myAnswerPanel.setBackground(UNDISCOVERED_COLOR);
         myAnswerButtonPanel = new JPanel(new GridLayout(numberOfAnswers, 1));
         myAnswerButtonPanel.setBorder(PADDING);
@@ -266,7 +266,7 @@ public class Game {
             myDirectionPanel.add(button);
         }
         addBufferPanel();
-        myDirectionPanel.setBorder(BOTTOM_PADDING);
+        myDirectionPanel.setBorder(DIRECTION_PADDING);
         myDirectionPanel.setBackground(UNDISCOVERED_COLOR);
         return myDirectionPanel;
     }
