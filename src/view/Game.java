@@ -48,7 +48,7 @@ public class Game {
     final Maze maze = new Maze(r, r);
 
     private JFrame myFrame;
-    private JPanel myFramePanel, myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
+    private JPanel myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton;
 
     private JTextArea myQuestionArea;
@@ -63,14 +63,14 @@ public class Game {
         myFrame = drawFrame();
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
-        myFramePanel.add(myMapDisplay, BorderLayout.CENTER);
+        myFrame.add(myMapDisplay, BorderLayout.CENTER);
         // Right
         mySidebar = new JPanel(new BorderLayout());
         mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(UNDISCOVERED_COLOR);
-        myFramePanel.add(mySidebar, BorderLayout.EAST);
+        myFrame.add(mySidebar, BorderLayout.EAST);
 
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
@@ -88,14 +88,13 @@ public class Game {
      */
     private JFrame drawFrame() {
         myFrame = new JFrame(myTitle);
-        myFramePanel = new JPanel(new BorderLayout());
-        myFramePanel.setBorder(PADDING);
-        myFramePanel.setBackground(UNDISCOVERED_COLOR);
+        myFrame.setLayout(new BorderLayout());
         myFrame.setSize(myPreferredSize);
+        myFrame.getRootPane().setBorder(PADDING);
+        myFrame.setBackground(UNDISCOVERED_COLOR);
         myFrame.setResizable(false);
         myFrame.setLocationRelativeTo(null);
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.add(myFramePanel);
         return myFrame;
     }
 
