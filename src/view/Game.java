@@ -11,10 +11,7 @@ import java.util.Random;
 import java.util.StringJoiner;
 
 import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
-import static model.Maze.*;
 import static model.mazecomponents.Direction.*;
-import static model.mazecomponents.Door.*;
-import static model.mazecomponents.Room.*;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
 import static view.MazeDisplayBuilder.drawMapDisplay;
@@ -24,7 +21,6 @@ public class Game {
     public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
     public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
-    public final static EmptyBorder TOOLBAR_PADDING = new EmptyBorder(0, 0, 7, 0);
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
@@ -142,12 +138,13 @@ public class Game {
     }
 
     private JPanel drawMenuBar() {
-        final JPanel myMenuBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        final JPanel myMenuBar = new JPanel(new GridLayout(1, 4));
         myMenuBar.setBackground(MID_GREY);
         myMenuBar.add(buildButton("New Game"));
         myMenuBar.add(buildButton("Load Game"));
         myMenuBar.add(buildButton("Save Game"));
         myMenuBar.add(buildButton("Quit"));
+        myMenuBar.setBorder(MENUBAR_PADDING);
         return myMenuBar;
     }
 

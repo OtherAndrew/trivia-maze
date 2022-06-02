@@ -43,8 +43,9 @@ public class Start {
         myButtonPanel.add(myNewGameBtn);
         myButtonPanel.add(myLoadGameBtn);
         myButtonPanel.add(myQuitBtn);
+        myButtonPanel.setBorder(MENUBAR_PADDING);
 
-        myFrame.add(myButtonPanel, BorderLayout.SOUTH);
+        myFrame.add(myButtonPanel, BorderLayout.NORTH);
         Maze m = new Maze(6, 6);
         m.setAllDoors(State.UNDISCOVERED);
         JPanel center = drawMapDisplay(m.toCharArray(), true);

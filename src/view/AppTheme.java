@@ -32,6 +32,7 @@ public final class AppTheme {
 
     public static final EmptyBorder GENERAL_BORDER = new EmptyBorder(10, 10, 10, 10);
     public static final EmptyBorder WINDOW_BORDER = new EmptyBorder(0, 10, 10, 10);
+    public final static EmptyBorder MENUBAR_PADDING = new EmptyBorder(7, 0, 7, 0);
     public static final Dimension WINDOW_SIZE = new Dimension(720, 600);
     public static final String TITLE = "Trivia Maze";
 
