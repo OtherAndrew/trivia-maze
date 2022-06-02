@@ -24,7 +24,7 @@ public class LoadGame {
             File selectedFile = myFileChooser.getSelectedFile();
             Serializer.load(selectedFile);
         } else {
-            new LoadOrStartNewGame();
+            new Start();
         }
     }
 

@@ -30,7 +30,7 @@ public class Welcome {
         myButton.setText("PRESS ANY KEY TO START");
         myButton.setVerticalTextPosition(JButton.NORTH);
         myButton.addActionListener(theAction -> {
-            new LoadOrStartNewGame();
+            new Start();
             myFrame.dispose();
         });
         myFrame.add(myButton);
