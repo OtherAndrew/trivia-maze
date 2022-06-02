@@ -23,6 +23,7 @@ public class Game {
     public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
     public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
+    public final static EmptyBorder TOOLBAR_PADDING = new EmptyBorder(0, 0, 7, 0);
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
@@ -35,7 +36,7 @@ public class Game {
     final Maze maze = new Maze(r, r);
 
     private JFrame myFrame;
-    private JPanel myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
+    private JPanel myMenuBar, myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton;
 
     private JTextArea myQuestionArea;
@@ -47,6 +48,8 @@ public class Game {
     public Game() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = buildFrame();
+        // Menubar
+        myFrame.add(drawMenuBar(), BorderLayout.NORTH);
         // Left
         myMapDisplay = drawMapDisplay(maze.toCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
@@ -137,6 +140,16 @@ public class Game {
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
     }
 
+    private JPanel drawMenuBar() {
+        final JPanel myMenuBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        myMenuBar.setBackground(MID_GREY);
+        myMenuBar.add(buildButton("New Game"));
+        myMenuBar.add(buildButton("Load Game"));
+        myMenuBar.add(buildButton("Save Game"));
+        myMenuBar.add(buildButton("Quit"));
+        return myMenuBar;
+    }
+
     /**
      * Draws the question/answer panel from a query and an array of answers.
      *
@@ -161,7 +174,7 @@ public class Game {
     private JPanel drawQuestionArea(final String theQueryText) {
         myQuestionPanel = new JPanel(new BorderLayout());
         myQuestionPanel.setBackground(DARK_GREY);
-        myQuestionPanel.setBorder(PADDING);
+        myQuestionPanel.setBorder(GENERAL_BORDER);
 
         myQuestionArea = new JTextArea();
         myQuestionArea.setLineWrap(true);
@@ -191,7 +204,7 @@ public class Game {
         myAnswerPanel.setBorder(ANSWER_PADDING);
         myAnswerPanel.setBackground(MID_GREY);
         myAnswerButtonPanel = new JPanel(new GridLayout(numberOfAnswers, 1));
-        myAnswerButtonPanel.setBorder(PADDING);
+        myAnswerButtonPanel.setBorder(GENERAL_BORDER);
         myAnswerButtonPanel.setBackground(DARK_GREY);
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();

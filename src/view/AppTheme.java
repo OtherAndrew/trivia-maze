@@ -30,7 +30,8 @@ public final class AppTheme {
     public static final Font MAP_TILE_FONT =
             new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
-    public static final EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
+    public static final EmptyBorder GENERAL_BORDER = new EmptyBorder(10, 10, 10, 10);
+    public static final EmptyBorder WINDOW_BORDER = new EmptyBorder(0, 10, 10, 10);
     public static final Dimension WINDOW_SIZE = new Dimension(720, 600);
     public static final String TITLE = "Trivia Maze";
 
@@ -48,7 +49,7 @@ public final class AppTheme {
         final JFrame frame  = new JFrame(TITLE);
         frame.setLayout(new BorderLayout());
         frame.setSize(WINDOW_SIZE);
-        frame.getRootPane().setBorder(PADDING);
+        frame.getRootPane().setBorder(WINDOW_BORDER);
         frame.setBackground(MID_GREY);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -67,6 +68,7 @@ public final class AppTheme {
         button.setBackground(LIGHT_GREY);
         button.setForeground(BLACK);
         button.setFont(BUTTON_FONT);
+        button.setFocusPainted(false);
         return button;
     }
 
@@ -81,6 +83,7 @@ public final class AppTheme {
         radioButton.setBackground(DARK_GREY);
         radioButton.setForeground(WHITE);
         radioButton.setFont(BUTTON_FONT);
+        radioButton.setFocusPainted(false);
         return radioButton;
     }
 }
