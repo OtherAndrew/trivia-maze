@@ -295,19 +295,25 @@ public class Game {
     private JComponent buildTile(final char theChar, final boolean theOmniscient) {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
-            case Maze.PLAYER_SYMBOL -> {
-                if (maze.atGoal()) tile.setBackground(GREEN);
-                else if (maze.atStart()) tile.setBackground(ORANGE);
-                else tile.setBackground(LIGHT_GREY);
-                tile.add(drawLabel("[]"), BorderLayout.CENTER);
-            }
             case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
                 if (theOmniscient) tile.setBackground(MID_GREY);
                 else tile.setBackground(DARK_GREY);
             }
-            case GOAL_SYMBOL -> {
+            case GOAL -> {
                 if (theOmniscient) tile.setBackground(GREEN);
                 else tile.setBackground(DARK_GREY);
+            }
+            case PLAYER_SYMBOL -> {
+                tile.setBackground(LIGHT_GREY);
+                tile.add(drawLabel("[]"), BorderLayout.CENTER);
+            }
+            case PLAYER_AT_START_SYMBOL -> {
+                tile.setBackground(ORANGE);
+                tile.add(drawLabel("[]"), BorderLayout.CENTER);
+            }
+            case PLAYER_AT_GOAL_SYMBOL -> {
+                tile.setBackground(GREEN);
+                tile.add(drawLabel("[]"), BorderLayout.CENTER);
             }
             case LOCKED_SYMBOL -> {
                 tile.setBackground(RED);
@@ -317,8 +323,7 @@ public class Game {
                 tile.setBackground(PURPLE);
                 tile.add(drawLabel("?"), BorderLayout.CENTER);
             }
-            case OPEN_SYMBOL, VISITED_SYMBOL ->
-                    tile.setBackground(LIGHT_GREY);
+            case OPEN_SYMBOL, VISITED_SYMBOL -> tile.setBackground(LIGHT_GREY);
             case WALL_SYMBOL -> tile.setBackground(DARK_GREY);
             case START_SYMBOL ->  tile.setBackground(ORANGE);
         }

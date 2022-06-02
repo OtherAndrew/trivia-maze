@@ -22,11 +22,19 @@ public class Maze implements Serializable {
     /**
      * Represents the goal position.
      */
-    public static final char GOAL_SYMBOL = '!';
+    public static final char GOAL = '!';
     /**
      * Represents the player position.
      */
     public static final char PLAYER_SYMBOL = '@';
+    /**
+     * Represents the player at goal position.
+     */
+    public static final char PLAYER_AT_GOAL_SYMBOL = 'G';
+    /**
+     * Represents the player at start position.
+     */
+    public static final char PLAYER_AT_START_SYMBOL = 'S';
     /**
      * Represents the start position.
      */
@@ -461,9 +469,15 @@ public class Maze implements Serializable {
                     col += 2, mazeCol++) {
                 final Room currentRoom = myRooms[mazeRow][mazeCol];
                 if (currentRoom.equals(myPlayerLocation)) {
-                    out[row][col] = PLAYER_SYMBOL;
+                    if (currentRoom.equals(myStartLocation)) {
+                        out[row][col] = PLAYER_AT_START_SYMBOL;
+                    } else if (currentRoom.equals(myGoalLocation)) {
+                        out[row][col] = PLAYER_AT_GOAL_SYMBOL;
+                    } else {
+                        out[row][col] = PLAYER_SYMBOL;
+                    }
                 } else if (currentRoom.equals(myGoalLocation)) {
-                    out[row][col] = GOAL_SYMBOL;
+                    out[row][col] = GOAL;
                 } else if (currentRoom.equals(myStartLocation)) {
                     out[row][col] = START_SYMBOL;
                 } else {
