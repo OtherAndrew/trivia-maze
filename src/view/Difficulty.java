@@ -26,7 +26,7 @@ public class Difficulty {
         myMediumButton = buildButton("6 x 6");
         myMediumButton.setBackground(ORANGE);
         myMediumButton.setFont(LARGE_FONT);
-        myHardButton = buildButton(" 8 x 8");
+        myHardButton = buildButton("8 x 8");
         myHardButton.setBackground(RED);
         myHardButton.setFont(LARGE_FONT);
         myInsaneButton = buildButton("10 x 10");
