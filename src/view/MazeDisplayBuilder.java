@@ -17,8 +17,7 @@ import static view.AppTheme.*;
 
 public final class MazeDisplayBuilder {
 
-    public static final Font MAP_TILE_FONT =
-            new Font(Font.SANS_SERIF, Font.BOLD, 18);
+
 
     /**
      * Draws a map display from the character array representation of one or

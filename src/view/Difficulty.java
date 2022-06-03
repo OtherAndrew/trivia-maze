@@ -14,22 +14,24 @@ public class Difficulty {
     private ImageIcon myWindowIcon;
     private final String myWindowIconPath = "resources\\App_Icon.png";
 
-
-
     public Difficulty() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = buildFrame();
 
         myMainMenuBtn = buildButton("Main Menu");
 
-        myEasyButton = buildButton("Easy");
+        myEasyButton = buildButton("4 x 4");
         myEasyButton.setBackground(GREEN);
-        myMediumButton = buildButton("Medium");
+        myEasyButton.setFont(MAP_TILE_FONT);
+        myMediumButton = buildButton("6 x 6");
         myMediumButton.setBackground(ORANGE);
-        myHardButton = buildButton("Hard");
+        myMediumButton.setFont(MAP_TILE_FONT);
+        myHardButton = buildButton(" 8 x 8");
         myHardButton.setBackground(RED);
-        myInsaneButton = buildButton("Insane");
+        myHardButton.setFont(MAP_TILE_FONT);
+        myInsaneButton = buildButton("10 x 10");
         myInsaneButton.setBackground(PINK);
+        myInsaneButton.setFont(MAP_TILE_FONT);
 
         final GridLayout difficultyLayout = new GridLayout(4, 1);
         difficultyLayout.setVgap(7);

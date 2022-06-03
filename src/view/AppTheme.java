@@ -28,6 +28,8 @@ public final class AppTheme {
             new Font(Font.SANS_SERIF, Font.BOLD, 12);
     public static final Font TEXT_FONT =
             new Font(Font.SANS_SERIF, Font.BOLD, 15);
+    public static final Font MAP_TILE_FONT =
+            new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     public static final EmptyBorder GENERAL_BORDER = new EmptyBorder(10, 10, 10, 10);
     public static final EmptyBorder WINDOW_BORDER = new EmptyBorder(0, 10, 10, 10);
