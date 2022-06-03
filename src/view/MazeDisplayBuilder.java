@@ -10,9 +10,12 @@ import static model.mazecomponents.Door.OPEN_SYMBOL;
 import static model.mazecomponents.Room.UNVISITED_SYMBOL;
 import static model.mazecomponents.Room.VISITED_SYMBOL;
 import static view.AppTheme.*;
-import static view.AppTheme.MAP_TILE_FONT;
+
 
 public final class MazeDisplayBuilder {
+
+    public static final Font MAP_TILE_FONT =
+            new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     /**
      * Draws a map display from the character array representation of one or

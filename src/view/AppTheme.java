@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 
 /**
  * AppTheme defines the shared GUI elements for every GUI class.
@@ -27,8 +28,6 @@ public final class AppTheme {
             new Font(Font.SANS_SERIF, Font.BOLD, 12);
     public static final Font TEXT_FONT =
             new Font(Font.SANS_SERIF, Font.BOLD, 15);
-    public static final Font MAP_TILE_FONT =
-            new Font(Font.SANS_SERIF, Font.BOLD, 18);
 
     public static final EmptyBorder GENERAL_BORDER = new EmptyBorder(10, 10, 10, 10);
     public static final EmptyBorder WINDOW_BORDER = new EmptyBorder(0, 10, 10, 10);
@@ -86,5 +85,15 @@ public final class AppTheme {
         radioButton.setFont(BUTTON_FONT);
         radioButton.setFocusPainted(false);
         return radioButton;
+    }
+
+    public static JPanel buildMenubar(final JButton[] theButtons) {
+        JPanel menubar = new JPanel(new GridLayout(1, theButtons.length));
+        menubar.setBackground(MID_GREY);
+        for (JButton button : theButtons) {
+            menubar.add(button);
+        }
+        menubar.setBorder(MENUBAR_PADDING);
+        return menubar;
     }
 }
