@@ -121,7 +121,7 @@ public final class MazeDisplayBuilder {
         final JLabel output = new JLabel(theLabelText);
         output.setHorizontalAlignment(SwingConstants.CENTER);
         output.setForeground(BLACK);
-        output.setFont(MAP_TILE_FONT);
+        output.setFont(LARGE_FONT);
         return output;
     }
 

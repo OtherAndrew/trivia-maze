@@ -22,16 +22,16 @@ public class Difficulty {
 
         myEasyButton = buildButton("4 x 4");
         myEasyButton.setBackground(GREEN);
-        myEasyButton.setFont(MAP_TILE_FONT);
+        myEasyButton.setFont(LARGE_FONT);
         myMediumButton = buildButton("6 x 6");
         myMediumButton.setBackground(ORANGE);
-        myMediumButton.setFont(MAP_TILE_FONT);
+        myMediumButton.setFont(LARGE_FONT);
         myHardButton = buildButton(" 8 x 8");
         myHardButton.setBackground(RED);
-        myHardButton.setFont(MAP_TILE_FONT);
+        myHardButton.setFont(LARGE_FONT);
         myInsaneButton = buildButton("10 x 10");
         myInsaneButton.setBackground(PINK);
-        myInsaneButton.setFont(MAP_TILE_FONT);
+        myInsaneButton.setFont(LARGE_FONT);
 
         final GridLayout difficultyLayout = new GridLayout(4, 1);
         difficultyLayout.setVgap(7);
