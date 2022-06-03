@@ -1,14 +1,11 @@
 package view;
 
-import model.Maze;
-import model.mazecomponents.State;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 import static view.AppTheme.*;
-import static view.MazeDisplayBuilder.drawMapDisplay;
+import static view.MazeDisplayBuilder.buildDummyMapDisplay;
+import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Start {
 
@@ -34,6 +31,7 @@ public class Start {
             myFrame.dispose();
         });
 
+        //TODO: go to difficulty screen
         myNewGameBtn.addActionListener(theAction -> {
             new Game();
             myFrame.dispose();
@@ -43,10 +41,7 @@ public class Start {
                 myNewGameBtn, myLoadGameBtn, myQuitBtn});
 
         myFrame.add(myButtonPanel, BorderLayout.NORTH);
-        Maze m = new Maze(6, 6);
-        m.setAllDoors(State.UNDISCOVERED);
-        JPanel center = drawMapDisplay(m.toCharArray(), true);
-        myFrame.add(center, BorderLayout.CENTER);
+        myFrame.add(buildDummyMapDisplay(6), BorderLayout.CENTER);
 
         myFrame.setVisible(true);
     }

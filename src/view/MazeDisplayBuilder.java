@@ -1,5 +1,8 @@
 package view;
 
+import model.Maze;
+import model.mazecomponents.State;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,8 +29,8 @@ public final class MazeDisplayBuilder {
      * @param theOmniscient if the output should display an omniscient view.
      * @return a JPanel that displays the character array as a series of tiles.
      */
-    public static JPanel drawMapDisplay(final char[][] theCharArray,
-                                 final boolean theOmniscient) {
+    public static JPanel buildMapDisplay(final char[][] theCharArray,
+                                         final boolean theOmniscient) {
         final JPanel mapDisplay =
                 new JPanel(new GridLayout(theCharArray.length,
                         theCharArray[0].length));
@@ -47,8 +50,20 @@ public final class MazeDisplayBuilder {
      *                     in the maze.
      * @return a JPanel that displays the character array as a series of tiles.
      */
-    public static JPanel drawMapDisplay(final char[][] theCharArray) {
-        return drawMapDisplay(theCharArray,false);
+    public static JPanel buildMapDisplay(final char[][] theCharArray) {
+        return buildMapDisplay(theCharArray,false);
+    }
+
+    /**
+     * Draws a map display for display purposes only.
+     *
+     * @param theSize the x and y size of the maze.
+     * @return a map with all paths visible.
+     */
+    public static JPanel buildDummyMapDisplay(final int theSize) {
+        final Maze dummyMaze = new Maze(theSize, theSize);
+        dummyMaze.setAllDoors(State.UNDISCOVERED);
+        return buildMapDisplay(dummyMaze.toCharArray(), true);
     }
 
     /**

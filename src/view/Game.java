@@ -14,7 +14,7 @@ import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
-import static view.MazeDisplayBuilder.drawMapDisplay;
+import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Game {
 
@@ -48,7 +48,7 @@ public class Game {
         // Menubar
         myFrame.add(drawMenuBar(), BorderLayout.NORTH);
         // Left
-        myMapDisplay = drawMapDisplay(maze.toCharArray());
+        myMapDisplay = buildMapDisplay(maze.toCharArray());
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
         // Right
         mySidebar = new JPanel(new BorderLayout());
@@ -58,6 +58,7 @@ public class Game {
         mySidebar.setBackground(MID_GREY);
         myFrame.add(mySidebar, BorderLayout.EAST);
 
+        //TODO: go to difficulty screen
         myNewGameButton.addActionListener(theAction -> {
             new Game();
             myFrame.dispose();
@@ -141,10 +142,10 @@ public class Game {
             sj.add("Locked doors: " + maze.getDoorStateNum(LOCKED));
             sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
             myQuestionArea.setText(sj.toString());
-            myMapDisplay = drawMapDisplay(maze.toCharArray(), true);
+            myMapDisplay = MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(), true);
             setMovementEnabled(false);
         } else {
-            myMapDisplay = drawMapDisplay(maze.toCharArray(), false);
+            myMapDisplay = MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(), false);
         }
         myFrame.add(myMapDisplay, BorderLayout.CENTER);
     }
