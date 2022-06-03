@@ -60,7 +60,7 @@ public class Game {
 
         //TODO: go to difficulty screen
         myNewGameButton.addActionListener(theAction -> {
-            new Game();
+            new Difficulty();
             myFrame.dispose();
         });
 
@@ -241,23 +241,14 @@ public class Game {
         mySouthButton = buildButton(DIRECTION_TEXT[3]);
         final JButton[] directionButtons =
                 {myNorthButton, myWestButton, myEastButton, mySouthButton};
-        myDirectionPanel.add(drawBufferPanel());
+        myDirectionPanel.add(buildBufferPanel());
         for (JButton button : directionButtons) {
             myDirectionPanel.add(button);
-            myDirectionPanel.add(drawBufferPanel());
+            myDirectionPanel.add(buildBufferPanel());
         }
         myDirectionPanel.setBorder(DIRECTION_PADDING);
         myDirectionPanel.setBackground(MID_GREY);
         return myDirectionPanel;
-    }
-
-    /**
-     * Adds buffer panel to direction panel.
-     */
-    private JPanel drawBufferPanel() {
-        final JPanel buffer = new JPanel();
-        buffer.setBackground(MID_GREY);
-        return buffer;
     }
 
     public static void main(String[] args) {

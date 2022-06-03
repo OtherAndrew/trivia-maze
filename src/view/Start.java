@@ -10,7 +10,7 @@ import static view.MazeDisplayBuilder.buildMapDisplay;
 public class Start {
 
     private JFrame myFrame;
-    private JPanel myButtonPanel;
+    private JPanel myMenuBar;
     private JButton myLoadGameBtn, myNewGameBtn, myQuitBtn;
     private final String myBackgroundPath = "assets\\Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
 
@@ -22,8 +22,9 @@ public class Start {
         myLoadGameBtn = buildButton("Load Game");
         myQuitBtn = buildButton("Quit");
 
-        myQuitBtn.addActionListener(theAction -> {
-            System.exit(1);
+        myNewGameBtn.addActionListener(theAction -> {
+            new Difficulty();
+            myFrame.dispose();
         });
 
         myLoadGameBtn.addActionListener(theAction -> {
@@ -31,16 +32,14 @@ public class Start {
             myFrame.dispose();
         });
 
-        //TODO: go to difficulty screen
-        myNewGameBtn.addActionListener(theAction -> {
-            new Game();
-            myFrame.dispose();
+        myQuitBtn.addActionListener(theAction -> {
+            System.exit(1);
         });
 
-        myButtonPanel = buildMenubar(new JButton[]{
+        myMenuBar = buildMenubar(new JButton[]{
                 myNewGameBtn, myLoadGameBtn, myQuitBtn});
 
-        myFrame.add(myButtonPanel, BorderLayout.NORTH);
+        myFrame.add(myMenuBar, BorderLayout.NORTH);
         myFrame.add(buildDummyMapDisplay(6), BorderLayout.CENTER);
 
         myFrame.setVisible(true);

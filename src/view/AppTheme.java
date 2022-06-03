@@ -93,13 +93,22 @@ public final class AppTheme {
      * @param theButtons the buttons to include in the menubar.
      * @return a standard menubar.
      */
-    public static JPanel buildMenubar(final JButton[] theButtons) {
+    public static JPanel buildMenubar(final JComponent[] theButtons) {
         JPanel menubar = new JPanel(new GridLayout(1, theButtons.length));
         menubar.setBackground(MID_GREY);
-        for (JButton button : theButtons) {
+        for (JComponent button : theButtons) {
             menubar.add(button);
         }
         menubar.setBorder(MENUBAR_PADDING);
         return menubar;
+    }
+
+    /**
+     * Builds a buffer panel.
+     */
+    public static JPanel buildBufferPanel() {
+        final JPanel buffer = new JPanel();
+        buffer.setBackground(MID_GREY);
+        return buffer;
     }
 }
