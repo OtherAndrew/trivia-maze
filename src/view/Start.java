@@ -39,14 +39,8 @@ public class Start {
             myFrame.dispose();
         });
 
-        myButtonPanel = buildMenubar(new JButton[]{myNewGameBtn, myLoadGameBtn, myQuitBtn});
-
-//                = new JPanel(new GridLayout(1, 3));
-//        myButtonPanel.setBackground(MID_GREY);
-//        myButtonPanel.add(myNewGameBtn);
-//        myButtonPanel.add(myLoadGameBtn);
-//        myButtonPanel.add(myQuitBtn);
-//        myButtonPanel.setBorder(MENUBAR_PADDING);
+        myButtonPanel = buildMenubar(new JButton[]{
+                myNewGameBtn, myLoadGameBtn, myQuitBtn});
 
         myFrame.add(myButtonPanel, BorderLayout.NORTH);
         Maze m = new Maze(6, 6);

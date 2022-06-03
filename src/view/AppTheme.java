@@ -41,9 +41,9 @@ public final class AppTheme {
     private AppTheme() {}
 
     /**
-     * Builds a standard JFrame for each GUI class.
+     * Builds a standard JFrame.
      *
-     * @return the standard JFrame for each GUI class.
+     * @return the standard JFrame.
      */
     public static JFrame buildFrame() {
         final JFrame frame  = new JFrame(TITLE);
@@ -87,6 +87,12 @@ public final class AppTheme {
         return radioButton;
     }
 
+    /**
+     * Builds a standard menubar.
+     *
+     * @param theButtons the buttons to include in the menubar.
+     * @return a standard menubar.
+     */
     public static JPanel buildMenubar(final JButton[] theButtons) {
         JPanel menubar = new JPanel(new GridLayout(1, theButtons.length));
         menubar.setBackground(MID_GREY);

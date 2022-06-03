@@ -34,7 +34,7 @@ public class Game {
 
     private JFrame myFrame;
     private JPanel myMenuBar, myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
-    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton;
+    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton, myNewGameButton, mySaveButton, myMainMenuButton;
 
     private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
@@ -57,6 +57,18 @@ public class Game {
         mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(MID_GREY);
         myFrame.add(mySidebar, BorderLayout.EAST);
+
+        myNewGameButton.addActionListener(theAction -> {
+            new Game();
+            myFrame.dispose();
+        });
+
+        //TODO: save button
+
+        myMainMenuButton.addActionListener(theAction -> {
+            new Start();
+            myFrame.dispose();
+        });
 
         setMovementEnabled(true);
         final updateGui north = new updateGui(NORTH);
@@ -138,13 +150,11 @@ public class Game {
     }
 
     private JPanel drawMenuBar() {
-        final JPanel myMenuBar = new JPanel(new GridLayout(1, 4));
-        myMenuBar.setBackground(MID_GREY);
-        myMenuBar.add(buildButton("New Game"));
-        myMenuBar.add(buildButton("Load Game"));
-        myMenuBar.add(buildButton("Save Game"));
-        myMenuBar.add(buildButton("Quit"));
-        myMenuBar.setBorder(MENUBAR_PADDING);
+        myNewGameButton = buildButton("New Game");
+        mySaveButton = buildButton("Save");
+        myMainMenuButton = buildButton("Main Menu");
+        myMenuBar = buildMenubar(new JButton[]{
+                myNewGameButton, mySaveButton, myMainMenuButton});
         return myMenuBar;
     }
 
