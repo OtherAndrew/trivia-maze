@@ -81,7 +81,10 @@ public final class MazeDisplayBuilder {
                 else tile.setBackground(DARK_GREY);
             }
             case GOAL -> {
-                if (theOmniscient) tile.setBackground(GREEN);
+                if (theOmniscient) {
+                    tile.setBackground(GREEN);
+                    tile.add(drawLabel("!"), BorderLayout.CENTER);
+                }
                 else tile.setBackground(DARK_GREY);
             }
             case PLAYER_SYMBOL -> {
