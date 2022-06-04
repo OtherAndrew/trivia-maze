@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 import static view.AppTheme.*;
-import static view.MazeDisplayBuilder.buildDummyMapDisplay;
+//import static view.MazeDisplayBuilder.buildDummyMapDisplay;
 
-public class Start {
+public class Start extends JPanel {
 
-    private final JPanel myPanel;
+//    private final JPanel myPanel;
     private final JPanel myMenuBar;
     private final JButton myLoadGameBtn;
     private final JButton myNewGameBtn;
@@ -16,7 +16,8 @@ public class Start {
 
     public Start(final JPanel thePanel, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-        myPanel = buildPanel();
+//        myPanel = buildPanel();
+        adjustPanel(this);
 
         myNewGameBtn = buildButton("New Game");
         myLoadGameBtn = buildButton("Load Game");
@@ -32,13 +33,13 @@ public class Start {
         myMenuBar = buildMenubar(new JButton[]{myNewGameBtn, myLoadGameBtn,
                 myQuitBtn});
 
-        myPanel.add(myMenuBar, BorderLayout.NORTH);
-        myPanel.add(buildDummyMapDisplay(6), BorderLayout.CENTER);
+        /*myPanel.*/add(myMenuBar, BorderLayout.NORTH);
+        // /*myPanel.*/add(buildDummyMapDisplay(6), BorderLayout.CENTER);
 
-        myPanel.setVisible(true);
+        /*myPanel.*/setVisible(true);
     }
 
-    public JPanel getPanel() {
-        return myPanel;
-    }
+//    public JPanel getPanel() {
+//        return myPanel;
+//    }
 }

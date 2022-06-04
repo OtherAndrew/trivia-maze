@@ -67,6 +67,13 @@ public final class AppTheme {
         return panel;
     }
 
+    public static void adjustPanel(final JPanel thePanel) {
+        thePanel.setLayout(new BorderLayout());
+        thePanel.setSize(WINDOW_SIZE);
+        thePanel.setBorder(WINDOW_BORDER);
+        thePanel.setBackground(MID_GREY);
+    }
+
     /**
      * Builds a standard JButton.
      *

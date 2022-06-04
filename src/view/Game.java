@@ -1,5 +1,6 @@
 package view;
 
+import controller.TriviaMaze;
 import model.Maze;
 import model.mazecomponents.Direction;
 
@@ -35,9 +36,7 @@ public class Game {
 
     private boolean myMovementEnabledStatus;
 
-    int r = new Random().nextInt(6) + 4;
-    final Maze maze = new Maze(r, r);
-
+    private TriviaMaze myController;
     private final JFrame myFrame;
     private final JPanel myContentPanel;
     private final JPanel myGamePanel;
@@ -58,7 +57,9 @@ public class Game {
     private JRadioButton[] myAnswerButtons;
     private ButtonGroup myAnswerButtonsGroup;
 
-    public Game() {
+    public Game(final TriviaMaze theController) {
+        myController = theController;
+        theController.registerView(this);
         System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = buildFrame();
         myContentPanel = buildPanel();
@@ -73,7 +74,7 @@ public class Game {
         // Menubar
         myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
         // Left
-        myMapDisplay = buildMapDisplay(maze.toCharArray());
+        myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
         // Right
         mySidebar = new JPanel(new BorderLayout());
@@ -86,12 +87,13 @@ public class Game {
         myContentPanel.add(myGamePanel, "game");
 
         // Difficulty
-        final Difficulty difficulty = new Difficulty(myContentPanel, cards);
-        myContentPanel.add(difficulty.getPanel(), "difficulty");
+//        final Difficulty difficulty = new Difficulty(myContentPanel, cards);
+        myContentPanel.add(new Difficulty(myController, myContentPanel, cards)/*difficulty
+        .getPanel()*/, "difficulty");
 
         // Start
-        final Start start = new Start(myContentPanel, cards);
-        myContentPanel.add(start.getPanel(), "start");
+//        final Start start = new Start(myContentPanel, cards);
+        myContentPanel.add(new Start(myContentPanel, cards)/*start.getPanel()*/, "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
 
@@ -114,7 +116,6 @@ public class Game {
 
         cards.show(myContentPanel, "start");
     }
-
     private class updateGui extends AbstractAction {
 
         private final Direction myDirection;
@@ -159,29 +160,27 @@ public class Game {
     }
 
     private void doMove(final Direction theDirection) {
-        // TODO: remove line below for final revision
-        maze.getPlayerLocation().setDoorState(theDirection, OPEN);
-        maze.attemptMove(theDirection);
+        myController.move(theDirection);
         myGamePanel.remove(myMapDisplay);
-        if (maze.atGoal()) {
+        if (myController.getVictory()) {
             final StringJoiner sj = new StringJoiner("\n");
             sj.add("YOU WON!");
             sj.add("");
-            sj.add("Rooms visited: " + maze.getRoomVisitedNum());
-            sj.add("Rooms not visited: " + maze.getRoomVisitedNum(false));
+            sj.add("Rooms visited: " + myController.getVisitCount(true));
+            sj.add("Rooms not visited: " + myController.getVisitCount(false));
             sj.add("");
-            sj.add("Opened doors: " + maze.getDoorStateNum(OPEN));
-            sj.add("Closed doors: " + maze.getDoorStateNum(CLOSED));
-            sj.add("Locked doors: " + maze.getDoorStateNum(LOCKED));
-            sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
+            sj.add("Opened doors: " + myController.getMazeDoorCount(OPEN));
+            sj.add("Closed doors: " + myController.getMazeDoorCount(CLOSED));
+            sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
+            sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
             myQuestionArea.setText(sj.toString());
             myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(),
+                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
                             true);
             setMovementEnabled(false);
         } else {
             myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(),
+                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
                             false);
         }
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
@@ -296,8 +295,8 @@ public class Game {
         return myDirectionPanel;
     }
 
-    public static void main(String[] args) {
-        Game game = new Game();
-    }
+//    public static void main(String[] args) {
+//        Game game = new Game();
+//    }
 }
 

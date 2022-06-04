@@ -1,14 +1,16 @@
 package view;
 
+import controller.TriviaMaze;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static view.AppTheme.*;
 
-public class Difficulty {
+public class Difficulty extends JPanel {
 
-    private final JPanel myPanel;
+//    private final JPanel myPanel;
     private final JPanel myMenubar;
     private final JPanel myDifficultyPanel;
     private final JButton myMainMenuBtn;
@@ -17,9 +19,11 @@ public class Difficulty {
     private final JButton myHardButton;
     private final JButton myInsaneButton;
 
-    public Difficulty(final JPanel thePanel, final CardLayout theCards) {
+    public Difficulty(final TriviaMaze theController, final JPanel thePanel,
+                      final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-        myPanel = buildPanel();
+//        myPanel = buildPanel();
+        adjustPanel(this);
 
         myMainMenuBtn = buildButton("Main Menu");
 
@@ -45,8 +49,8 @@ public class Difficulty {
         myMenubar = buildMenubar(new JComponent[]{buildBufferPanel(),
                 buildBufferPanel(), myMainMenuBtn});
 
-        myPanel.add(myMenubar, BorderLayout.NORTH);
-        myPanel.add(myDifficultyPanel, BorderLayout.CENTER);
+        /*myPanel.*/add(myMenubar, BorderLayout.NORTH);
+        /*myPanel.*/add(myDifficultyPanel, BorderLayout.CENTER);
 
         myMainMenuBtn.addActionListener(theAction -> theCards.show(thePanel,
                 "start"));
@@ -54,20 +58,24 @@ public class Difficulty {
         // TODO: assign difficulty settings
         final JButton[] difficultyButtons = {myEasyButton, myMediumButton,
                 myHardButton, myInsaneButton};
+        int dim = 4;
         for (JButton button : difficultyButtons) {
+            int finalDim = dim;
             button.addActionListener(theAction -> {
+                theController.buildMaze(finalDim, finalDim);
                 theCards.show(thePanel, "game"); // PLACEHOLDER
             });
             myDifficultyPanel.add(button);
+            dim += 2;
         }
 
         // TODO: dev mode button/buttons (omniscient map, always open doors,
         //  highlighted answers, etc)
 
-        myPanel.setVisible(true);
+//        myPanel.setVisible(true);
     }
 
-    public JPanel getPanel() {
-        return myPanel;
-    }
+//    public JPanel getPanel() {
+//        return myPanel;
+//    }
 }

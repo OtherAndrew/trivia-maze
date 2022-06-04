@@ -59,11 +59,11 @@ public final class MazeDisplayBuilder {
      * @param theSize the x and y size of the maze.
      * @return a map with all paths visible.
      */
-    public static JPanel buildDummyMapDisplay(final int theSize) {
-        final Maze dummyMaze = new Maze(theSize, theSize);
-        dummyMaze.setAllDoors(State.UNDISCOVERED);
-        return buildMapDisplay(dummyMaze.toCharArray(), true);
-    }
+//    public static JPanel buildDummyMapDisplay(final int theSize) {
+//        final Maze dummyMaze = new Maze(theSize, theSize);
+//        dummyMaze.setAllDoors(State.UNDISCOVERED);
+//        return buildMapDisplay(dummyMaze.toCharArray(), true);
+//    }
 
     /**
      * Returns a tile based on the given parameters.

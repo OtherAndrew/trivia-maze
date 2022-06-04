@@ -1,5 +1,6 @@
 package model;
 
+import controller.TriviaMaze;
 import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
@@ -43,6 +44,8 @@ public class Maze implements Serializable {
      * Represents maze walls.
      */
     public static final char WALL_SYMBOL = '█';
+
+    private TriviaMaze myController;
     /**
      * Number of rows.
      */
@@ -72,17 +75,18 @@ public class Maze implements Serializable {
      */
     private Room myGoalLocation;
 
-    /**
-     * Constructs a maze of arbitrary size greater than 3 x 3.
-     *
-     * @param theRows the number of rows the maze should have.
-     * @param theCols the number of columns the maze should have.
-     */
-    public Maze(final int theRows, final int theCols) throws IllegalArgumentException {
+    public Maze(final TriviaMaze theController, final int theRows,
+                final int theCols) throws IllegalArgumentException {
+        myController = theController;
+        theController.registerModel(this);
         if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
             throw new IllegalArgumentException("dimensions passed to Maze " +
                     "cannot be outside the range of 4-10 (passed values: " + theRows + ", " + theCols);
         }
+        build(theRows, theCols);
+    }
+
+    public void build(final int theRows, final int theCols)  {
         myHeight = theRows;
         myWidth = theCols;
         myRooms = generateRoomMatrix(theRows, theCols);
@@ -568,15 +572,11 @@ public class Maze implements Serializable {
     }
 
     // FOR TESTING
-    public static void main(final String[] theArgs) {
-        Random r = new Random();
-        Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
-        System.out.println(maze);
-        System.out.println();
-//        maze.setAllDoors(LOCKED);
+//    public static void main(final String[] theArgs) {
+//        Random r = new Random();
+//        Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
 //        System.out.println(maze);
-//        System.out.println();
-//        System.out.println(maze.playerRoomToString());
-        maze.save();
-    }
+//        //System.out.println();
+//        //maze.save();
+//    }
 }
