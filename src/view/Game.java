@@ -261,7 +261,7 @@ public class Game {
     private JPanel drawShortAnswerPanel() {
         myAnswerPanel = drawAnswerPanel();
         myResponsePanel = new JPanel(new BorderLayout());
-        myResponsePanel.setBackground(DARK_GREY);
+        myResponsePanel.setBackground(MID_GREY);
 
         myAnswerPrompt = new JTextField();
         myAnswerPrompt.setEditable(true);
@@ -269,7 +269,7 @@ public class Game {
         myAnswerPrompt.setBackground(DARK_GREY);
         myAnswerPrompt.setForeground(WHITE);
         myAnswerPrompt.setCaretColor(WHITE);
-        myResponsePanel.setBackground(MID_GREY);
+
         final JLabel textIndicator = new JLabel("> ");
         textIndicator.setFont(BUTTON_FONT);
         textIndicator.setForeground(WHITE);
