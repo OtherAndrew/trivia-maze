@@ -7,10 +7,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static view.AppTheme.*;
+import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Difficulty extends JPanel {
 
-//    private final JPanel myPanel;
     private final JPanel myMenubar;
     private final JPanel myDifficultyPanel;
     private final JButton myMainMenuBtn;
@@ -21,7 +21,6 @@ public class Difficulty extends JPanel {
 
     public Difficulty(final Game theGame, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-//        myPanel = buildPanel();
         adjustPanel(this);
 
         myMainMenuBtn = buildButton("Main Menu");
@@ -45,11 +44,10 @@ public class Difficulty extends JPanel {
         myDifficultyPanel.setBackground(MID_GREY);
         myDifficultyPanel.setBorder(new EmptyBorder(100, 100, 100, 100));
 
-        myMenubar = buildMenubar(new JComponent[]{buildBufferPanel(),
-                buildBufferPanel(), myMainMenuBtn});
+        myMenubar = buildMenubar(buildBufferPanel(), buildBufferPanel(), myMainMenuBtn);
 
-        /*myPanel.*/add(myMenubar, BorderLayout.NORTH);
-        /*myPanel.*/add(myDifficultyPanel, BorderLayout.CENTER);
+        add(myMenubar, BorderLayout.NORTH);
+        add(myDifficultyPanel, BorderLayout.CENTER);
 
         myMainMenuBtn.addActionListener(theAction -> theCards.show(theGame.getContentPanel(), "start"));
 
@@ -61,6 +59,7 @@ public class Difficulty extends JPanel {
             int finalDim = dim;
             button.addActionListener(theAction -> {
                 theGame.getController().buildMaze(finalDim, finalDim);
+                theGame.updateMapDisplay();
                 theCards.show(theGame.getContentPanel(), "game"); // PLACEHOLDER
             });
             myDifficultyPanel.add(button);
@@ -69,11 +68,5 @@ public class Difficulty extends JPanel {
 
         // TODO: dev mode button/buttons (omniscient map, always open doors,
         //  highlighted answers, etc)
-
-//        myPanel.setVisible(true);
     }
-
-//    public JPanel getPanel() {
-//        return myPanel;
-//    }
 }

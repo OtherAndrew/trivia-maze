@@ -8,7 +8,6 @@ import static view.AppTheme.*;
 
 public class Start extends JPanel {
 
-//    private final JPanel myPanel;
     private final JPanel myMenuBar;
     private final JButton myLoadGameBtn;
     private final JButton myNewGameBtn;
@@ -16,30 +15,21 @@ public class Start extends JPanel {
 
     public Start(final JPanel thePanel, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-//        myPanel = buildPanel();
         adjustPanel(this);
 
         myNewGameBtn = buildButton("New Game");
         myLoadGameBtn = buildButton("Load Game");
         myQuitBtn = buildButton("Quit");
 
-        myNewGameBtn.addActionListener(theAction -> theCards.show(thePanel,
-                "difficulty"));
+        myNewGameBtn.addActionListener(theAction -> theCards.show(thePanel, "difficulty"));
 
         myLoadGameBtn.addActionListener(theAction -> FileAccessor.getInstance().loadFile());
 
         myQuitBtn.addActionListener(theAction -> System.exit(1));
 
-        myMenuBar = buildMenubar(new JButton[]{myNewGameBtn, myLoadGameBtn,
-                myQuitBtn});
+        myMenuBar = buildMenubar(myNewGameBtn, myLoadGameBtn, myQuitBtn);
 
-        /*myPanel.*/add(myMenuBar, BorderLayout.NORTH);
-        // /*myPanel.*/add(buildDummyMapDisplay(6), BorderLayout.CENTER);
-
-        /*myPanel.*/setVisible(true);
+        add(myMenuBar, BorderLayout.NORTH);
+        // add(buildDummyMapDisplay(6), BorderLayout.CENTER);
     }
-
-//    public JPanel getPanel() {
-//        return myPanel;
-//    }
 }

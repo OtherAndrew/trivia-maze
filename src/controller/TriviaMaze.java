@@ -51,7 +51,6 @@ public class TriviaMaze {
     }
 
 
-
     public static void main(final String[] theArgs) {
         final TriviaMaze triviaMaze = new TriviaMaze();
         final Maze maze = new Maze(triviaMaze, 4, 4); // Placeholder

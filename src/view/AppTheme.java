@@ -110,7 +110,7 @@ public final class AppTheme {
      * @param theButtons the buttons to include in the menubar.
      * @return a standard menubar.
      */
-    public static JPanel buildMenubar(final JComponent[] theButtons) {
+    public static JPanel buildMenubar(final JComponent... theButtons) {
         JPanel menubar = new JPanel(new GridLayout(1, theButtons.length));
         menubar.setBackground(MID_GREY);
         for (JComponent button : theButtons) {

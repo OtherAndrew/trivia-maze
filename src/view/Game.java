@@ -132,12 +132,10 @@ public class Game {
             sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
             sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
             myQuestionArea.setText(sj.toString());
-            myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(), true);
+            myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), true);
             setMovementEnabled(false);
         } else {
-            myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(), false);
+            myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), false);
         }
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
@@ -165,8 +163,7 @@ public class Game {
         myNewGameButton = buildButton("New Game");
         mySaveButton = buildButton("Save");
         myMainMenuButton = buildButton("Main Menu");
-        myMenuBar = buildMenubar(new JButton[]{myNewGameButton, mySaveButton,
-                myMainMenuButton});
+        myMenuBar = buildMenubar(myNewGameButton, mySaveButton, myMainMenuButton);
         return myMenuBar;
     }
 
@@ -278,8 +275,10 @@ public class Game {
         return myContentPanel;
     }
 
-    JPanel getGamePanel() {
-        return myGamePanel;
+    void updateMapDisplay() {
+        myGamePanel.remove(myMapDisplay);
+        myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
+        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
 
     private class updateGui extends AbstractAction {
