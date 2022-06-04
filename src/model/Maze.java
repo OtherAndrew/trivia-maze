@@ -86,6 +86,14 @@ public class Maze implements Serializable {
         build(theRows, theCols);
     }
 
+    public Maze(final int theRows, final int theCols) throws IllegalArgumentException {
+        if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
+            throw new IllegalArgumentException("dimensions passed to Maze " +
+                    "cannot be outside the range of 4-10 (passed values: " + theRows + ", " + theCols);
+        }
+        build(theRows, theCols);
+    }
+
     public void build(final int theRows, final int theCols)  {
         myHeight = theRows;
         myWidth = theCols;
@@ -571,12 +579,10 @@ public class Maze implements Serializable {
         return concatenateMatrix(playerRoomToCharArray());
     }
 
-    // FOR TESTING
-//    public static void main(final String[] theArgs) {
-//        Random r = new Random();
-//        Maze maze = new Maze(r.nextInt(8) + 3, r.nextInt(8) + 3);
-//        System.out.println(maze);
-//        //System.out.println();
-//        //maze.save();
-//    }
+    public char[][] generateDummy() {
+        final int dim = new Random().nextInt(7) + 4;
+        final Maze dummyMaze = new Maze(dim, dim);
+        dummyMaze.setAllDoors(State.UNDISCOVERED);
+        return dummyMaze.toCharArray();
+    }
 }

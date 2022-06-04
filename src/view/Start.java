@@ -13,7 +13,7 @@ public class Start extends JPanel {
     private final JButton myNewGameBtn;
     private final JButton myQuitBtn;
 
-    public Start(final JPanel thePanel, final CardLayout theCards) {
+    public Start(final Game theGame, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         adjustPanel(this);
 
@@ -21,7 +21,8 @@ public class Start extends JPanel {
         myLoadGameBtn = buildButton("Load Game");
         myQuitBtn = buildButton("Quit");
 
-        myNewGameBtn.addActionListener(theAction -> theCards.show(thePanel, "difficulty"));
+        myNewGameBtn.addActionListener(theAction -> theCards.show(theGame.getContentPanel(),
+                "difficulty"));
 
         myLoadGameBtn.addActionListener(theAction -> FileAccessor.getInstance().loadFile());
 
@@ -30,6 +31,6 @@ public class Start extends JPanel {
         myMenuBar = buildMenubar(myNewGameBtn, myLoadGameBtn, myQuitBtn);
 
         add(myMenuBar, BorderLayout.NORTH);
-        // add(buildDummyMapDisplay(6), BorderLayout.CENTER);
+//        add(buildDummyMapDisplay(theGame.getController()), BorderLayout.CENTER);
     }
 }

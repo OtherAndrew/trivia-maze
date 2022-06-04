@@ -51,7 +51,7 @@ public class Difficulty extends JPanel {
 
         myMainMenuBtn.addActionListener(theAction -> theCards.show(theGame.getContentPanel(), "start"));
 
-        // TODO: assign difficulty settings
+        // TODO assign difficulty settings
         final JButton[] difficultyButtons = {myEasyButton, myMediumButton,
                 myHardButton, myInsaneButton};
         int dim = 4;
