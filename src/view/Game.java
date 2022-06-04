@@ -186,7 +186,7 @@ public class Game {
                                final String[] theAnswerArray) {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
-        myQAPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
+        myQAPanel.add(drawMultipleChoicePanel(theAnswerArray), BorderLayout.SOUTH);
         myQAPanel.setBackground(MID_GREY);
         return myQAPanel;
     }
@@ -225,7 +225,7 @@ public class Game {
 
     // TODO do text input or radio buttons based on input
     //  NEEDS TO HANDLE SHORT ANSWER DIFFERENTLY
-    private JPanel drawAnswerPanel(final String[] theAnswerArray) {
+    private JPanel drawMultipleChoicePanel(final String[] theAnswerArray) {
         int numberOfAnswers = theAnswerArray.length;
         myAnswerPanel = new JPanel(new BorderLayout());
         myAnswerPanel.setBorder(ANSWER_PADDING);
