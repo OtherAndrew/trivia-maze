@@ -17,12 +17,12 @@ import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Game {
 
-    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0
-            , 7, 0);
-    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0
-            , 0);
-    public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0,
-            0);
+    public final static EmptyBorder DIRECTION_PADDING =
+            new EmptyBorder(17, 0, 7, 0);
+    public final static EmptyBorder SIDEBAR_PADDING =
+            new EmptyBorder(0, 7, 0, 0);
+    public final static EmptyBorder ANSWER_PADDING =
+            new EmptyBorder(7, 0, 0, 0);
 
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right",
             "Down"};
@@ -45,7 +45,7 @@ public class Game {
     private JPanel myQAPanel;
     private JPanel myQuestionPanel;
     private JPanel myAnswerPanel;
-    private JPanel myAnswerButtonPanel;
+    private JPanel myResponsePanel;
     private JPanel myDirectionPanel;
     private JPanel myAnswerSubmissionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
@@ -53,6 +53,7 @@ public class Game {
             myCancelButton;
 
     private JTextArea myQuestionArea;
+    private JTextField myAnswerPrompt;
     private JRadioButton[] myAnswerButtons;
     private ButtonGroup myAnswerButtonsGroup;
 
@@ -158,7 +159,7 @@ public class Game {
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
         // Right
         mySidebar = new JPanel(new BorderLayout());
-        mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS),
+        mySidebar.add(drawQAPanel(SAMPLE_QUERY/*, SAMPLE_ANSWERS*/),
                 BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(SIDEBAR_PADDING);
@@ -176,7 +177,7 @@ public class Game {
     }
 
     /**
-     * Draws the question/answer panel from a query and an array of answers.
+     * Draws the question/answer panel for a multiple choice question.
      *
      * @param theQueryText   the query.
      * @param theAnswerArray a set of answers.
@@ -187,6 +188,20 @@ public class Game {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawMultipleChoicePanel(theAnswerArray), BorderLayout.SOUTH);
+        myQAPanel.setBackground(MID_GREY);
+        return myQAPanel;
+    }
+
+    /**
+     * Draws the question/answer panel for a short answer question.
+     *
+     * @param theQueryText   the query.
+     * @return the question/answer panel.
+     */
+    private JPanel drawQAPanel(final String theQueryText) {
+        myQAPanel = new JPanel(new BorderLayout());
+        myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
+        myQAPanel.add(drawShortAnswerPanel(), BorderLayout.SOUTH);
         myQAPanel.setBackground(MID_GREY);
         return myQAPanel;
     }
@@ -223,33 +238,66 @@ public class Game {
         return drawQuestionArea("");
     }
 
-    // TODO do text input or radio buttons based on input
-    //  NEEDS TO HANDLE SHORT ANSWER DIFFERENTLY
     private JPanel drawMultipleChoicePanel(final String[] theAnswerArray) {
         int numberOfAnswers = theAnswerArray.length;
-        myAnswerPanel = new JPanel(new BorderLayout());
-        myAnswerPanel.setBorder(ANSWER_PADDING);
-        myAnswerPanel.setBackground(MID_GREY);
-        myAnswerButtonPanel = new JPanel(new GridLayout(numberOfAnswers, 1));
-        myAnswerButtonPanel.setBorder(GENERAL_BORDER);
-        myAnswerButtonPanel.setBackground(DARK_GREY);
+        myAnswerPanel = drawAnswerPanel();
+        myResponsePanel = new JPanel(new GridLayout(numberOfAnswers, 1));
+        myResponsePanel.setBorder(GENERAL_BORDER);
+        myResponsePanel.setBackground(DARK_GREY);
+
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
             myAnswerButtons[i] = buildRadioButton(theAnswerArray[i]);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
-            myAnswerButtonPanel.add(myAnswerButtons[i]);
+            myResponsePanel.add(myAnswerButtons[i]);
         }
+
+        myAnswerPanel.add(myResponsePanel, BorderLayout.CENTER);
+        myAnswerPanel.add(drawAnswerSubmitPanel(), BorderLayout.SOUTH);
+        return myAnswerPanel;
+    }
+
+    private JPanel drawShortAnswerPanel() {
+        myAnswerPanel = drawAnswerPanel();
+        myResponsePanel = new JPanel(new BorderLayout());
+        myResponsePanel.setBackground(DARK_GREY);
+
+        myAnswerPrompt = new JTextField();
+        myAnswerPrompt.setEditable(true);
+        myAnswerPrompt.setFont(BUTTON_FONT);
+        myAnswerPrompt.setBackground(DARK_GREY);
+        myAnswerPrompt.setForeground(WHITE);
+        myAnswerPrompt.setCaretColor(WHITE);
+        myResponsePanel.setBackground(MID_GREY);
+        final JLabel textIndicator = new JLabel("> ");
+        textIndicator.setFont(BUTTON_FONT);
+        textIndicator.setForeground(WHITE);
+        myResponsePanel.add(textIndicator, BorderLayout.WEST);
+        myResponsePanel.add(myAnswerPrompt, BorderLayout.CENTER);
+
+        myAnswerPanel.add(myResponsePanel, BorderLayout.CENTER);
+        myAnswerPanel.add(drawAnswerSubmitPanel(), BorderLayout.SOUTH);
+
+        return myAnswerPanel;
+    }
+
+    private JPanel drawAnswerPanel() {
+        myAnswerPanel = new JPanel(new BorderLayout());
+        myAnswerPanel.setBorder(ANSWER_PADDING);
+        myAnswerPanel.setBackground(MID_GREY);
+        return myAnswerPanel;
+    }
+
+    private JPanel drawAnswerSubmitPanel() {
+        myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
-
-        myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
-
-        myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
-        myAnswerPanel.add(myAnswerSubmissionPanel, BorderLayout.SOUTH);
-        return myAnswerPanel;
+        myAnswerSubmissionPanel.setBorder(ANSWER_PADDING);
+        myAnswerSubmissionPanel.setBackground(MID_GREY);
+        return myAnswerSubmissionPanel;
     }
 
     /**
