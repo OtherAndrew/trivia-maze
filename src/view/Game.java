@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.Random;
 import java.util.StringJoiner;
 
-import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
+import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
@@ -18,59 +18,84 @@ import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Game {
 
-    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
-    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
-    public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
+    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0
+            , 7, 0);
+    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0
+            , 0);
+    public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0,
+            0);
 
-    public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
+    public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right",
+            "Down"};
 
-    public static final String SAMPLE_QUERY = "Where does the majority of the world's apples come from?";
-    public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington", "Canada", "California"};
+    public static final String SAMPLE_QUERY = "Where does the majority of " +
+            "the" + " world's apples come from?";
+    public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington",
+            "Canada", "California"};
 
     private boolean myMovementEnabledStatus;
 
     int r = new Random().nextInt(6) + 4;
     final Maze maze = new Maze(r, r);
 
-    private JFrame myFrame;
-    private JPanel myMenuBar, myMapDisplay, mySidebar, myQAPanel, myQuestionPanel, myAnswerPanel, myAnswerButtonPanel, myDirectionPanel;
-    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton, mySubmitButton, myNewGameButton, mySaveButton, myMainMenuButton;
+    private final JFrame myFrame;
+    private final JPanel myContentPanel;
+    private final JPanel myGamePanel;
+    private JPanel myMenuBar;
+    private JPanel myMapDisplay;
+    private final JPanel mySidebar;
+    private JPanel myQAPanel;
+    private JPanel myQuestionPanel;
+    private JPanel myAnswerPanel;
+    private JPanel myAnswerButtonPanel;
+    private JPanel myDirectionPanel;
+    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
+            mySubmitButton, myNewGameButton, mySaveButton, myMainMenuButton;
 
     private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
     private ButtonGroup myAnswerButtonsGroup;
-    private final String myWindowIconPath = "assets" +
-            "\\Landing_page_01.png";
 
     public Game() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = buildFrame();
+        myContentPanel = buildPanel();
+        myFrame.add(myContentPanel);
+
+        // CardLayout
+        final CardLayout cards = new CardLayout();
+        myContentPanel.setLayout(cards);
+
+        // Game
+        myGamePanel = buildPanel();
         // Menubar
-        myFrame.add(drawMenuBar(), BorderLayout.NORTH);
+        myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
         // Left
         myMapDisplay = buildMapDisplay(maze.toCharArray());
-        myFrame.add(myMapDisplay, BorderLayout.CENTER);
+        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
         // Right
         mySidebar = new JPanel(new BorderLayout());
-        mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS), BorderLayout.CENTER);
+        mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS),
+                BorderLayout.CENTER);
         mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(MID_GREY);
-        myFrame.add(mySidebar, BorderLayout.EAST);
+        myGamePanel.add(mySidebar, BorderLayout.EAST);
+        myContentPanel.add(myGamePanel, "game");
 
-        //TODO: go to difficulty screen
-        myNewGameButton.addActionListener(theAction -> {
-            new Difficulty();
-            myFrame.dispose();
-        });
+        // Difficulty
+        final Difficulty difficulty = new Difficulty(myContentPanel, cards);
+        myContentPanel.add(difficulty.getPanel(), "difficulty");
 
-        //TODO: save button
+        // Start
+        final Start start = new Start(myContentPanel, cards);
+        myContentPanel.add(start.getPanel(), "start");
 
-        myMainMenuButton.addActionListener(theAction -> {
-            new Start();
-            myFrame.dispose();
-        });
+        myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
 
+        myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
+
+        // Movement
         setMovementEnabled(true);
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
@@ -78,7 +103,12 @@ public class Game {
         final updateGui west = new updateGui(WEST);
         addButtonActionListeners(north, east, south, west);
         addKeyboardBindings(north, east, south, west);
+
+        myGamePanel.setVisible(true);
+        myContentPanel.setVisible(true);
         myFrame.setVisible(true);
+
+        cards.show(myContentPanel, "start");
     }
 
     private class updateGui extends AbstractAction {
@@ -108,20 +138,20 @@ public class Game {
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
-        final JRootPane pane = myFrame.getRootPane();
-        final InputMap inputMap = pane.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        final InputMap inputMap =
+                myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
         inputMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
         inputMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
         inputMap.put(KeyStroke.getKeyStroke("A"), "moveWest");
-        final ActionMap actionMap = pane.getActionMap();
+        final ActionMap actionMap = myGamePanel.getActionMap();
         actionMap.put("moveNorth", theDirections[0]);
         actionMap.put("moveEast", theDirections[1]);
         actionMap.put("moveSouth", theDirections[2]);
         actionMap.put("moveWest", theDirections[3]);
     }
 
-    private void setMovementEnabled(final boolean theStatus) {
+    public void setMovementEnabled(final boolean theStatus) {
         myMovementEnabledStatus = theStatus;
     }
 
@@ -129,7 +159,7 @@ public class Game {
         // TODO: remove line below for final revision
         maze.getPlayerLocation().setDoorState(theDirection, OPEN);
         maze.attemptMove(theDirection);
-        myFrame.remove(myMapDisplay);
+        myGamePanel.remove(myMapDisplay);
         if (maze.atGoal()) {
             final StringJoiner sj = new StringJoiner("\n");
             sj.add("YOU WON!");
@@ -142,31 +172,36 @@ public class Game {
             sj.add("Locked doors: " + maze.getDoorStateNum(LOCKED));
             sj.add("Undiscovered doors: " + maze.getDoorStateNum(UNDISCOVERED));
             myQuestionArea.setText(sj.toString());
-            myMapDisplay = MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(), true);
+            myMapDisplay =
+                    MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(),
+                            true);
             setMovementEnabled(false);
         } else {
-            myMapDisplay = MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(), false);
+            myMapDisplay =
+                    MazeDisplayBuilder.buildMapDisplay(maze.toCharArray(),
+                            false);
         }
-        myFrame.add(myMapDisplay, BorderLayout.CENTER);
+        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
 
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
         mySaveButton = buildButton("Save");
         myMainMenuButton = buildButton("Main Menu");
-        myMenuBar = buildMenubar(new JButton[]{
-                myNewGameButton, mySaveButton, myMainMenuButton});
+        myMenuBar = buildMenubar(new JButton[]{myNewGameButton, mySaveButton,
+                myMainMenuButton});
         return myMenuBar;
     }
 
     /**
      * Draws the question/answer panel from a query and an array of answers.
      *
-     * @param theQueryText the query.
+     * @param theQueryText   the query.
      * @param theAnswerArray a set of answers.
      * @return the question/answer panel.
      */
-    private JPanel drawQAPanel(final String theQueryText, final String[] theAnswerArray) {
+    private JPanel drawQAPanel(final String theQueryText,
+                               final String[] theAnswerArray) {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawAnswerPanel(theAnswerArray), BorderLayout.SOUTH);
@@ -207,6 +242,8 @@ public class Game {
     }
 
     // TODO do text input or radio buttons based on input
+    //  CANCEL BUTTON
+    //  NEEDS TO HANDLE SHORT ANSWER DIFFERENTLY
     private JPanel drawAnswerPanel(final String[] theAnswerArray) {
         int numberOfAnswers = theAnswerArray.length;
         myAnswerPanel = new JPanel(new BorderLayout());
@@ -239,8 +276,8 @@ public class Game {
         myWestButton = buildButton(DIRECTION_TEXT[1]);
         myEastButton = buildButton(DIRECTION_TEXT[2]);
         mySouthButton = buildButton(DIRECTION_TEXT[3]);
-        final JButton[] directionButtons =
-                {myNorthButton, myWestButton, myEastButton, mySouthButton};
+        final JButton[] directionButtons = {myNorthButton, myWestButton,
+                myEastButton, mySouthButton};
         myDirectionPanel.add(buildBufferPanel());
         for (JButton button : directionButtons) {
             myDirectionPanel.add(button);

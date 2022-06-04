@@ -8,15 +8,18 @@ import static view.AppTheme.*;
 
 public class Difficulty {
 
-    private JFrame myFrame;
-    private JPanel myMenubar, myDifficultyPanel;
-    private JButton myMainMenuBtn, myEasyButton, myMediumButton, myHardButton, myInsaneButton;
-    private ImageIcon myWindowIcon;
-    private final String myWindowIconPath = "resources\\App_Icon.png";
+    private final JPanel myPanel;
+    private final JPanel myMenubar;
+    private final JPanel myDifficultyPanel;
+    private final JButton myMainMenuBtn;
+    private final JButton myEasyButton;
+    private final JButton myMediumButton;
+    private final JButton myHardButton;
+    private final JButton myInsaneButton;
 
-    public Difficulty() {
+    public Difficulty(final JPanel thePanel, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-        myFrame = buildFrame();
+        myPanel = buildPanel();
 
         myMainMenuBtn = buildButton("Main Menu");
 
@@ -39,34 +42,32 @@ public class Difficulty {
         myDifficultyPanel.setBackground(MID_GREY);
         myDifficultyPanel.setBorder(new EmptyBorder(100, 100, 100, 100));
 
+        myMenubar = buildMenubar(new JComponent[]{buildBufferPanel(),
+                buildBufferPanel(), myMainMenuBtn});
 
-        myMenubar = buildMenubar(new JComponent[]{
-                buildBufferPanel(), buildBufferPanel(), myMainMenuBtn});
+        myPanel.add(myMenubar, BorderLayout.NORTH);
+        myPanel.add(myDifficultyPanel, BorderLayout.CENTER);
 
-        myFrame.add(myMenubar, BorderLayout.NORTH);
-        myFrame.add(myDifficultyPanel, BorderLayout.CENTER);
-
-        myMainMenuBtn.addActionListener(theAction -> {
-            new Start();
-            myFrame.dispose();
-        });
+        myMainMenuBtn.addActionListener(theAction -> theCards.show(thePanel,
+                "start"));
 
         // TODO: assign difficulty settings
-        final JButton[] difficultyButtons = {myEasyButton, myMediumButton, myHardButton, myInsaneButton};
+        final JButton[] difficultyButtons = {myEasyButton, myMediumButton,
+                myHardButton, myInsaneButton};
         for (JButton button : difficultyButtons) {
             button.addActionListener(theAction -> {
-                new Game();
-                myFrame.dispose();
+                theCards.show(thePanel, "game"); // PLACEHOLDER
             });
             myDifficultyPanel.add(button);
         }
 
-        // TODO: dev mode button/buttons (omniscient map, always open doors, highlighted answers, etc)
+        // TODO: dev mode button/buttons (omniscient map, always open doors,
+        //  highlighted answers, etc)
 
-        myFrame.setVisible(true);
+        myPanel.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        Difficulty d = new Difficulty();
+    public JPanel getPanel() {
+        return myPanel;
     }
 }

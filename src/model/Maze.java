@@ -191,7 +191,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                 myQuestionMap.put(door, qf.createQuestion());
+                // myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();

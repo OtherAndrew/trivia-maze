@@ -58,6 +58,15 @@ public final class AppTheme {
         return frame;
     }
 
+    public static JPanel buildPanel() {
+        final JPanel panel  = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setSize(WINDOW_SIZE);
+        panel.setBorder(WINDOW_BORDER);
+        panel.setBackground(MID_GREY);
+        return panel;
+    }
+
     /**
      * Builds a standard JButton.
      *

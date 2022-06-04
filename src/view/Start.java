@@ -5,47 +5,43 @@ import java.awt.*;
 
 import static view.AppTheme.*;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
-import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Start {
 
-    private JFrame myFrame;
-    private JPanel myMenuBar;
-    private JButton myLoadGameBtn, myNewGameBtn, myQuitBtn;
-    private final String myBackgroundPath = "assets\\Landing_Page_01.png", myWindowIconPath = "assets\\App_Icon.png";
+    private final JPanel myPanel;
+    private final JPanel myMenuBar;
+    private final JButton myLoadGameBtn;
+    private final JButton myNewGameBtn;
+    private final JButton myQuitBtn;
+    private final LoadGame myLoader;
 
-    public Start() {
+    public Start(final JPanel thePanel, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
-        myFrame = buildFrame();
+        myPanel = buildPanel();
 
         myNewGameBtn = buildButton("New Game");
         myLoadGameBtn = buildButton("Load Game");
         myQuitBtn = buildButton("Quit");
 
-        myNewGameBtn.addActionListener(theAction -> {
-            new Difficulty();
-            myFrame.dispose();
-        });
+        myLoader = new LoadGame();
 
-        myLoadGameBtn.addActionListener(theAction -> {
-            new LoadGame();
-            myFrame.dispose();
-        });
+        myNewGameBtn.addActionListener(theAction -> theCards.show(thePanel,
+                "difficulty"));
 
-        myQuitBtn.addActionListener(theAction -> {
-            System.exit(1);
-        });
+        myLoadGameBtn.addActionListener(theAction -> myLoader.setFile());
 
-        myMenuBar = buildMenubar(new JButton[]{
-                myNewGameBtn, myLoadGameBtn, myQuitBtn});
+        myQuitBtn.addActionListener(theAction -> System.exit(1));
 
-        myFrame.add(myMenuBar, BorderLayout.NORTH);
-        myFrame.add(buildDummyMapDisplay(6), BorderLayout.CENTER);
+        myMenuBar = buildMenubar(new JButton[]{myNewGameBtn, myLoadGameBtn,
+                myQuitBtn});
 
-        myFrame.setVisible(true);
+        myPanel.add(myMenuBar, BorderLayout.NORTH);
+        myPanel.add(buildDummyMapDisplay(6), BorderLayout.CENTER);
+
+        myPanel.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        Start losng = new Start();
+    public JPanel getPanel() {
+        return myPanel;
     }
 }

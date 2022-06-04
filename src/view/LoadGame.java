@@ -1,7 +1,5 @@
 package view;
 
-import model.Serializer;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -9,27 +7,26 @@ import java.io.File;
 
 public class LoadGame {
 
-    private JFileChooser myFileChooser;
-    private final String myApproveBtnText = "Resume";
+    final JFileChooser myChooser;
+    File myFile;
 
     public LoadGame() {
-        myFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-        myFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        myFileChooser.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Trivia Maze .ser file", "ser");
-        myFileChooser.addChoosableFileFilter(filter);
-        myFileChooser.setDialogTitle("Load a previous game");
-        int returnValue = myFileChooser.showDialog(null, myApproveBtnText);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = myFileChooser.getSelectedFile();
-            Serializer.load(selectedFile);
-        } else {
-            new Start();
+        myChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        myChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        myChooser.setAcceptAllFileFilterUsed(false);
+        final FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Trivia Maze .ser file", "ser");
+        myChooser.addChoosableFileFilter(filter);
+        myChooser.setDialogTitle("Load a previous game");
+    }
+
+    public void setFile() {
+        if (myChooser.showDialog(null, "Resume") == JFileChooser.APPROVE_OPTION) {
+            myFile = myChooser.getSelectedFile();
         }
     }
 
-    public static void main(String[] theArgs) {
-        LoadGame loadGame = new LoadGame();
+    public File getFile() {
+        return myFile;
     }
-
 }
