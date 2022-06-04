@@ -12,6 +12,37 @@ public class TriviaMaze {
     private Game myGUI;
     private Maze myMaze;
 
+    /**
+     * Open doors without answering a question.
+     */
+    private boolean myMasterKey;
+
+    /**
+     * Correct answers are highlighted.
+     */
+    private boolean myAllKnowing;
+
+    /**
+     * Omniscient view of maze.
+     */
+    private boolean myXRay;
+
+    /**
+     * Creates TriviaMaze
+     * @param theMasterKey ability to open doors without answering a question.
+     */
+    public TriviaMaze(final boolean theMasterKey,
+                      final boolean theAllKnowing,
+                      final boolean theXRay) {
+        myMasterKey = theMasterKey;
+        myAllKnowing = theAllKnowing;
+        myXRay = theXRay;
+    }
+
+    public TriviaMaze() {
+        this(false, false, false);
+    }
+
     public void registerView(final Game theGUI) {
         myGUI = theGUI;
     }
@@ -25,8 +56,9 @@ public class TriviaMaze {
     }
 
     public void move(final Direction theDirection) {
-        // PLACEHOLDER
-        myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+        if (myMasterKey) {
+            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+        }
         myMaze.attemptMove(theDirection);
     }
 
@@ -49,7 +81,6 @@ public class TriviaMaze {
     public boolean getLoss() {
         return myMaze.gameLoss();
     }
-
 
     public static void main(final String[] theArgs) {
         final TriviaMaze triviaMaze = new TriviaMaze();

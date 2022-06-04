@@ -121,23 +121,31 @@ public class Game {
         myController.move(theDirection);
         myGamePanel.remove(myMapDisplay);
         if (myController.getVictory()) {
-            final StringJoiner sj = new StringJoiner("\n");
-            sj.add("YOU WON!");
-            sj.add("");
-            sj.add("Rooms visited: " + myController.getVisitCount(true));
-            sj.add("Rooms not visited: " + myController.getVisitCount(false));
-            sj.add("");
-            sj.add("Opened doors: " + myController.getMazeDoorCount(OPEN));
-            sj.add("Closed doors: " + myController.getMazeDoorCount(CLOSED));
-            sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
-            sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
-            myQuestionArea.setText(sj.toString());
-            myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), true);
+            displayWinMessage();
+            myMapDisplay =
+                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
+                            true);
             setMovementEnabled(false);
         } else {
-            myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), false);
+            myMapDisplay =
+                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
+                            false);
         }
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
+    }
+
+    private void displayWinMessage() {
+        final StringJoiner sj = new StringJoiner("\n");
+        sj.add("You won!");
+        sj.add("");
+        sj.add("Rooms visited: " + myController.getVisitCount(true));
+        sj.add("Rooms not visited: " + myController.getVisitCount(false));
+        sj.add("");
+        sj.add("Opened doors: " + myController.getMazeDoorCount(OPEN));
+        sj.add("Closed doors: " + myController.getMazeDoorCount(CLOSED));
+        sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
+        sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
+        myQuestionArea.setText(sj.toString());
     }
 
     JPanel drawGamePanel(final boolean theReadiness) {
