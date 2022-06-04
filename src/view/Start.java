@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static view.AppTheme.*;
-//import static view.MazeDisplayBuilder.buildDummyMapDisplay;
+import static view.MazeDisplayBuilder.buildDummyMapDisplay;
 
 public class Start extends JPanel {
 
@@ -31,6 +31,6 @@ public class Start extends JPanel {
         myMenuBar = buildMenubar(myNewGameBtn, myLoadGameBtn, myQuitBtn);
 
         add(myMenuBar, BorderLayout.NORTH);
-//        add(buildDummyMapDisplay(theGame.getController()), BorderLayout.CENTER);
+        add(buildDummyMapDisplay(theGame.getController()), BorderLayout.CENTER);
     }
 }

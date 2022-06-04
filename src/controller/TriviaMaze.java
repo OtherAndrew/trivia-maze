@@ -56,9 +56,10 @@ public class TriviaMaze {
     }
 
     public void move(final Direction theDirection) {
-        if (myMasterKey) {
-            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
-        }
+//        if (myMasterKey) {
+//            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+//        }
+        myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
         myMaze.attemptMove(theDirection);
     }
 

@@ -86,7 +86,7 @@ public class Maze implements Serializable {
         build(theRows, theCols);
     }
 
-    public Maze(final int theRows, final int theCols) throws IllegalArgumentException {
+    private Maze(final int theRows, final int theCols) throws IllegalArgumentException {
         if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
             throw new IllegalArgumentException("dimensions passed to Maze " +
                     "cannot be outside the range of 4-10 (passed values: " + theRows + ", " + theCols);
