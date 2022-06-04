@@ -19,8 +19,7 @@ public class Difficulty extends JPanel {
     private final JButton myHardButton;
     private final JButton myInsaneButton;
 
-    public Difficulty(final TriviaMaze theController, final JPanel thePanel,
-                      final CardLayout theCards) {
+    public Difficulty(final Game theGame, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
 //        myPanel = buildPanel();
         adjustPanel(this);
@@ -52,8 +51,7 @@ public class Difficulty extends JPanel {
         /*myPanel.*/add(myMenubar, BorderLayout.NORTH);
         /*myPanel.*/add(myDifficultyPanel, BorderLayout.CENTER);
 
-        myMainMenuBtn.addActionListener(theAction -> theCards.show(thePanel,
-                "start"));
+        myMainMenuBtn.addActionListener(theAction -> theCards.show(theGame.getContentPanel(), "start"));
 
         // TODO: assign difficulty settings
         final JButton[] difficultyButtons = {myEasyButton, myMediumButton,
@@ -62,8 +60,8 @@ public class Difficulty extends JPanel {
         for (JButton button : difficultyButtons) {
             int finalDim = dim;
             button.addActionListener(theAction -> {
-                theController.buildMaze(finalDim, finalDim);
-                theCards.show(thePanel, "game"); // PLACEHOLDER
+                theGame.getController().buildMaze(finalDim, finalDim);
+                theCards.show(theGame.getContentPanel(), "game"); // PLACEHOLDER
             });
             myDifficultyPanel.add(button);
             dim += 2;

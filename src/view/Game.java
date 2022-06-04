@@ -1,14 +1,12 @@
 package view;
 
 import controller.TriviaMaze;
-import model.Maze;
 import model.mazecomponents.Direction;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Random;
 import java.util.StringJoiner;
 
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -29,8 +27,9 @@ public class Game {
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right",
             "Down"};
 
-    public static final String SAMPLE_QUERY = "Where does the majority of " +
-            "the" + " world's apples come from?";
+    public static final String SAMPLE_QUERY =
+            "Where does the majority of " + "the" + " world's apples come " +
+                    "from?";
     public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington",
             "Canada", "California"};
 
@@ -39,10 +38,10 @@ public class Game {
     private TriviaMaze myController;
     private final JFrame myFrame;
     private final JPanel myContentPanel;
-    private final JPanel myGamePanel;
+    private JPanel myGamePanel;
     private JPanel myMenuBar;
     private JPanel myMapDisplay;
-    private final JPanel mySidebar;
+    private JPanel mySidebar;
     private JPanel myQAPanel;
     private JPanel myQuestionPanel;
     private JPanel myAnswerPanel;
@@ -60,6 +59,7 @@ public class Game {
     public Game(final TriviaMaze theController) {
         myController = theController;
         theController.registerView(this);
+
         System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = buildFrame();
         myContentPanel = buildPanel();
@@ -69,31 +69,9 @@ public class Game {
         final CardLayout cards = new CardLayout();
         myContentPanel.setLayout(cards);
 
-        // Game
-        myGamePanel = buildPanel();
-        // Menubar
-        myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
-        // Left
-        myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
-        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
-        // Right
-        mySidebar = new JPanel(new BorderLayout());
-        mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS),
-                BorderLayout.CENTER);
-        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
-        mySidebar.setBorder(SIDEBAR_PADDING);
-        mySidebar.setBackground(MID_GREY);
-        myGamePanel.add(mySidebar, BorderLayout.EAST);
-        myContentPanel.add(myGamePanel, "game");
-
-        // Difficulty
-//        final Difficulty difficulty = new Difficulty(myContentPanel, cards);
-        myContentPanel.add(new Difficulty(myController, myContentPanel, cards)/*difficulty
-        .getPanel()*/, "difficulty");
-
-        // Start
-//        final Start start = new Start(myContentPanel, cards);
-        myContentPanel.add(new Start(myContentPanel, cards)/*start.getPanel()*/, "start");
+        myContentPanel.add(drawGamePanel(false), "game");
+        myContentPanel.add(new Difficulty(this, cards), "difficulty");
+        myContentPanel.add(new Start(myContentPanel, cards), "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
 
@@ -110,29 +88,8 @@ public class Game {
         addButtonActionListeners(north, east, south, west);
         addKeyboardBindings(north, east, south, west);
 
-        myGamePanel.setVisible(true);
-        myContentPanel.setVisible(true);
-        myFrame.setVisible(true);
-
         cards.show(myContentPanel, "start");
-    }
-    private class updateGui extends AbstractAction {
-
-        private final Direction myDirection;
-
-
-        private updateGui(final Direction theDirection) {
-            myDirection = theDirection;
-        }
-
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            if (myMovementEnabledStatus) {
-                doMove(myDirection);
-                myFrame.revalidate();
-                myFrame.repaint();
-            }
-        }
+        myFrame.setVisible(true);
     }
 
     private void addButtonActionListeners(final updateGui... theDirections) {
@@ -143,7 +100,8 @@ public class Game {
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
-        final InputMap inputMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        final InputMap inputMap =
+                myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
         inputMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
         inputMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
@@ -175,15 +133,32 @@ public class Game {
             sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
             myQuestionArea.setText(sj.toString());
             myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
-                            true);
+                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(), true);
             setMovementEnabled(false);
         } else {
             myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
-                            false);
+                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(), false);
         }
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
+    }
+
+    JPanel drawGamePanel(final boolean theReadiness) {
+        // Game
+        myGamePanel = buildPanel();
+        // Menubar
+        myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
+        // Left
+        myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
+        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
+        // Right
+        mySidebar = new JPanel(new BorderLayout());
+        mySidebar.add(drawQAPanel(SAMPLE_QUERY, SAMPLE_ANSWERS),
+                BorderLayout.CENTER);
+        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
+        mySidebar.setBorder(SIDEBAR_PADDING);
+        mySidebar.setBackground(MID_GREY);
+        myGamePanel.add(mySidebar, BorderLayout.EAST);
+        return myGamePanel;
     }
 
     private JPanel drawMenuBar() {
@@ -263,7 +238,7 @@ public class Game {
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
 
-        myAnswerSubmissionPanel = new JPanel(new GridLayout(1,2));
+        myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
 
@@ -295,8 +270,34 @@ public class Game {
         return myDirectionPanel;
     }
 
-//    public static void main(String[] args) {
-//        Game game = new Game();
-//    }
+    TriviaMaze getController() {
+        return myController;
+    }
+
+    JPanel getContentPanel() {
+        return myContentPanel;
+    }
+
+    JPanel getGamePanel() {
+        return myGamePanel;
+    }
+
+    private class updateGui extends AbstractAction {
+
+        private final Direction myDirection;
+
+        private updateGui(final Direction theDirection) {
+            myDirection = theDirection;
+        }
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            if (myMovementEnabledStatus) {
+                doMove(myDirection);
+                myFrame.revalidate();
+                myFrame.repaint();
+            }
+        }
+    }
 }
 
