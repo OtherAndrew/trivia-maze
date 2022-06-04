@@ -49,8 +49,10 @@ public class Game {
     private JPanel myAnswerPanel;
     private JPanel myAnswerButtonPanel;
     private JPanel myDirectionPanel;
+    private JPanel myAnswerSubmissionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
-            mySubmitButton, myNewGameButton, mySaveButton, myMainMenuButton;
+            mySubmitButton, myNewGameButton, mySaveButton, myMainMenuButton,
+            myCancelButton;
 
     private JTextArea myQuestionArea;
     private JRadioButton[] myAnswerButtons;
@@ -92,6 +94,8 @@ public class Game {
         myContentPanel.add(start.getPanel(), "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
+
+        mySaveButton.addActionListener(theAction -> FileAccessor.getInstance().saveFile());
 
         myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
 
@@ -138,8 +142,7 @@ public class Game {
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
-        final InputMap inputMap =
-                myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        final InputMap inputMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
         inputMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
         inputMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
@@ -242,7 +245,6 @@ public class Game {
     }
 
     // TODO do text input or radio buttons based on input
-    //  CANCEL BUTTON
     //  NEEDS TO HANDLE SHORT ANSWER DIFFERENTLY
     private JPanel drawAnswerPanel(final String[] theAnswerArray) {
         int numberOfAnswers = theAnswerArray.length;
@@ -260,8 +262,14 @@ public class Game {
             myAnswerButtonPanel.add(myAnswerButtons[i]);
         }
         mySubmitButton = buildButton("Submit");
+        myCancelButton = buildButton("Cancel");
+
+        myAnswerSubmissionPanel = new JPanel(new GridLayout(1,2));
+        myAnswerSubmissionPanel.add(mySubmitButton);
+        myAnswerSubmissionPanel.add(myCancelButton);
+
         myAnswerPanel.add(myAnswerButtonPanel, BorderLayout.CENTER);
-        myAnswerPanel.add(mySubmitButton, BorderLayout.SOUTH);
+        myAnswerPanel.add(myAnswerSubmissionPanel, BorderLayout.SOUTH);
         return myAnswerPanel;
     }
 

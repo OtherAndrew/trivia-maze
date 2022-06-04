@@ -13,7 +13,6 @@ public class Start {
     private final JButton myLoadGameBtn;
     private final JButton myNewGameBtn;
     private final JButton myQuitBtn;
-    private final LoadGame myLoader;
 
     public Start(final JPanel thePanel, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
@@ -23,12 +22,10 @@ public class Start {
         myLoadGameBtn = buildButton("Load Game");
         myQuitBtn = buildButton("Quit");
 
-        myLoader = new LoadGame();
-
         myNewGameBtn.addActionListener(theAction -> theCards.show(thePanel,
                 "difficulty"));
 
-        myLoadGameBtn.addActionListener(theAction -> myLoader.setFile());
+        myLoadGameBtn.addActionListener(theAction -> FileAccessor.getInstance().loadFile());
 
         myQuitBtn.addActionListener(theAction -> System.exit(1));
 
