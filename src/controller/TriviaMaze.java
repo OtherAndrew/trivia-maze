@@ -29,11 +29,11 @@ public class TriviaMaze {
 
     /**
      * Creates TriviaMaze
+     *
      * @param theMasterKey ability to open doors without answering a question.
      */
-    public TriviaMaze(final boolean theMasterKey,
-                      final boolean theAllKnowing,
-                      final boolean theXRay) {
+    public TriviaMaze(final boolean theMasterKey, final boolean theAllKnowing
+            , final boolean theXRay) {
         myMasterKey = theMasterKey;
         myAllKnowing = theAllKnowing;
         myXRay = theXRay;
@@ -56,9 +56,10 @@ public class TriviaMaze {
     }
 
     public void move(final Direction theDirection) {
-        if (myMasterKey) {
-            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
-        }
+//        if (myMasterKey) {
+//            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+//        }
+        myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
         myMaze.attemptMove(theDirection);
     }
 
@@ -80,6 +81,10 @@ public class TriviaMaze {
 
     public boolean getLoss() {
         return myMaze.gameLoss();
+    }
+
+    public char[][] getDummyCharArray() {
+        return myMaze.generateDummy();
     }
 
     public static void main(final String[] theArgs) {

@@ -71,7 +71,7 @@ public class Game {
 
         myContentPanel.add(drawGamePanel(false), "game");
         myContentPanel.add(new Difficulty(this, cards), "difficulty");
-        myContentPanel.add(new Start(myContentPanel, cards), "start");
+        myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
 
