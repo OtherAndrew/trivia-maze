@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.StringJoiner;
+import java.util.List;
 
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static model.mazecomponents.Direction.*;
@@ -34,7 +35,8 @@ public class Game {
             "Canada", "California"};
 
     private boolean myMovementEnabledStatus;
-
+    private Direction myDirection;
+    private String myAnswer;
     private TriviaMaze myController;
     private final JFrame myFrame;
     private final JPanel myContentPanel;
@@ -70,7 +72,7 @@ public class Game {
         final CardLayout cards = new CardLayout();
         myContentPanel.setLayout(cards);
 
-        myContentPanel.add(drawGamePanel(false), "game");
+        myContentPanel.add(drawGamePanel(), "game");
         myContentPanel.add(new Difficulty(this, cards), "difficulty");
         myContentPanel.add(new Start(this, cards), "start");
 
@@ -81,7 +83,7 @@ public class Game {
         myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
 
         // Movement
-        setMovementEnabled(true);
+        setMovementEnabled(false);
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
         final updateGui south = new updateGui(SOUTH);
@@ -101,8 +103,7 @@ public class Game {
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
-        final InputMap inputMap =
-                myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        final InputMap inputMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
         inputMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
         inputMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
@@ -119,7 +120,8 @@ public class Game {
     }
 
     private void doMove(final Direction theDirection) {
-        myController.move(theDirection);
+        myDirection = theDirection;
+        myController.move(myDirection);
         myGamePanel.remove(myMapDisplay);
         if (myController.getVictory()) {
             displayWinMessage();
@@ -149,23 +151,22 @@ public class Game {
         myQuestionArea.setText(sj.toString());
     }
 
-    JPanel drawGamePanel(final boolean theReadiness) {
-        // Game
+    JPanel drawGamePanel() {
         myGamePanel = buildPanel();
-        // Menubar
         myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
-        // Left
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
-        // Right
+        myGamePanel.add(drawSidebar(), BorderLayout.EAST);
+        return myGamePanel;
+    }
+
+    private JPanel drawSidebar() {
         mySidebar = new JPanel(new BorderLayout());
-        mySidebar.add(drawQAPanel(SAMPLE_QUERY/*, SAMPLE_ANSWERS*/),
-                BorderLayout.CENTER);
-        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
         mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(MID_GREY);
-        myGamePanel.add(mySidebar, BorderLayout.EAST);
-        return myGamePanel;
+        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
+        mySidebar.add(drawQAPanel(), BorderLayout.CENTER);
+        return mySidebar;
     }
 
     private JPanel drawMenuBar() {
@@ -183,8 +184,8 @@ public class Game {
      * @param theAnswerArray a set of answers.
      * @return the question/answer panel.
      */
-    private JPanel drawQAPanel(final String theQueryText,
-                               final String[] theAnswerArray) {
+    public JPanel drawQAPanel(final String theQueryText,
+                              final List<String> theAnswerArray) {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawMultipleChoicePanel(theAnswerArray), BorderLayout.SOUTH);
@@ -198,10 +199,17 @@ public class Game {
      * @param theQueryText   the query.
      * @return the question/answer panel.
      */
-    private JPanel drawQAPanel(final String theQueryText) {
+    public JPanel drawQAPanel(final String theQueryText) {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawShortAnswerPanel(), BorderLayout.SOUTH);
+        myQAPanel.setBackground(MID_GREY);
+        return myQAPanel;
+    }
+
+    public JPanel drawQAPanel() {
+        myQAPanel = new JPanel(new BorderLayout());
+        myQAPanel.add(drawQuestionArea(), BorderLayout.CENTER);
         myQAPanel.setBackground(MID_GREY);
         return myQAPanel;
     }
@@ -238,8 +246,8 @@ public class Game {
         return drawQuestionArea("");
     }
 
-    private JPanel drawMultipleChoicePanel(final String[] theAnswerArray) {
-        int numberOfAnswers = theAnswerArray.length;
+    private JPanel drawMultipleChoicePanel(final List<String> theAnswerArray) {
+        int numberOfAnswers = theAnswerArray.size();
         myAnswerPanel = drawAnswerPanel();
         myResponsePanel = new JPanel(new GridLayout(numberOfAnswers, 1));
         myResponsePanel.setBorder(GENERAL_BORDER);
@@ -248,7 +256,9 @@ public class Game {
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
-            myAnswerButtons[i] = buildRadioButton(theAnswerArray[i]);
+            String answer = theAnswerArray.get(i);
+            myAnswerButtons[i] = buildRadioButton(answer);
+            myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0,1));
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myResponsePanel.add(myAnswerButtons[i]);
         }
@@ -293,6 +303,8 @@ public class Game {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
+        mySubmitButton.addActionListener(e -> myController.respond(myDirection, myAnswer));
+        myCancelButton.addActionListener(e -> drawQAPanel());
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
         myAnswerSubmissionPanel.setBorder(ANSWER_PADDING);
@@ -336,6 +348,11 @@ public class Game {
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
+
+//    void updateQA(final String theQuery, final List<String> theAnswers) {
+//        mySidebar.remove(myQAPanel);
+//        mySidebar.add(myQAPanel, BorderLayout.CENTER);
+//    }
 
     private class updateGui extends AbstractAction {
 

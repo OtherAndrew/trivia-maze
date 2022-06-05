@@ -5,9 +5,19 @@ import model.mazecomponents.Direction;
 import model.mazecomponents.State;
 import view.Game;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import static model.mazecomponents.State.OPEN;
 
 public class TriviaMaze {
+
+    public static void main(final String[] theArgs) {
+        final TriviaMaze triviaMaze = new TriviaMaze(true, false, false);
+        final Maze maze = new Maze(triviaMaze, 4, 4); // Placeholder
+        final Game game = new Game(triviaMaze);
+    }
 
     private Game myGUI;
     private Maze myMaze;
@@ -34,8 +44,8 @@ public class TriviaMaze {
      * @param theAllKnowing ability to see correct answer.
      * @param theXRay       reveals entire maze.
      */
-    public TriviaMaze(final boolean theMasterKey, final boolean theAllKnowing
-            , final boolean theXRay) {
+    public TriviaMaze(final boolean theMasterKey, final boolean theAllKnowing,
+                      final boolean theXRay) {
         myMasterKey = theMasterKey;
         myAllKnowing = theAllKnowing;
         myXRay = theXRay;
@@ -58,10 +68,9 @@ public class TriviaMaze {
     }
 
     public void move(final Direction theDirection) {
-//        if (myMasterKey) {
-//            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
-//        }
-        myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+        if (myMasterKey) {
+            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+        }
         myMaze.attemptMove(theDirection);
     }
 
@@ -89,9 +98,17 @@ public class TriviaMaze {
         return myMaze.generateDummy();
     }
 
-    public static void main(final String[] theArgs) {
-        final TriviaMaze triviaMaze = new TriviaMaze();
-        final Maze maze = new Maze(triviaMaze, 4, 4); // Placeholder
-        final Game game = new Game(triviaMaze);
+    public void displayQA(final String theQuery,
+                          final List<String> theAnswers) {
+        if (theAnswers instanceof ArrayList<String>) {
+            myGUI.drawQAPanel(theQuery);
+        } else if (theAnswers instanceof LinkedList<String>) {
+            myGUI.drawQAPanel(theQuery, theAnswers);
+        }
+
+    }
+
+    public void respond(final Direction theDirection, final String myAnswer) {
+        myMaze.respond(theDirection, myAnswer);
     }
 }

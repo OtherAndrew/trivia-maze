@@ -213,9 +213,8 @@ public class Maze implements Serializable {
         if (myPlayerLocation.hasDoor(theDirection)) {
             State doorState = myPlayerLocation.getDoorState(theDirection);
             if (doorState == CLOSED) {
-                getQuestion(theDirection); // PLACEHOLDER
-                // Tell GUI to display the question and answer choices
-                // enable listeners for input which will indirectly call response
+                final Question question = getQuestion(theDirection);
+                myController.displayQA(question.getQuery(), question.getAnswers());
             } else if (doorState == OPEN) {
                 move(theDirection);
             }

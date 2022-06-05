@@ -60,6 +60,7 @@ public class Difficulty extends JPanel {
             button.addActionListener(theAction -> {
                 theGame.getController().buildMaze(finalDim, finalDim);
                 theGame.updateMapDisplay();
+                theGame.setMovementEnabled(true);
                 theCards.show(theGame.getContentPanel(), "game"); // PLACEHOLDER
             });
             myDifficultyPanel.add(button);
