@@ -290,7 +290,7 @@ public class Game {
         myAnswerPrompt.setBackground(DARK_GREY);
         myAnswerPrompt.setForeground(WHITE);
         myAnswerPrompt.setCaretColor(WHITE);
-        myAnswerPrompt.addActionListener(e -> checkAnswer());
+        myAnswerPrompt.addActionListener(e -> submit());
 
         final JLabel textIndicator = new JLabel("> ");
         textIndicator.setFont(BUTTON_FONT);
@@ -304,7 +304,7 @@ public class Game {
         return myAnswerPanel;
     }
 
-    private void checkAnswer() {
+    private void submit() {
         if (myTextInputEnabled) {
             myController.respond(myDirection, myAnswerPrompt.getText());
             myAnswerPrompt.setText("");
@@ -327,7 +327,7 @@ public class Game {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
-        mySubmitButton.addActionListener(e -> checkAnswer());
+        mySubmitButton.addActionListener(e -> submit());
         myCancelButton.addActionListener(e -> updateQA());
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
