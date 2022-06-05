@@ -67,13 +67,4 @@ public class QuestionFactory {
             e.printStackTrace();
         }
     }
-
-    // FOR TESTING
-    public static void main(final String[] theArgs) {
-        final QuestionFactory qf = new QuestionFactory();
-        System.out.println(qf.createQuestion());
-        System.out.println(qf.createQuestion());
-        System.out.println(qf.createQuestion());
-        qf.cleanUp();
-    }
 }
