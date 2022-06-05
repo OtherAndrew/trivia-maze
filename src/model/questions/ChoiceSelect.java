@@ -2,10 +2,7 @@ package model.questions;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ChoiceSelect extends Question implements Serializable {
 
@@ -52,7 +49,7 @@ public class ChoiceSelect extends Question implements Serializable {
      */
     @Override
     public boolean checkAnswer(final String theOption) {
-        return myAnswers.get(theOption).isCorrect();
+        return Optional.ofNullable(myAnswers.get(theOption)).map(Answer::isCorrect).orElse(false);
     }
 
     /**
