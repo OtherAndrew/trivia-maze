@@ -290,6 +290,7 @@ public class Game {
         myAnswerPrompt.setBackground(DARK_GREY);
         myAnswerPrompt.setForeground(WHITE);
         myAnswerPrompt.setCaretColor(WHITE);
+        myAnswerPrompt.addActionListener(e -> checkAnswer());
 
         final JLabel textIndicator = new JLabel("> ");
         textIndicator.setFont(BUTTON_FONT);
@@ -303,6 +304,18 @@ public class Game {
         return myAnswerPanel;
     }
 
+    private void checkAnswer() {
+        if (myTextInputEnabled) {
+            myController.respond(myDirection, myAnswerPrompt.getText());
+            myAnswerPrompt.setText("");
+        } else {
+            if (myAnswer != null) {
+                myController.respond(myDirection, myAnswer);
+            }
+            myAnswer = null;
+        }
+    }
+
     private JPanel drawAnswerPanel() {
         myAnswerPanel = new JPanel(new BorderLayout());
         myAnswerPanel.setBorder(ANSWER_PADDING);
@@ -314,17 +327,7 @@ public class Game {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
-        mySubmitButton.addActionListener(e -> {
-            if (myTextInputEnabled) {
-                myController.respond(myDirection, myAnswerPrompt.getText());
-                myAnswerPrompt.setText("");
-            } else {
-                if (myAnswer != null) {
-                    myController.respond(myDirection, myAnswer);
-                }
-                myAnswer = null;
-            }
-        });
+        mySubmitButton.addActionListener(e -> checkAnswer());
         myCancelButton.addActionListener(e -> updateQA());
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
