@@ -73,9 +73,10 @@ public class Game {
             }
         });
         myQuickLoadButton.addActionListener(e -> {
-            myController.quickLoad();
-            updateQA();
-            cards.show(myContentPanel, "game");
+            if (myController.quickLoad()) {
+                updateQA();
+                cards.show(myContentPanel, "game");
+            }
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
                 FileAccessor.getInstance().saveFile().ifPresent(myController::save);
