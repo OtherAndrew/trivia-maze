@@ -105,6 +105,21 @@ public final class AppTheme {
     }
 
     /**
+     * Builds a standard JCheckBox.
+     *
+     * @param theButtonText the text displayed on the checkbox.
+     * @return the standard JCheckBox.
+     */
+    public static JCheckBox buildCheckBox(final String theButtonText) {
+        final JCheckBox checkbox = new JCheckBox(theButtonText);
+        checkbox.setBackground(DARK_GREY);
+        checkbox.setForeground(WHITE);
+        checkbox.setFont(BUTTON_FONT);
+        checkbox.setFocusPainted(false);
+        return checkbox;
+    }
+
+    /**
      * Builds a standard menubar.
      *
      * @param theButtons the buttons to include in the menubar.

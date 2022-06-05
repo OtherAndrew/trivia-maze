@@ -21,8 +21,8 @@ public class Difficulty extends JPanel {
     private final JButton myMediumButton;
     private final JButton myHardButton;
     private final JButton myInsaneButton;
-    private final JRadioButton myMasterKeyRadio;
-    private final JRadioButton myXRayRadio;
+    private final JCheckBox myMasterKeyCheck;
+    private final JCheckBox myXRayCheck;
 
     private boolean myMasterKey;
     private boolean myXRay;
@@ -50,8 +50,8 @@ public class Difficulty extends JPanel {
         myInsaneButton.setBackground(PINK);
         myInsaneButton.setFont(LARGE_FONT);
 
-        myMasterKeyRadio = buildRadioButton("Master Key");
-        myXRayRadio = buildRadioButton("X-Ray");
+        myMasterKeyCheck = buildCheckBox("Master Key");
+        myXRayCheck = buildCheckBox("X-Ray");
 
         final GridLayout difficultyLayout = new GridLayout(5, 1);
         difficultyLayout.setVgap(7);
@@ -60,8 +60,8 @@ public class Difficulty extends JPanel {
         myDifficultyPanel.setBorder(new EmptyBorder(100, 100, 100, 100));
 
         myCheatPanel = new JPanel(new GridLayout(1, 2));
-        myCheatPanel.add(myMasterKeyRadio);
-        myCheatPanel.add(myXRayRadio);
+        myCheatPanel.add(myMasterKeyCheck);
+        myCheatPanel.add(myXRayCheck);
 
         myMenubar = buildMenubar(myHelpButton, myAboutButton, myMainMenuButton);
 
@@ -77,22 +77,22 @@ public class Difficulty extends JPanel {
             }
         });
         myAboutButton.addActionListener(e -> {
-                    try {
-                        final String aboutText = Files.readString(Path.of(
-                                "resources/aboutMessage.txt"));
-                        JOptionPane.showMessageDialog(this,
-                                aboutText, "About Trivia Maze",
-                                JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
+            try {
+                final String aboutText = Files.readString(Path.of(
+                        "resources/aboutMessage.txt"));
+                JOptionPane.showMessageDialog(this,
+                        aboutText, "About Trivia Maze",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         );
         myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
-        myMasterKeyRadio.addActionListener(e -> myMasterKey = myMasterKeyRadio.isSelected());
+        myMasterKeyCheck.addActionListener(e -> myMasterKey = myMasterKeyCheck.isSelected());
 
-        myXRayRadio.addActionListener(e -> myXRay = myXRayRadio.isSelected());
+        myXRayCheck.addActionListener(e -> myXRay = myXRayCheck.isSelected());
 
         int dim = 4;
         for (JButton button : new JButton[]{myEasyButton, myMediumButton, myHardButton, myInsaneButton}) {
