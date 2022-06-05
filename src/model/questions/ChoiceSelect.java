@@ -49,7 +49,9 @@ public class ChoiceSelect extends Question implements Serializable {
      */
     @Override
     public boolean checkAnswer(final String theOption) {
-        return Optional.ofNullable(myAnswers.get(theOption)).map(Answer::isCorrect).orElse(false);
+        return Optional.ofNullable(myAnswers.get(theOption))
+                .map(Answer::isCorrect)
+                .orElse(false);
     }
 
     /**
