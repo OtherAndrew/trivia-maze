@@ -13,7 +13,9 @@ public class FileAccessor {
     private final JFileChooser myChooser;
     
     private FileAccessor() {
-        myChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        final File saveFolder = new File("saves");
+        final boolean createFolder = saveFolder.mkdir();
+        myChooser = new JFileChooser(saveFolder);
         myChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         myChooser.setAcceptAllFileFilterUsed(false);
         myChooser.addChoosableFileFilter(new FileNameExtensionFilter(

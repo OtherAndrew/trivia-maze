@@ -516,15 +516,14 @@ public class Maze implements Serializable {
     }
 
     public char[][] generateDummy() {
-        // final int dim = new Random().nextInt(7) + 4;
-        int dim = 4;
+        final int dim = new Random().nextInt(7) + 4;
         final Maze dummyMaze = new Maze(dim, dim);
         dummyMaze.setAllDoors(State.UNDISCOVERED);
         return dummyMaze.toCharArray();
     }
 
     public void save() {
-        final boolean quickSave = new File("saves").mkdir();
+        final boolean saveFolder = new File("saves").mkdir();
         save(new File("saves/quickSave.ser"));
     }
 
@@ -545,8 +544,6 @@ public class Maze implements Serializable {
             myController.updateMap(false);
         }
         return successfulLoad;
-//        Serializer.load(theSaveFile).ifPresent(this::restore);
-//        myController.updateMap(false);
     }
 
     private void restore(final Memento theMemento) {
