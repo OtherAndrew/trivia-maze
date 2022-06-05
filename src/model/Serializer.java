@@ -7,6 +7,11 @@ import java.util.Optional;
 
 public class Serializer {
 
+    /**
+     * Empty constructor
+     */
+    private Serializer() {}
+
     public static void save(final Memento theMaze, final File theSaveFile) {
         try {
             final FileOutputStream file = new FileOutputStream(theSaveFile);

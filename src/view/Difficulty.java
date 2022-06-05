@@ -1,13 +1,10 @@
 package view;
 
-import controller.TriviaMaze;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static view.AppTheme.*;
-import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Difficulty extends JPanel {
 
@@ -19,7 +16,7 @@ public class Difficulty extends JPanel {
     private final JButton myHardButton;
     private final JButton myInsaneButton;
 
-    public Difficulty(final Game theGame, final CardLayout theCards) {
+    Difficulty(final Game theGame, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         adjustPanel(this);
 
@@ -49,22 +46,19 @@ public class Difficulty extends JPanel {
         add(myMenubar, BorderLayout.NORTH);
         add(myDifficultyPanel, BorderLayout.CENTER);
 
-        myMainMenuBtn.addActionListener(theAction -> theCards.show(theGame.getContentPanel(), "start"));
+        myMainMenuBtn.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
-        // TODO assign difficulty settings
-        final JButton[] difficultyButtons = {myEasyButton, myMediumButton,
-                myHardButton, myInsaneButton};
         int dim = 4;
-        for (JButton button : difficultyButtons) {
+        for (JButton button : new JButton[]{myEasyButton, myMediumButton, myHardButton, myInsaneButton}) {
             int finalDim = dim;
-            button.addActionListener(theAction -> {
+            button.addActionListener(e -> {
                 theGame.getController().buildMaze(finalDim, finalDim);
                 theGame.updateMapDisplay(false);
                 theGame.updateQA();
-                theCards.show(theGame.getContentPanel(), "game"); // PLACEHOLDER
+                theCards.show(theGame.getContentPanel(), "game");
             });
-            myDifficultyPanel.add(button);
             dim += 2;
+            myDifficultyPanel.add(button);
         }
 
         // TODO: dev mode button/buttons (omniscient map, always open doors,

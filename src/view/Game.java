@@ -7,10 +7,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Optional;
-import java.util.StringJoiner;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static model.mazecomponents.Direction.*;
@@ -20,24 +18,13 @@ import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Game {
 
-    public final static EmptyBorder DIRECTION_PADDING =
-            new EmptyBorder(17, 0, 7, 0);
-    public final static EmptyBorder SIDEBAR_PADDING =
-            new EmptyBorder(0, 7, 0, 0);
-    public final static EmptyBorder ANSWER_PADDING =
-            new EmptyBorder(7, 0, 0, 0);
+    public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
+    public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
+    public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
+    public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
-    public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right",
-            "Down"};
-
-    public static final String SAMPLE_QUERY =
-            "Where does the majority of " + "the" + " world's apples come " +
-                    "from?";
-    public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington",
-            "Canada", "California"};
-
-    private boolean myEnabledTextInput;
-    private boolean myMovementEnabledStatus;
+    private boolean myTextInputEnabled;
+    private boolean myMovementEnabled;
     private Direction myDirection;
     private String myAnswer;
     private final TriviaMaze myController;
@@ -71,7 +58,6 @@ public class Game {
         myContentPanel = buildPanel();
         myFrame.add(myContentPanel);
 
-        // CardLayout
         final CardLayout cards = new CardLayout();
         myContentPanel.setLayout(cards);
 
@@ -79,11 +65,10 @@ public class Game {
         myContentPanel.add(new Difficulty(this, cards), "difficulty");
         myContentPanel.add(new Start(this, cards), "start");
 
-        myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
-        mySaveButton.addActionListener(theAction -> FileAccessor.getInstance().saveFile().ifPresent(myController::save));
-        myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
+        myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
+        mySaveButton.addActionListener(e -> FileAccessor.getInstance().saveFile().ifPresent(myController::save));
+        myMainMenuButton.addActionListener(e -> cards.show(myContentPanel, "start"));
 
-        // Movement
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
         final updateGui south = new updateGui(SOUTH);
@@ -103,20 +88,20 @@ public class Game {
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
-        final InputMap inputMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
-        inputMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
-        inputMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
-        inputMap.put(KeyStroke.getKeyStroke("A"), "moveWest");
-        final ActionMap actionMap = myGamePanel.getActionMap();
-        actionMap.put("moveNorth", theDirections[0]);
-        actionMap.put("moveEast", theDirections[1]);
-        actionMap.put("moveSouth", theDirections[2]);
-        actionMap.put("moveWest", theDirections[3]);
+        final InputMap iMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        iMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
+        iMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
+        iMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
+        iMap.put(KeyStroke.getKeyStroke("A"), "moveWest");
+        final ActionMap aMap = myGamePanel.getActionMap();
+        aMap.put("moveNorth", theDirections[0]);
+        aMap.put("moveEast", theDirections[1]);
+        aMap.put("moveSouth", theDirections[2]);
+        aMap.put("moveWest", theDirections[3]);
     }
 
-    void setMovementEnabled(final boolean theStatus) {
-        myMovementEnabledStatus = theStatus;
+    private void setMovementEnabled(final boolean theStatus) {
+        myMovementEnabled = theStatus;
     }
 
     private void doMove(final Direction theDirection) {
@@ -127,19 +112,25 @@ public class Game {
 //        if (myController.getVictory()) {
 //            displayWinMessage();
 //            myMapDisplay =
-//                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
+//                    MazeDisplayBuilder.buildMapDisplay(myController
+//                    .getMazeCharArray(),
 //                            true);
 //        } else {
 //            myMapDisplay =
-//                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
+//                    MazeDisplayBuilder.buildMapDisplay(myController
+//                    .getMazeCharArray(),
 //                            false);
 //        }
 //        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
 
-    private void displayWinMessage() {
+    private void displayEndGameMessage(final boolean theWinStatus) {
         final StringJoiner sj = new StringJoiner("\n");
-        sj.add("You won!");
+        if (theWinStatus) {
+            sj.add("You won!");
+        } else {
+            sj.add("You lost!");
+        }
         sj.add("");
         sj.add("Rooms visited: " + myController.getVisitCount(true));
         sj.add("Rooms not visited: " + myController.getVisitCount(false));
@@ -177,6 +168,25 @@ public class Game {
         return myMenuBar;
     }
 
+    private JPanel drawQAPanel() {
+        myQAPanel = drawGenQAPanel();
+        myQAPanel.add(drawQuestionArea(), BorderLayout.CENTER);
+        return myQAPanel;
+    }
+
+    /**
+     * Draws the question/answer panel for a short answer question.
+     *
+     * @param theQueryText the query.
+     * @return the question/answer panel.
+     */
+    private JPanel drawQAPanel(final String theQueryText) {
+        myQAPanel = drawGenQAPanel();
+        myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
+        myQAPanel.add(drawShortAnswerPanel(), BorderLayout.SOUTH);
+        return myQAPanel;
+    }
+
     /**
      * Draws the question/answer panel for a multiple choice question.
      *
@@ -185,33 +195,26 @@ public class Game {
      * @return the question/answer panel.
      */
     private JPanel drawQAPanel(final String theQueryText,
-                              final List<String> theAnswerArray) {
-        myQAPanel = new JPanel(new BorderLayout());
+                               final List<String> theAnswerArray) {
+        myQAPanel = drawGenQAPanel();
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawMultipleChoicePanel(theAnswerArray), BorderLayout.SOUTH);
+        return myQAPanel;
+    }
+
+    private JPanel drawGenQAPanel() {
+        myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.setBackground(MID_GREY);
         return myQAPanel;
     }
 
     /**
-     * Draws the question/answer panel for a short answer question.
+     * Draws blank question area.
      *
-     * @param theQueryText   the query.
-     * @return the question/answer panel.
+     * @return the question area.
      */
-    private JPanel drawQAPanel(final String theQueryText) {
-        myQAPanel = new JPanel(new BorderLayout());
-        myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
-        myQAPanel.add(drawShortAnswerPanel(), BorderLayout.SOUTH);
-        myQAPanel.setBackground(MID_GREY);
-        return myQAPanel;
-    }
-
-    private JPanel drawQAPanel() {
-        myQAPanel = new JPanel(new BorderLayout());
-        myQAPanel.add(drawQuestionArea(), BorderLayout.CENTER);
-        myQAPanel.setBackground(MID_GREY);
-        return myQAPanel;
+    private JPanel drawQuestionArea() {
+        return drawQuestionArea("");
     }
 
     /**
@@ -237,17 +240,8 @@ public class Game {
         return myQuestionPanel;
     }
 
-    /**
-     * Draws blank question area.
-     *
-     * @return the question area.
-     */
-    private JPanel drawQuestionArea() {
-        return drawQuestionArea("");
-    }
-
     private JPanel drawMultipleChoicePanel(final List<String> theAnswerArray) {
-        myEnabledTextInput = false;
+        myTextInputEnabled = false;
         int numberOfAnswers = theAnswerArray.size();
         myAnswerPanel = drawAnswerPanel();
         myResponsePanel = new JPanel(new GridLayout(numberOfAnswers, 1));
@@ -259,7 +253,7 @@ public class Game {
         for (int i = 0; i < numberOfAnswers; i++) {
             String answer = theAnswerArray.get(i);
             myAnswerButtons[i] = buildRadioButton(answer);
-            myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0,1));
+            myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0, 1));
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myResponsePanel.add(myAnswerButtons[i]);
         }
@@ -270,7 +264,7 @@ public class Game {
     }
 
     private JPanel drawShortAnswerPanel() {
-        myEnabledTextInput = true;
+        myTextInputEnabled = true;
         myAnswerPanel = drawAnswerPanel();
         myResponsePanel = new JPanel(new BorderLayout());
         myResponsePanel.setBackground(MID_GREY);
@@ -306,10 +300,14 @@ public class Game {
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
         mySubmitButton.addActionListener(e -> {
-            if (myEnabledTextInput) {
+            if (myTextInputEnabled) {
                 myController.respond(myDirection, myAnswerPrompt.getText());
+                myAnswerPrompt.setText("");
             } else {
-                myController.respond(myDirection, myAnswer);
+                if (myAnswer != null) {
+                    myController.respond(myDirection, myAnswer);
+                }
+                myAnswer = null;
             }
         });
         myCancelButton.addActionListener(e -> updateQA());
@@ -331,10 +329,8 @@ public class Game {
         myWestButton = buildButton(DIRECTION_TEXT[1]);
         myEastButton = buildButton(DIRECTION_TEXT[2]);
         mySouthButton = buildButton(DIRECTION_TEXT[3]);
-        final JButton[] directionButtons = {myNorthButton, myWestButton,
-                myEastButton, mySouthButton};
         myDirectionPanel.add(buildBufferPanel());
-        for (JButton button : directionButtons) {
+        for (JButton button : new JButton[]{myNorthButton, myWestButton, myEastButton, mySouthButton}) {
             myDirectionPanel.add(button);
             myDirectionPanel.add(buildBufferPanel());
         }
@@ -360,6 +356,14 @@ public class Game {
         myFrame.repaint();
     }
 
+    private void update(final JPanel theContainer, final JPanel theReplacee,
+                        final JPanel theReplacer) {
+        theContainer.remove(theReplacee);
+        theContainer.add(theReplacer, BorderLayout.CENTER);
+        myFrame.revalidate();
+        myFrame.repaint();
+    }
+
     public void updateQA() {
         setMovementEnabled(true);
         update(mySidebar, myQAPanel, drawQAPanel());
@@ -373,14 +377,6 @@ public class Game {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery, theAnswers));
     }
 
-    private void update(final JPanel theContainer, final JPanel theReplacee,
-                        final JPanel theReplacer) {
-        theContainer.remove(theReplacee);
-        theContainer.add(theReplacer, BorderLayout.CENTER);
-        myFrame.revalidate();
-        myFrame.repaint();
-    }
-
     private class updateGui extends AbstractAction {
 
         private final Direction myDirection;
@@ -391,7 +387,7 @@ public class Game {
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            if (myMovementEnabledStatus) {
+            if (myMovementEnabled) {
                 doMove(myDirection);
             }
         }
