@@ -98,9 +98,8 @@ public class Difficulty extends JPanel {
         for (JButton button : new JButton[]{myEasyButton, myMediumButton, myHardButton, myInsaneButton}) {
             int finalDim = dim;
             button.addActionListener(e -> {
-                theGame.getController()
-                        .buildMaze(finalDim, finalDim, myMasterKey, myXRay);
-                theGame.updateMapDisplay(false);
+                theGame.getController().buildMaze(finalDim, finalDim, myMasterKey, myXRay);
+                theGame.updateMapDisplay(myXRay);
                 theGame.updateQA();
                 theCards.show(theGame.getContentPanel(), "game");
             });
