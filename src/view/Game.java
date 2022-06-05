@@ -7,6 +7,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -44,7 +47,7 @@ public class Game {
     private JPanel myAnswerSubmissionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
             myNewGameButton, myQuickSaveButton, myQuickLoadButton, mySaveButton,
-            myMainMenuButton, mySubmitButton, myCancelButton;
+            myHelpButton, myMainMenuButton, mySubmitButton, myCancelButton;
 
     private JTextArea myQuestionArea;
     private JTextField myAnswerPrompt;
@@ -80,6 +83,17 @@ public class Game {
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
                 FileAccessor.getInstance().saveFile().ifPresent(myController::save);
+            }
+        });
+        myHelpButton .addActionListener(e -> {
+            try {
+                final String helpText = Files.readString(Path.of(
+                        "resources/helpMessage.txt"));
+                JOptionPane.showMessageDialog(myFrame,
+                        helpText, "Help",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         });
         myMainMenuButton.addActionListener(e -> cards.show(myContentPanel, "start"));
@@ -173,9 +187,10 @@ public class Game {
         myQuickSaveButton = buildButton("Quick Save");
         myQuickLoadButton = buildButton("Quick Load");
         mySaveButton = buildButton("Save");
+        myHelpButton = buildButton("Help");
         myMainMenuButton = buildButton("Main Menu");
         myMenuBar = buildMenubar(myNewGameButton, myQuickSaveButton,
-                myQuickLoadButton, mySaveButton, myMainMenuButton);
+                myQuickLoadButton, mySaveButton, myHelpButton, myMainMenuButton);
         return myMenuBar;
     }
 
