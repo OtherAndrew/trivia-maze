@@ -68,14 +68,14 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
+        myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled) {
+            myController.quickSave();
+        }
+        });
         myQuickLoadButton.addActionListener(e -> {
             if (myController.quickLoad()) {
                 updateQA();
                 cards.show(myContentPanel, "game");
-            }
-        });
-        myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled) {
-                myController.quickSave();
             }
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
@@ -174,12 +174,12 @@ public class Game {
 
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
-        myQuickLoadButton = buildButton("Q.Load");
         myQuickSaveButton = buildButton("Q.Save");
+        myQuickLoadButton = buildButton("Q.Load");
         mySaveButton = buildButton("Save");
         myLoadButton = buildButton("Load");
-        myMenuBar = buildMenubar(myNewGameButton, myQuickLoadButton,
-                myQuickSaveButton, mySaveButton, myLoadButton);
+        myMenuBar = buildMenubar(myNewGameButton, myQuickSaveButton,
+                myQuickLoadButton, mySaveButton, myLoadButton);
         return myMenuBar;
     }
 
