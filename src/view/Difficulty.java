@@ -62,6 +62,8 @@ public class Difficulty extends JPanel {
         myCheatPanel = new JPanel(new GridLayout(1, 2));
         myCheatPanel.add(myMasterKeyCheck);
         myCheatPanel.add(myXRayCheck);
+        myCheatPanel.setBackground(DARK_GREY);
+        myCheatPanel.setBorder(GENERAL_BORDER);
 
         myMenubar = buildMenubar(myHelpButton, myAboutButton, myMainMenuButton);
 
