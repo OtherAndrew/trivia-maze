@@ -1,12 +1,11 @@
 - Find the goal to win the game!
-- Move with the direction buttons on the bottom left
+- Move with the direction buttons on the bottom left,
   or use the WASD keys.
-- To pass through the question doors you must answer a question.
-    - If you answer correctly the door will unlock.
-    - If you answer incorrectly the door will lock.
+- To pass through the question doors, you must answer a question.
+    - If you answer correctly, the door will unlock.
+    - If you answer incorrectly, the door will lock.
     - Press cancel to choose a different door.
 - If a door leading to the goal is locked then the game is lost.
-- Save your game by using the "Save" button
-  or by exiting to the main menu.
-- Load a game by using the "Load" button on the main menu
-  or by pressing "Quick Load."
+- Save your game by using the "Q.Save" or "Save" button.
+- Load a game by using the "Resume" button on the main menu
+  or by pressing "Q.Load" or "Load."
