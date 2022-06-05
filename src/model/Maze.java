@@ -210,17 +210,12 @@ public class Maze implements Serializable {
     }
 
     public void attemptMove(final Direction theDirection) {
-        if (myPlayerLocation.hasDoor(theDirection)) {
-            State doorState = myPlayerLocation.getDoorState(theDirection);
-            if (doorState == CLOSED) {
-                final Question question = getQuestion(theDirection);
-                myController.updateQA(question.getQuery(),
-                        question.getAnswers());
-            } else if (doorState == OPEN) {
-                move(theDirection);
-            } else {
-                myController.updateQA();
-            }
+        State doorState = myPlayerLocation.getDoorState(theDirection);
+        if (doorState == CLOSED) {
+            final Question question = getQuestion(theDirection);
+            myController.updateQA(question.getQuery(), question.getAnswers());
+        } else if (doorState == OPEN) {
+            move(theDirection);
         } else {
             myController.updateQA();
         }
@@ -252,8 +247,7 @@ public class Maze implements Serializable {
      */
     public void respond(final Direction theDirection,
                         final String theResponse) {
-        if (myPlayerLocation.hasDoor(theDirection)
-                && myPlayerLocation.getDoorState(theDirection) == CLOSED) {
+        if (myPlayerLocation.getDoorState(theDirection) == CLOSED) {
             if (getQuestion(theDirection).checkAnswer(theResponse.toLowerCase().trim())) {
                 myPlayerLocation.setDoorState(theDirection, OPEN);
                 move(theDirection);
@@ -263,10 +257,6 @@ public class Maze implements Serializable {
                 myController.updateMap(false);
                 myController.updateQA();
                 gameLoss();
-//                if (!gameLoss()) {
-//                    myController.updateMap(false);
-//                    myController.updateQA();
-//                }
             }
         }
     }
@@ -294,7 +284,7 @@ public class Maze implements Serializable {
      * Checks if player has reached the goal room.
      */
     public void atGoal() {
-        if (atRoom(myGoalLocation)) {
+        if (atRoom(myGoalLocation)) { // delete atRoom and atStart if not needed
             endGame(true);
         }
     }
@@ -465,6 +455,7 @@ public class Maze implements Serializable {
     @Override
     public String toString() {
         return concatenateMatrix(toCharArray());
+        // merge if playerRoomToString not needed
     }
 
     /**
@@ -523,13 +514,13 @@ public class Maze implements Serializable {
     }
 
     public void save() {
-        final boolean saveFolder = new File("saves").mkdir();
+        final boolean createFolder = new File("saves").mkdir();
         save(new File("saves/quickSave.ser"));
     }
 
     public void save(final File theSaveFile) {
-        Serializer.save(new Memento(myRooms, myQuestionMap,
-                myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
+        Serializer.save(new Memento(myRooms, myQuestionMap, myPlayerLocation,
+                myGoalLocation, myStartLocation), theSaveFile);
     }
 
     public boolean load() {
@@ -537,13 +528,13 @@ public class Maze implements Serializable {
     }
 
     public boolean load(final File theSaveFile) {
-        final Optional<Memento> loadFile = Serializer.load(theSaveFile);
-        final boolean successfulLoad = loadFile.isPresent();
-        if (successfulLoad) {
-            restore(loadFile.get());
-            myController.updateMap(false);
-        }
-        return successfulLoad;
+        return Serializer.load(theSaveFile)
+                .map(memento -> {
+                    restore(memento);
+                    myController.updateMap(false);
+                    return true;
+                })
+                .orElse(false);
     }
 
     private void restore(final Memento theMemento) {
