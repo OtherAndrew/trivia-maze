@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class Game {
     private boolean myMovementEnabledStatus;
     private Direction myDirection;
     private String myAnswer;
-    private TriviaMaze myController;
+    private final TriviaMaze myController;
     private final JFrame myFrame;
     private final JPanel myContentPanel;
     private JPanel myGamePanel;
@@ -78,11 +80,7 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
-        mySaveButton.addActionListener(theAction -> {
-            final FileAccessor accessor = FileAccessor.getInstance();
-            accessor.saveFile();
-            myController.save(accessor.getSaveFile());
-        });
+        mySaveButton.addActionListener(theAction -> FileAccessor.getInstance().saveFile().ifPresent(myController::save));
         myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
 
         // Movement
@@ -314,9 +312,7 @@ public class Game {
                 myController.respond(myDirection, myAnswer);
             }
         });
-        myCancelButton.addActionListener(e -> {
-            updateQA();
-        });
+        myCancelButton.addActionListener(e -> updateQA());
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
         myAnswerSubmissionPanel.setBorder(ANSWER_PADDING);

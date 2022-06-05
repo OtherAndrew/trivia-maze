@@ -4,15 +4,14 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.util.Optional;
 
 public class FileAccessor {
 
     private static FileAccessor uniqueInstance;
 
     final JFileChooser myChooser;
-    File myLoadFile;
-    File mySaveFile;
-
+    
     private FileAccessor() {
         myChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         myChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -29,25 +28,21 @@ public class FileAccessor {
         return uniqueInstance;
     }
 
-    public void loadFile() {
+    public Optional<File> loadFile() {
         myChooser.setDialogTitle("Load a previous game");
+        File myLoadFile = null;
         if (myChooser.showDialog(null, "Resume") == JFileChooser.APPROVE_OPTION) {
             myLoadFile = myChooser.getSelectedFile();
         }
+        return Optional.ofNullable(myLoadFile);
     }
 
-    public void saveFile() {
+    public Optional<File> saveFile() {
         myChooser.setDialogTitle("Save your game");
+        File mySaveFile = null;
         if (myChooser.showDialog(null, "Save") == JFileChooser.APPROVE_OPTION) {
             mySaveFile = myChooser.getSelectedFile();
         }
-    }
-
-    public File getLoadFile() {
-        return myLoadFile;
-    }
-
-    public File getSaveFile() {
-        return mySaveFile;
+        return Optional.ofNullable(mySaveFile);
     }
 }
