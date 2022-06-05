@@ -27,11 +27,6 @@ public class TriviaMaze {
     private boolean myMasterKey;
 
     /**
-     * Correct answers are highlighted.
-     */
-    private boolean myAllKnowing;
-
-    /**
      * Omniscient view of maze.
      */
     private boolean myXRay;
@@ -40,18 +35,16 @@ public class TriviaMaze {
      * Creates TriviaMaze
      *
      * @param theMasterKey  ability to open doors without answering a question.
-     * @param theAllKnowing ability to see correct answer.
      * @param theXRay       reveals entire maze.
      */
-    public TriviaMaze(final boolean theMasterKey, final boolean theAllKnowing,
+    public TriviaMaze(final boolean theMasterKey,
                       final boolean theXRay) {
         myMasterKey = theMasterKey;
-        myAllKnowing = theAllKnowing;
         myXRay = theXRay;
     }
 
     public TriviaMaze() {
-        this(false, false, false);
+        this(false, false);
     }
 
     public void registerView(final Game theGUI) {
