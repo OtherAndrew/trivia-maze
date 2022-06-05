@@ -3,6 +3,9 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static view.AppTheme.*;
 
@@ -16,6 +19,7 @@ public class Difficulty extends JPanel {
     private final JButton myMediumButton;
     private final JButton myHardButton;
     private final JButton myInsaneButton;
+    private final JButton myHelpButton;
     private final JRadioButton myMasterKeyRadio;
     private final JRadioButton myXRayRadio;
 
@@ -29,6 +33,7 @@ public class Difficulty extends JPanel {
         myXRay = false;
 
         myMainMenuBtn = buildButton("Main Menu");
+        myHelpButton = buildButton("Help");
 
         myEasyButton = buildButton("4 x 4");
         myEasyButton.setBackground(GREEN);
@@ -45,8 +50,20 @@ public class Difficulty extends JPanel {
 
         myMasterKeyRadio = buildRadioButton("Master Key");
         myXRayRadio = buildRadioButton("X-Ray");
+        myHelpButton.addActionListener(e -> {
+            try {
+                final String helpText = Files.readString(Path.of(
+                        "resources/helpMessage.txt"));
+                JOptionPane.showMessageDialog(this,
+                        helpText, "Help",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
-        myMenubar = buildMenubar(buildBufferPanel(), buildBufferPanel(), myMainMenuBtn);
+
+        myMenubar = buildMenubar(buildBufferPanel(), myHelpButton, myMainMenuBtn);
 
         final GridLayout difficultyLayout = new GridLayout(5, 1);
         difficultyLayout.setVgap(7);

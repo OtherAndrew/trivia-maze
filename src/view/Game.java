@@ -47,7 +47,7 @@ public class Game {
     private JPanel myAnswerSubmissionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
             myNewGameButton, myQuickSaveButton, myLoadPrevButton, mySaveButton,
-            myHelpButton, myMainMenuButton, mySubmitButton, myCancelButton;
+            myMainMenuButton, mySubmitButton, myCancelButton;
 
     private JTextArea myQuestionArea;
     private JTextField myAnswerPrompt;
@@ -71,6 +71,11 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
+        myQuickSaveButton.addActionListener(e -> {
+            if (mySaveEnabled) {
+                myController.quickSave();
+            }
+        });
         myLoadPrevButton.addActionListener(e -> {
             if (myController.quickLoad()) {
                 updateQA();
@@ -81,17 +86,7 @@ public class Game {
                 FileAccessor.getInstance().saveFile().ifPresent(myController::save);
             }
         });
-        myHelpButton .addActionListener(e -> {
-            try {
-                final String helpText = Files.readString(Path.of(
-                        "resources/helpMessage.txt"));
-                JOptionPane.showMessageDialog(myFrame,
-                        helpText, "Help",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
+
         myMainMenuButton.addActionListener(e -> {
             if (mySaveEnabled) {
                 myController.quickSave();
@@ -185,12 +180,13 @@ public class Game {
 
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
+        myQuickSaveButton = buildButton("Quick Save");
         myLoadPrevButton = buildButton("Load Prev.");
         mySaveButton = buildButton("Save");
-        myHelpButton = buildButton("Help");
+
         myMainMenuButton = buildButton("Main Menu");
-        myMenuBar = buildMenubar(myNewGameButton, myLoadPrevButton,
-                mySaveButton, myHelpButton, myMainMenuButton);
+        myMenuBar = buildMenubar(myNewGameButton, myQuickSaveButton,
+                myLoadPrevButton, mySaveButton, myMainMenuButton);
         return myMenuBar;
     }
 
