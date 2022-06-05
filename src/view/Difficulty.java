@@ -14,12 +14,13 @@ public class Difficulty extends JPanel {
     private final JPanel myMenubar;
     private final JPanel myDifficultyPanel;
     private final JPanel myCheatPanel;
-    private final JButton myMainMenuBtn;
+    private final JButton myHelpButton;
+    private final JButton myAboutButton;
+    private final JButton myMainMenuButton;
     private final JButton myEasyButton;
     private final JButton myMediumButton;
     private final JButton myHardButton;
     private final JButton myInsaneButton;
-    private final JButton myHelpButton;
     private final JRadioButton myMasterKeyRadio;
     private final JRadioButton myXRayRadio;
 
@@ -32,8 +33,9 @@ public class Difficulty extends JPanel {
         myMasterKey = false;
         myXRay = false;
 
-        myMainMenuBtn = buildButton("Main Menu");
         myHelpButton = buildButton("Help");
+        myAboutButton = buildButton("About");
+        myMainMenuButton = buildButton("Main Menu");
 
         myEasyButton = buildButton("4 x 4");
         myEasyButton.setBackground(GREEN);
@@ -50,20 +52,6 @@ public class Difficulty extends JPanel {
 
         myMasterKeyRadio = buildRadioButton("Master Key");
         myXRayRadio = buildRadioButton("X-Ray");
-        myHelpButton.addActionListener(e -> {
-            try {
-                final String helpText = Files.readString(Path.of(
-                        "resources/helpMessage.txt"));
-                JOptionPane.showMessageDialog(this,
-                        helpText, "Help",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-
-        myMenubar = buildMenubar(buildBufferPanel(), myHelpButton, myMainMenuBtn);
 
         final GridLayout difficultyLayout = new GridLayout(5, 1);
         difficultyLayout.setVgap(7);
@@ -75,10 +63,32 @@ public class Difficulty extends JPanel {
         myCheatPanel.add(myMasterKeyRadio);
         myCheatPanel.add(myXRayRadio);
 
-        add(myMenubar, BorderLayout.NORTH);
-        add(myDifficultyPanel, BorderLayout.CENTER);
+        myMenubar = buildMenubar(myHelpButton, myAboutButton, myMainMenuButton);
 
-        myMainMenuBtn.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
+        myHelpButton.addActionListener(e -> {
+            try {
+                final String helpText = Files.readString(Path.of(
+                        "resources/helpMessage.txt"));
+                JOptionPane.showMessageDialog(this,
+                        helpText, "Help",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        myAboutButton.addActionListener(e -> {
+                    try {
+                        final String aboutText = Files.readString(Path.of(
+                                "resources/aboutMessage.txt"));
+                        JOptionPane.showMessageDialog(this,
+                                aboutText, "About Trivia Maze",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+        );
+        myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
         myMasterKeyRadio.addActionListener(e -> myMasterKey = myMasterKeyRadio.isSelected());
 
@@ -98,6 +108,9 @@ public class Difficulty extends JPanel {
             myDifficultyPanel.add(button);
         }
         myDifficultyPanel.add(myCheatPanel);
+
+        add(myMenubar, BorderLayout.NORTH);
+        add(myDifficultyPanel, BorderLayout.CENTER);
 
         // TODO: dev mode button/buttons (omniscient map, always open doors,
         //  highlighted answers, etc)
