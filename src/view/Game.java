@@ -34,6 +34,7 @@ public class Game {
     public static final String[] SAMPLE_ANSWERS = {"Wisconsin", "Washington",
             "Canada", "California"};
 
+    private boolean myEnabledTextInput;
     private boolean myMovementEnabledStatus;
     private Direction myDirection;
     private String myAnswer;
@@ -77,13 +78,10 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
-
         mySaveButton.addActionListener(theAction -> FileAccessor.getInstance().saveFile());
-
         myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
 
         // Movement
-        setMovementEnabled(false);
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
         final updateGui south = new updateGui(SOUTH);
@@ -115,26 +113,26 @@ public class Game {
         actionMap.put("moveWest", theDirections[3]);
     }
 
-    public void setMovementEnabled(final boolean theStatus) {
+    void setMovementEnabled(final boolean theStatus) {
         myMovementEnabledStatus = theStatus;
     }
 
     private void doMove(final Direction theDirection) {
+        setMovementEnabled(false);
         myDirection = theDirection;
         myController.move(myDirection);
-        myGamePanel.remove(myMapDisplay);
-        if (myController.getVictory()) {
-            displayWinMessage();
-            myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
-                            true);
-            setMovementEnabled(false);
-        } else {
-            myMapDisplay =
-                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
-                            false);
-        }
-        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
+//        myGamePanel.remove(myMapDisplay);
+//        if (myController.getVictory()) {
+//            displayWinMessage();
+//            myMapDisplay =
+//                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
+//                            true);
+//        } else {
+//            myMapDisplay =
+//                    MazeDisplayBuilder.buildMapDisplay(myController.getMazeCharArray(),
+//                            false);
+//        }
+//        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
 
     private void displayWinMessage() {
@@ -151,7 +149,7 @@ public class Game {
         myQuestionArea.setText(sj.toString());
     }
 
-    JPanel drawGamePanel() {
+    private JPanel drawGamePanel() {
         myGamePanel = buildPanel();
         myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
@@ -184,7 +182,7 @@ public class Game {
      * @param theAnswerArray a set of answers.
      * @return the question/answer panel.
      */
-    public JPanel drawQAPanel(final String theQueryText,
+    private JPanel drawQAPanel(final String theQueryText,
                               final List<String> theAnswerArray) {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
@@ -199,7 +197,7 @@ public class Game {
      * @param theQueryText   the query.
      * @return the question/answer panel.
      */
-    public JPanel drawQAPanel(final String theQueryText) {
+    private JPanel drawQAPanel(final String theQueryText) {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
         myQAPanel.add(drawShortAnswerPanel(), BorderLayout.SOUTH);
@@ -207,7 +205,7 @@ public class Game {
         return myQAPanel;
     }
 
-    public JPanel drawQAPanel() {
+    private JPanel drawQAPanel() {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.add(drawQuestionArea(), BorderLayout.CENTER);
         myQAPanel.setBackground(MID_GREY);
@@ -247,6 +245,7 @@ public class Game {
     }
 
     private JPanel drawMultipleChoicePanel(final List<String> theAnswerArray) {
+        myEnabledTextInput = false;
         int numberOfAnswers = theAnswerArray.size();
         myAnswerPanel = drawAnswerPanel();
         myResponsePanel = new JPanel(new GridLayout(numberOfAnswers, 1));
@@ -269,6 +268,7 @@ public class Game {
     }
 
     private JPanel drawShortAnswerPanel() {
+        myEnabledTextInput = true;
         myAnswerPanel = drawAnswerPanel();
         myResponsePanel = new JPanel(new BorderLayout());
         myResponsePanel.setBackground(MID_GREY);
@@ -303,8 +303,17 @@ public class Game {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
-        mySubmitButton.addActionListener(e -> myController.respond(myDirection, myAnswer));
-        myCancelButton.addActionListener(e -> drawQAPanel());
+        mySubmitButton.addActionListener(e -> {
+            if (myEnabledTextInput) {
+                myController.respond(myDirection, myAnswerPrompt.getText());
+            } else {
+                myController.respond(myDirection, myAnswer);
+            }
+        });
+        myCancelButton.addActionListener(e -> {
+            updateQA();
+            setMovementEnabled(true);
+        });
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
         myAnswerSubmissionPanel.setBorder(ANSWER_PADDING);
@@ -343,16 +352,35 @@ public class Game {
         return myContentPanel;
     }
 
-    void updateMapDisplay() {
+    public void updateMapDisplay(final boolean theReveal) {
+        setMovementEnabled(true);
         myGamePanel.remove(myMapDisplay);
-        myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
+        myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), theReveal);
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
+        myFrame.revalidate();
+        myFrame.repaint();
     }
 
-//    void updateQA(final String theQuery, final List<String> theAnswers) {
-//        mySidebar.remove(myQAPanel);
-//        mySidebar.add(myQAPanel, BorderLayout.CENTER);
-//    }
+    public void updateQA() {
+        update(mySidebar, myQAPanel, drawQAPanel());
+    }
+
+    public void updateQA(final String theQuery) {
+        update(mySidebar, myQAPanel, drawQAPanel(theQuery));
+    }
+
+    public void updateQA(final String theQuery, final List<String> theAnswers) {
+        update(mySidebar, myQAPanel, drawQAPanel(theQuery, theAnswers));
+    }
+
+    private void update(final JPanel theContainer, final JPanel theReplacee,
+                        final JPanel theReplacer) {
+        theContainer.remove(theReplacee);
+        theContainer.add(theReplacer, BorderLayout.CENTER);
+        myFrame.revalidate();
+        myFrame.repaint();
+    }
+
 
     private class updateGui extends AbstractAction {
 
@@ -366,8 +394,6 @@ public class Game {
         public void actionPerformed(final ActionEvent e) {
             if (myMovementEnabledStatus) {
                 doMove(myDirection);
-                myFrame.revalidate();
-                myFrame.repaint();
             }
         }
     }

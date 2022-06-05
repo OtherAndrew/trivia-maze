@@ -203,7 +203,7 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                // myQuestionMap.put(door, qf.createQuestion());
+                myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
@@ -214,10 +214,15 @@ public class Maze implements Serializable {
             State doorState = myPlayerLocation.getDoorState(theDirection);
             if (doorState == CLOSED) {
                 final Question question = getQuestion(theDirection);
-                myController.displayQA(question.getQuery(), question.getAnswers());
+                myController.updateQA(question.getQuery(),
+                        question.getAnswers());
             } else if (doorState == OPEN) {
                 move(theDirection);
+            } else {
+                myController.updateQA();
             }
+        } else {
+            myController.updateQA();
         }
     }
 
@@ -229,6 +234,7 @@ public class Maze implements Serializable {
     private void move(final Direction theDirection) {
         myPlayerLocation = myPlayerLocation.getOtherSide(theDirection);
         myPlayerLocation.visit();
+        myController.updateMap(false);
     }
 
     /**
@@ -247,12 +253,14 @@ public class Maze implements Serializable {
                         final String theResponse) {
         if (myPlayerLocation.hasDoor(theDirection)
                 && myPlayerLocation.getDoorState(theDirection) == CLOSED) {
-            if (getQuestion(theDirection).checkAnswer(theResponse)) {
+            if (getQuestion(theDirection).checkAnswer(theResponse.toLowerCase().trim())) {
                 myPlayerLocation.setDoorState(theDirection, OPEN);
                 move(theDirection);
                 atGoal();
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
+                myController.updateQA();
+                myController.updateMap(false);
                 gameLoss();
             }
         }
@@ -579,7 +587,8 @@ public class Maze implements Serializable {
     }
 
     public char[][] generateDummy() {
-        final int dim = new Random().nextInt(7) + 4;
+        // final int dim = new Random().nextInt(7) + 4;
+        int dim = 4;
         final Maze dummyMaze = new Maze(dim, dim);
         dummyMaze.setAllDoors(State.UNDISCOVERED);
         return dummyMaze.toCharArray();

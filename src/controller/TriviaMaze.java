@@ -14,7 +14,7 @@ import static model.mazecomponents.State.OPEN;
 public class TriviaMaze {
 
     public static void main(final String[] theArgs) {
-        final TriviaMaze triviaMaze = new TriviaMaze(true, false, false);
+        final TriviaMaze triviaMaze = new TriviaMaze(false, false, false);
         final Maze maze = new Maze(triviaMaze, 4, 4); // Placeholder
         final Game game = new Game(triviaMaze);
     }
@@ -71,6 +71,7 @@ public class TriviaMaze {
         if (myMasterKey) {
             myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
         }
+        // myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
         myMaze.attemptMove(theDirection);
     }
 
@@ -98,17 +99,24 @@ public class TriviaMaze {
         return myMaze.generateDummy();
     }
 
-    public void displayQA(final String theQuery,
-                          final List<String> theAnswers) {
-        if (theAnswers instanceof ArrayList<String>) {
-            myGUI.drawQAPanel(theQuery);
-        } else if (theAnswers instanceof LinkedList<String>) {
-            myGUI.drawQAPanel(theQuery, theAnswers);
-        }
+    public void updateQA() {
+        myGUI.updateQA();
+    }
 
+    public void updateQA(final String theQuery,
+                         final List<String> theAnswers) {
+        if (theAnswers instanceof ArrayList<String>) {
+            myGUI.updateQA(theQuery);
+        } else if (theAnswers instanceof LinkedList<String>) {
+            myGUI.updateQA(theQuery, theAnswers);
+        }
     }
 
     public void respond(final Direction theDirection, final String myAnswer) {
         myMaze.respond(theDirection, myAnswer);
+    }
+
+    public void updateMap(final boolean theReveal) {
+        myGUI.updateMapDisplay(theReveal);
     }
 }

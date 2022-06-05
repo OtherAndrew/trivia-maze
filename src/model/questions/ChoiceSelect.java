@@ -11,7 +11,7 @@ public class ChoiceSelect extends Question implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2189392842155253463L;
-    private static final String[] OPTIONS = {"A", "B", "C", "D"};
+    private static final String[] OPTIONS = {"a", "b", "c", "d"};
 
     private final Map<String, Answer> myAnswers;
 
