@@ -46,7 +46,7 @@ public class Game {
     private JPanel myDirectionPanel;
     private JPanel myAnswerSubmissionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
-            myNewGameButton, myQuickSaveButton, myQuickLoadButton, mySaveButton,
+            myNewGameButton, myQuickSaveButton, myLoadPrevButton, mySaveButton,
             myHelpButton, myMainMenuButton, mySubmitButton, myCancelButton;
 
     private JTextArea myQuestionArea;
@@ -71,11 +71,7 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
-        myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled) {
-                myController.quickSave();
-            }
-        });
-        myQuickLoadButton.addActionListener(e -> {
+        myLoadPrevButton.addActionListener(e -> {
             if (myController.quickLoad()) {
                 updateQA();
                 cards.show(myContentPanel, "game");
@@ -189,13 +185,12 @@ public class Game {
 
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
-        myQuickSaveButton = buildButton("Quick Save");
-        myQuickLoadButton = buildButton("Quick Load");
+        myLoadPrevButton = buildButton("Load Prev.");
         mySaveButton = buildButton("Save");
         myHelpButton = buildButton("Help");
         myMainMenuButton = buildButton("Main Menu");
-        myMenuBar = buildMenubar(myNewGameButton, myQuickSaveButton,
-                myQuickLoadButton, mySaveButton, myHelpButton, myMainMenuButton);
+        myMenuBar = buildMenubar(myNewGameButton, myLoadPrevButton,
+                mySaveButton, myHelpButton, myMainMenuButton);
         return myMenuBar;
     }
 
