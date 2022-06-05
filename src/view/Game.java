@@ -96,7 +96,12 @@ public class Game {
                 ex.printStackTrace();
             }
         });
-        myMainMenuButton.addActionListener(e -> cards.show(myContentPanel, "start"));
+        myMainMenuButton.addActionListener(e -> {
+            if (mySaveEnabled) {
+                myController.quickSave();
+            }
+            cards.show(myContentPanel, "start");
+        });
 
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
