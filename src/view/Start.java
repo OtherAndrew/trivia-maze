@@ -2,6 +2,9 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static view.AppTheme.*;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
@@ -10,9 +13,9 @@ public class Start extends JPanel {
 
     private final JPanel myMenuBar;
     private final JButton myNewGameBtn;
-    private final JButton myQuickLoadGameBtn;
+    private final JButton myResumeBtn;
     private final JButton myLoadGameBtn;
-    private final JButton myHelpBtn;
+    private final JButton myAboutBtn;
     private final JButton myQuitBtn;
 
     Start(final Game theGame, final CardLayout theCards) {
@@ -20,13 +23,13 @@ public class Start extends JPanel {
         adjustPanel(this);
 
         myNewGameBtn = buildButton("New Game");
-        myQuickLoadGameBtn = buildButton("Quick Load");
+        myResumeBtn = buildButton("Resume");
         myLoadGameBtn = buildButton("Load");
-        myHelpBtn = buildButton("Help");
+        myAboutBtn = buildButton("About");
         myQuitBtn = buildButton("Quit");
 
         myNewGameBtn.addActionListener(e -> theCards.show(theGame.getContentPanel(), "difficulty"));
-        myQuickLoadGameBtn.addActionListener(e -> {
+        myResumeBtn.addActionListener(e -> {
             if (theGame.getController().quickLoad()) {
                 theGame.updateQA();
                 theCards.show(theGame.getContentPanel(), "game");
@@ -37,13 +40,21 @@ public class Start extends JPanel {
             theGame.updateQA();
             theCards.show(theGame.getContentPanel(), "game");
         }));
-        myHelpBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "PLACEHOLDER");
+        myAboutBtn.addActionListener(e -> {
+            try {
+                final String aboutText = Files.readString(Path.of(
+                        "resources/aboutMessage.txt"));
+                JOptionPane.showMessageDialog(this,
+                        aboutText, "About Trivia Maze",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
         myQuitBtn.addActionListener(e -> System.exit(1));
 
-        myMenuBar = buildMenubar(myNewGameBtn, myQuickLoadGameBtn,
-                myLoadGameBtn, myHelpBtn, myQuitBtn);
+        myMenuBar = buildMenubar(myNewGameBtn, myResumeBtn,
+                myLoadGameBtn, myAboutBtn, myQuitBtn);
 
         add(myMenuBar, BorderLayout.NORTH);
         add(buildDummyMapDisplay(theGame.getController()), BorderLayout.CENTER);
