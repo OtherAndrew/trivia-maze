@@ -231,6 +231,7 @@ public class Maze implements Serializable {
         myPlayerLocation.visit();
         myController.updateMap(false);
         myController.updateQA();
+        atGoal();
     }
 
     /**
@@ -251,7 +252,6 @@ public class Maze implements Serializable {
             if (getQuestion(theDirection).checkAnswer(theResponse.toLowerCase().trim())) {
                 myPlayerLocation.setDoorState(theDirection, OPEN);
                 move(theDirection);
-                atGoal();
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
                 myController.updateMap(false);
