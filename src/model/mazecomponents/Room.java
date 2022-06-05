@@ -121,7 +121,11 @@ public class Room implements Serializable {
      * @return the door in the specified direction.
      */
     public Door getDoor(final Direction theDirection) {
-        return myDoors.get(theDirection);
+        Door door = null;
+        if (hasDoor(theDirection)) {
+            door = myDoors.get(theDirection);
+        }
+        return door;
     }
 
     /**
@@ -141,7 +145,11 @@ public class Room implements Serializable {
      * @return the state of the specified door.
      */
     public State getDoorState(final Direction theDirection) {
-        return getDoor(theDirection).getState();
+        State doorState = null;
+        if (hasDoor(theDirection)) {
+            doorState = getDoor(theDirection).getState();
+        }
+        return doorState;
     }
 
     public void setDoorState(final Direction theDirection,

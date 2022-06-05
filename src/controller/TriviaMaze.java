@@ -30,7 +30,9 @@ public class TriviaMaze {
     /**
      * Creates TriviaMaze
      *
-     * @param theMasterKey ability to open doors without answering a question.
+     * @param theMasterKey  ability to open doors without answering a question.
+     * @param theAllKnowing ability to see correct answer.
+     * @param theXRay       reveals entire maze.
      */
     public TriviaMaze(final boolean theMasterKey, final boolean theAllKnowing
             , final boolean theXRay) {
@@ -88,7 +90,7 @@ public class TriviaMaze {
     }
 
     public static void main(final String[] theArgs) {
-        final TriviaMaze triviaMaze = new TriviaMaze(true, false, false);
+        final TriviaMaze triviaMaze = new TriviaMaze();
         final Maze maze = new Maze(triviaMaze, 4, 4); // Placeholder
         final Game game = new Game(triviaMaze);
     }
