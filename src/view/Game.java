@@ -7,9 +7,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -46,8 +43,8 @@ public class Game {
     private JPanel myDirectionPanel;
     private JPanel myAnswerSubmissionPanel;
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
-            myNewGameButton, myQuickSaveButton, myLoadPrevButton, mySaveButton,
-            myMainMenuButton, mySubmitButton, myCancelButton;
+            myNewGameButton, myQuickSaveButton, myQuickLoadButton,
+            mySaveButton, myLoadButton, mySubmitButton, myCancelButton;
 
     private JTextArea myQuestionArea;
     private JTextField myAnswerPrompt;
@@ -71,28 +68,25 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
-        myQuickSaveButton.addActionListener(e -> {
-            if (mySaveEnabled) {
-                myController.quickSave();
-            }
-        });
-        myLoadPrevButton.addActionListener(e -> {
+        myQuickLoadButton.addActionListener(e -> {
             if (myController.quickLoad()) {
                 updateQA();
                 cards.show(myContentPanel, "game");
+            }
+        });
+        myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled) {
+                myController.quickSave();
             }
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
                 FileAccessor.getInstance().saveFile().ifPresent(myController::save);
             }
         });
-
-        myMainMenuButton.addActionListener(e -> {
-            if (mySaveEnabled) {
-                myController.quickSave();
-            }
-            cards.show(myContentPanel, "start");
-        });
+        myLoadButton.addActionListener(e -> FileAccessor.getInstance().loadFile().ifPresent(file -> {
+            myController.load(file);
+            updateQA();
+            cards.show(myContentPanel, "game");
+        }));
 
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
@@ -180,13 +174,12 @@ public class Game {
 
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
-        myQuickSaveButton = buildButton("Quick Save");
-        myLoadPrevButton = buildButton("Load Prev.");
+        myQuickLoadButton = buildButton("Q.Load");
+        myQuickSaveButton = buildButton("Q.Save");
         mySaveButton = buildButton("Save");
-
-        myMainMenuButton = buildButton("Main Menu");
-        myMenuBar = buildMenubar(myNewGameButton, myQuickSaveButton,
-                myLoadPrevButton, mySaveButton, myMainMenuButton);
+        myLoadButton = buildButton("Load");
+        myMenuBar = buildMenubar(myNewGameButton, myQuickLoadButton,
+                myQuickSaveButton, mySaveButton, myLoadButton);
         return myMenuBar;
     }
 
