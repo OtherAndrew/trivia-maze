@@ -10,15 +10,23 @@ public class Difficulty extends JPanel {
 
     private final JPanel myMenubar;
     private final JPanel myDifficultyPanel;
+    private final JPanel myCheatPanel;
     private final JButton myMainMenuBtn;
     private final JButton myEasyButton;
     private final JButton myMediumButton;
     private final JButton myHardButton;
     private final JButton myInsaneButton;
+    private final JRadioButton myMasterKeyRadio;
+    private final JRadioButton myXRayRadio;
+
+    private boolean myMasterKey;
+    private boolean myXRay;
 
     Difficulty(final Game theGame, final CardLayout theCards) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         adjustPanel(this);
+        myMasterKey = false;
+        myXRay = false;
 
         myMainMenuBtn = buildButton("Main Menu");
 
@@ -35,24 +43,36 @@ public class Difficulty extends JPanel {
         myInsaneButton.setBackground(PINK);
         myInsaneButton.setFont(LARGE_FONT);
 
-        final GridLayout difficultyLayout = new GridLayout(4, 1);
+        myMasterKeyRadio = buildRadioButton("Master Key");
+        myXRayRadio = buildRadioButton("X-Ray");
+
+        myMenubar = buildMenubar(buildBufferPanel(), buildBufferPanel(), myMainMenuBtn);
+
+        final GridLayout difficultyLayout = new GridLayout(5, 1);
         difficultyLayout.setVgap(7);
         myDifficultyPanel = new JPanel(difficultyLayout);
         myDifficultyPanel.setBackground(MID_GREY);
         myDifficultyPanel.setBorder(new EmptyBorder(100, 100, 100, 100));
 
-        myMenubar = buildMenubar(buildBufferPanel(), buildBufferPanel(), myMainMenuBtn);
+        myCheatPanel = new JPanel(new GridLayout(1, 2));
+        myCheatPanel.add(myMasterKeyRadio);
+        myCheatPanel.add(myXRayRadio);
 
         add(myMenubar, BorderLayout.NORTH);
         add(myDifficultyPanel, BorderLayout.CENTER);
 
         myMainMenuBtn.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
+        myMasterKeyRadio.addActionListener(e -> myMasterKey = myMasterKeyRadio.isSelected());
+
+        myXRayRadio.addActionListener(e -> myXRay = myXRayRadio.isSelected());
+
         int dim = 4;
         for (JButton button : new JButton[]{myEasyButton, myMediumButton, myHardButton, myInsaneButton}) {
             int finalDim = dim;
             button.addActionListener(e -> {
-                theGame.getController().buildMaze(finalDim, finalDim);
+                theGame.getController()
+                        .buildMaze(finalDim, finalDim, myMasterKey, myXRay);
                 theGame.updateMapDisplay(false);
                 theGame.updateQA();
                 theCards.show(theGame.getContentPanel(), "game");
@@ -60,6 +80,7 @@ public class Difficulty extends JPanel {
             dim += 2;
             myDifficultyPanel.add(button);
         }
+        myDifficultyPanel.add(myCheatPanel);
 
         // TODO: dev mode button/buttons (omniscient map, always open doors,
         //  highlighted answers, etc)

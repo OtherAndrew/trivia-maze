@@ -55,7 +55,10 @@ public class TriviaMaze {
         myMaze = theMaze;
     }
 
-    public void buildMaze(final int theRows, final int theCols) {
+    public void buildMaze(final int theRows, final int theCols,
+                          final boolean theMasterKey, final boolean theXRay) {
+        myMasterKey = theMasterKey;
+        myXRay = theXRay;
         myMaze.build(theRows, theCols);
     }
 
@@ -104,7 +107,7 @@ public class TriviaMaze {
     }
 
     public void updateMap(final boolean theReveal) {
-        myGUI.updateMapDisplay(theReveal);
+        myGUI.updateMapDisplay(theReveal || myXRay);
     }
 
     public void quickSave() {
