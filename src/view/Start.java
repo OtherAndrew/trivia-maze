@@ -38,7 +38,7 @@ public class Start extends JPanel {
             theCards.show(theGame.getContentPanel(), "game");
         }));
         myHelpBtn.addActionListener(e -> {
-            System.out.println("PLACEHOLDER");
+            JOptionPane.showMessageDialog(this, "PLACEHOLDER");
         });
         myQuitBtn.addActionListener(e -> System.exit(1));
 
