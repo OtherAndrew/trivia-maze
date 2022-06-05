@@ -235,6 +235,7 @@ public class Maze implements Serializable {
         myPlayerLocation = myPlayerLocation.getOtherSide(theDirection);
         myPlayerLocation.visit();
         myController.updateMap(false);
+        myController.updateQA();
     }
 
     /**
@@ -259,8 +260,8 @@ public class Maze implements Serializable {
                 atGoal();
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
-                myController.updateQA();
                 myController.updateMap(false);
+                myController.updateQA();
                 gameLoss();
             }
         }

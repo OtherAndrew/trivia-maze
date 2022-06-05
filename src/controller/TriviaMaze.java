@@ -5,6 +5,7 @@ import model.mazecomponents.Direction;
 import model.mazecomponents.State;
 import view.Game;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,5 +119,14 @@ public class TriviaMaze {
 
     public void updateMap(final boolean theReveal) {
         myGUI.updateMapDisplay(theReveal);
+    }
+
+    public void save(final File theFile) {
+        myMaze.save(theFile);
+    }
+
+    public void load(final File theFile) {
+        myMaze.load(theFile);
+        updateMap(false);
     }
 }

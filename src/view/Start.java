@@ -24,7 +24,12 @@ public class Start extends JPanel {
         myNewGameBtn.addActionListener(theAction -> theCards.show(theGame.getContentPanel(),
                 "difficulty"));
 
-        myLoadGameBtn.addActionListener(theAction -> FileAccessor.getInstance().loadFile());
+        myLoadGameBtn.addActionListener(theAction -> {
+            final FileAccessor accessor = FileAccessor.getInstance();
+            accessor.loadFile();
+            theGame.getController().load(accessor.getLoadFile());
+            theCards.show(theGame.getContentPanel(), "game");
+        });
 
         myQuitBtn.addActionListener(theAction -> System.exit(1));
 

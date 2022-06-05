@@ -78,7 +78,11 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(theAction -> cards.show(myContentPanel, "difficulty"));
-        mySaveButton.addActionListener(theAction -> FileAccessor.getInstance().saveFile());
+        mySaveButton.addActionListener(theAction -> {
+            final FileAccessor accessor = FileAccessor.getInstance();
+            accessor.saveFile();
+            myController.save(accessor.getSaveFile());
+        });
         myMainMenuButton.addActionListener(theAction -> cards.show(myContentPanel, "start"));
 
         // Movement
@@ -312,7 +316,6 @@ public class Game {
         });
         myCancelButton.addActionListener(e -> {
             updateQA();
-            setMovementEnabled(true);
         });
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
@@ -362,6 +365,7 @@ public class Game {
     }
 
     public void updateQA() {
+        setMovementEnabled(true);
         update(mySidebar, myQAPanel, drawQAPanel());
     }
 
@@ -380,7 +384,6 @@ public class Game {
         myFrame.revalidate();
         myFrame.repaint();
     }
-
 
     private class updateGui extends AbstractAction {
 
