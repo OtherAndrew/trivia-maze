@@ -263,6 +263,10 @@ public class Maze implements Serializable {
                 myController.updateMap(false);
                 myController.updateQA();
                 gameLoss();
+//                if (!gameLoss()) {
+//                    myController.updateMap(false);
+//                    myController.updateQA();
+//                }
             }
         }
     }
@@ -278,20 +282,6 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Checks if player has reached the goal room.
-     *
-     * @return if the player reached the goal.
-     */
-    public boolean atGoal() {
-        boolean atGoal = false;
-        if (atRoom(myGoalLocation)) {
-            atGoal = true;
-            endGame(true);
-        }
-        return atGoal;
-    }
-
-    /**
      * Checks if player is in the start room.
      *
      * @return if the player is at the start room.
@@ -301,18 +291,22 @@ public class Maze implements Serializable {
     }
 
     /**
+     * Checks if player has reached the goal room.
+     */
+    public void atGoal() {
+        if (atRoom(myGoalLocation)) {
+            endGame(true);
+        }
+    }
+
+    /**
      * Determines if there is no longer a viable path to the goal, meaning
      * the game is lost.
-     *
-     * @return if the game is lost.
      */
-    public boolean gameLoss() {
-        boolean loss = false;
+    public void gameLoss() {
         if (BFSRunner.findPath(this).isEmpty()) {
-            loss = true;
             endGame(false);
         }
-        return loss;
     }
 
     /**
@@ -325,8 +319,8 @@ public class Maze implements Serializable {
         return myPlayerLocation == theRoom;
     }
 
-    private void endGame(final boolean theWin) {
-        // Tells GUI to show end of game frames
+    private void endGame(final boolean theWinStatus) {
+        myController.endGame(theWinStatus);
     }
 
     /**
@@ -344,6 +338,7 @@ public class Maze implements Serializable {
     public Room getStartLocation() {
         return myStartLocation;
     }
+
     /**
      * Gets the room where the player is located.
      *
@@ -351,73 +346,6 @@ public class Maze implements Serializable {
      */
     public Room getPlayerLocation() {
         return myPlayerLocation;
-    }
-
-    public static class Memento implements Serializable {
-
-        @Serial
-        private static final long serialVersionUID = -4739895132858153478L;
-
-        /**
-         * The rooms in the maze.
-         */
-        private final Room[][] mySavedRooms;
-        /**
-         * Doors with corresponding question.
-         */
-        private final Map<Door, Question> mySavedQuestionMap;
-        /**
-         * The player's location.
-         */
-        private final Room mySavedPlayerLocation;
-        /**
-         * The goal location.
-         */
-        private final Room mySavedGoalLocation;
-        /**
-         * The start location.
-         */
-        private final Room mySavedStartLocation;
-
-        private Memento(final Room[][] theRooms,
-                        final Map<Door, Question> theQuestionMap,
-                        final Room thePlayerLocation,
-                        final Room theGoalLocation,
-                        final Room theStartLocation) {
-            mySavedRooms = theRooms;
-            mySavedQuestionMap = theQuestionMap;
-            mySavedPlayerLocation = thePlayerLocation;
-            mySavedGoalLocation = theGoalLocation;
-            mySavedStartLocation = theStartLocation;
-        }
-    }
-
-    public void save() {
-        final boolean quickSave = new File("saves").mkdir();
-        save(new File("saves/quickSave.ser"));
-    }
-
-    public void save(final File theSaveFile) {
-        Serializer.save(new Memento(myRooms, myQuestionMap,
-                myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
-    }
-
-    public void load() {
-        load(new File("saves/quickSave.ser"));
-    }
-
-    public void load(final File theSaveFile) {
-        Serializer.load(theSaveFile).ifPresent(this::restore);
-    }
-
-    private void restore(final Memento theMemento) {
-        myRooms = theMemento.mySavedRooms;
-        myHeight = myRooms.length;
-        myWidth = myRooms[0].length;
-        myQuestionMap = theMemento.mySavedQuestionMap;
-        myPlayerLocation = theMemento.mySavedPlayerLocation;
-        myGoalLocation = theMemento.mySavedGoalLocation;
-        myStartLocation = theMemento.mySavedStartLocation;
     }
 
     /**
@@ -593,5 +521,72 @@ public class Maze implements Serializable {
         final Maze dummyMaze = new Maze(dim, dim);
         dummyMaze.setAllDoors(State.UNDISCOVERED);
         return dummyMaze.toCharArray();
+    }
+
+    public void save() {
+        final boolean quickSave = new File("saves").mkdir();
+        save(new File("saves/quickSave.ser"));
+    }
+
+    public void save(final File theSaveFile) {
+        Serializer.save(new Memento(myRooms, myQuestionMap,
+                myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
+    }
+
+    public void load() {
+        load(new File("saves/quickSave.ser"));
+    }
+
+    public void load(final File theSaveFile) {
+        Serializer.load(theSaveFile).ifPresent(this::restore);
+    }
+
+    private void restore(final Memento theMemento) {
+        myRooms = theMemento.mySavedRooms;
+        myHeight = myRooms.length;
+        myWidth = myRooms[0].length;
+        myQuestionMap = theMemento.mySavedQuestionMap;
+        myPlayerLocation = theMemento.mySavedPlayerLocation;
+        myGoalLocation = theMemento.mySavedGoalLocation;
+        myStartLocation = theMemento.mySavedStartLocation;
+    }
+
+    static class Memento implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = -4739895132858153478L;
+
+        /**
+         * The rooms in the maze.
+         */
+        private final Room[][] mySavedRooms;
+        /**
+         * Doors with corresponding question.
+         */
+        private final Map<Door, Question> mySavedQuestionMap;
+        /**
+         * The player's location.
+         */
+        private final Room mySavedPlayerLocation;
+        /**
+         * The goal location.
+         */
+        private final Room mySavedGoalLocation;
+        /**
+         * The start location.
+         */
+        private final Room mySavedStartLocation;
+
+        private Memento(final Room[][] theRooms,
+                        final Map<Door, Question> theQuestionMap,
+                        final Room thePlayerLocation,
+                        final Room theGoalLocation,
+                        final Room theStartLocation) {
+            mySavedRooms = theRooms;
+            mySavedQuestionMap = theQuestionMap;
+            mySavedPlayerLocation = thePlayerLocation;
+            mySavedGoalLocation = theGoalLocation;
+            mySavedStartLocation = theStartLocation;
+        }
     }
 }

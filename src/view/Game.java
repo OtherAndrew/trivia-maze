@@ -25,6 +25,8 @@ public class Game {
 
     private boolean myTextInputEnabled;
     private boolean myMovementEnabled;
+
+    private boolean mySaveEnabled;
     private Direction myDirection;
     private String myAnswer;
     private final TriviaMaze myController;
@@ -66,7 +68,10 @@ public class Game {
         myContentPanel.add(new Start(this, cards), "start");
 
         myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
-        mySaveButton.addActionListener(e -> FileAccessor.getInstance().saveFile().ifPresent(myController::save));
+        mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
+                FileAccessor.getInstance().saveFile().ifPresent(myController::save);
+            }
+        });
         myMainMenuButton.addActionListener(e -> cards.show(myContentPanel, "start"));
 
         final updateGui north = new updateGui(NORTH);
@@ -104,6 +109,10 @@ public class Game {
         myMovementEnabled = theStatus;
     }
 
+    private void setSaveEnabled(final boolean theStatus) {
+        mySaveEnabled = theStatus;
+    }
+
     private void doMove(final Direction theDirection) {
         setMovementEnabled(false);
         myDirection = theDirection;
@@ -124,7 +133,7 @@ public class Game {
 //        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
 
-    private void displayEndGameMessage(final boolean theWinStatus) {
+    public void displayEndGame(final boolean theWinStatus) {
         final StringJoiner sj = new StringJoiner("\n");
         if (theWinStatus) {
             sj.add("You won!");
@@ -140,6 +149,9 @@ public class Game {
         sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
         sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
         myQuestionArea.setText(sj.toString());
+        updateMapDisplay(true);
+        setMovementEnabled(false);
+        setSaveEnabled(false);
     }
 
     private JPanel drawGamePanel() {
@@ -349,6 +361,7 @@ public class Game {
 
     public void updateMapDisplay(final boolean theReveal) {
         setMovementEnabled(true);
+        setSaveEnabled(true);
         myGamePanel.remove(myMapDisplay);
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), theReveal);
         myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
@@ -393,4 +406,3 @@ public class Game {
         }
     }
 }
-

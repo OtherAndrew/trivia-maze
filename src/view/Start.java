@@ -25,6 +25,7 @@ public class Start extends JPanel {
 
         myLoadGameBtn.addActionListener(e -> FileAccessor.getInstance().loadFile().ifPresent(file -> {
             theGame.getController().load(file);
+            theGame.updateQA();
             theCards.show(theGame.getContentPanel(), "game");
         }));
 

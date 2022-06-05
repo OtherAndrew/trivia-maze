@@ -10,13 +10,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static model.mazecomponents.State.OPEN;
-
 public class TriviaMaze {
 
     public static void main(final String[] theArgs) {
         final TriviaMaze triviaMaze = new TriviaMaze(false, false, false);
-        final Maze maze = new Maze(triviaMaze, 4, 4); // Placeholder
+        final Maze maze = new Maze(triviaMaze, 4, 4);
         final Game game = new Game(triviaMaze);
     }
 
@@ -70,10 +68,13 @@ public class TriviaMaze {
 
     public void move(final Direction theDirection) {
         if (myMasterKey) {
-            myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
+            myMaze.getPlayerLocation().setDoorState(theDirection, State.OPEN);
         }
-        // myMaze.getPlayerLocation().setDoorState(theDirection, OPEN);
         myMaze.attemptMove(theDirection);
+    }
+
+    public void respond(final Direction theDirection, final String myAnswer) {
+        myMaze.respond(theDirection, myAnswer);
     }
 
     public char[][] getMazeCharArray() {
@@ -88,12 +89,8 @@ public class TriviaMaze {
         return myMaze.getDoorStateNum(theState);
     }
 
-    public boolean getVictory() {
-        return myMaze.atGoal();
-    }
-
-    public boolean getLoss() {
-        return myMaze.gameLoss();
+    public void endGame(final boolean theWinStatus) {
+        myGUI.displayEndGame(theWinStatus);
     }
 
     public char[][] getDummyCharArray() {
@@ -111,10 +108,6 @@ public class TriviaMaze {
         } else if (theAnswers instanceof LinkedList<String>) {
             myGUI.updateQA(theQuery, theAnswers);
         }
-    }
-
-    public void respond(final Direction theDirection, final String myAnswer) {
-        myMaze.respond(theDirection, myAnswer);
     }
 
     public void updateMap(final boolean theReveal) {
