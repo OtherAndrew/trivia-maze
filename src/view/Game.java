@@ -117,20 +117,6 @@ public class Game {
         setMovementEnabled(false);
         myDirection = theDirection;
         myController.move(myDirection);
-//        myGamePanel.remove(myMapDisplay);
-//        if (myController.getVictory()) {
-//            displayWinMessage();
-//            myMapDisplay =
-//                    MazeDisplayBuilder.buildMapDisplay(myController
-//                    .getMazeCharArray(),
-//                            true);
-//        } else {
-//            myMapDisplay =
-//                    MazeDisplayBuilder.buildMapDisplay(myController
-//                    .getMazeCharArray(),
-//                            false);
-//        }
-//        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
     }
 
     public void displayEndGame(final boolean theWinStatus) {
