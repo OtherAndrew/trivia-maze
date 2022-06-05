@@ -10,8 +10,7 @@ public class Serializer {
     /**
      * Empty constructor
      */
-    private Serializer() {
-    }
+    private Serializer() {}
 
     private static File checkExtension(final File theSaveFile) {
         File returnFile = theSaveFile;

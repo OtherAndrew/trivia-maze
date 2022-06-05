@@ -13,7 +13,7 @@ import java.util.List;
 public class TriviaMaze {
 
     public static void main(final String[] theArgs) {
-        final TriviaMaze triviaMaze = new TriviaMaze(false, false, false);
+        final TriviaMaze triviaMaze = new TriviaMaze();
         final Maze maze = new Maze(triviaMaze, 4, 4);
         final Game game = new Game(triviaMaze);
     }
@@ -114,12 +114,19 @@ public class TriviaMaze {
         myGUI.updateMapDisplay(theReveal);
     }
 
+    public void quickSave() {
+        myMaze.save();
+    }
+
     public void save(final File theFile) {
         myMaze.save(theFile);
     }
 
+    public boolean quickLoad() {
+        return myMaze.load();
+    }
+
     public void load(final File theFile) {
         myMaze.load(theFile);
-        updateMap(false);
     }
 }

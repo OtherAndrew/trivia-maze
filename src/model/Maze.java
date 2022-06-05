@@ -533,12 +533,20 @@ public class Maze implements Serializable {
                 myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
     }
 
-    public void load() {
-        load(new File("saves/quickSave.ser"));
+    public boolean load() {
+        return load(new File("saves/quickSave.ser"));
     }
 
-    public void load(final File theSaveFile) {
-        Serializer.load(theSaveFile).ifPresent(this::restore);
+    public boolean load(final File theSaveFile) {
+        final Optional<Memento> loadFile = Serializer.load(theSaveFile);
+        final boolean successfulLoad = loadFile.isPresent();
+        if (successfulLoad) {
+            restore(loadFile.get());
+            myController.updateMap(false);
+        }
+        return successfulLoad;
+//        Serializer.load(theSaveFile).ifPresent(this::restore);
+//        myController.updateMap(false);
     }
 
     private void restore(final Memento theMemento) {
