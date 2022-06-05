@@ -211,7 +211,7 @@ public class Maze implements Serializable {
 
     public void attemptMove(final Direction theDirection) {
         State doorState = myPlayerLocation.getDoorState(theDirection);
-        if (doorState == CLOSED) {
+        if (doorState == CLOSED || doorState == LOCKED) {
             final Question question = getQuestion(theDirection);
             myController.updateQA(question.getQuery(), question.getAnswers());
         } else if (doorState == OPEN) {
