@@ -16,7 +16,8 @@ public class QuestionFactory {
 
     private void setUp() {
         try {
-            myConnection = DriverManager.getConnection("jdbc:sqlite:Questions.db");
+            myConnection = DriverManager.getConnection(
+                    "jdbc:sqlite::resource:Questions.db");
             myConnection.setAutoCommit(false);
             myStatement = myConnection.createStatement();
             myStatement.setQueryTimeout(30);
