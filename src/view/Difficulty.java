@@ -3,9 +3,11 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static view.AppTheme.*;
 
@@ -72,15 +74,9 @@ public class Difficulty extends JPanel {
 
         myMenubar = buildMenubar(myMainMenuButton, myHelpButton, myKeyBindingsButton, myAboutButton);
 
-        myHelpButton.addActionListener(e -> {
-            showDialog(Path.of("resources/help.txt"), "Help");
-        });
-        myKeyBindingsButton.addActionListener(e -> {
-            showDialog(Path.of("resources/key_bindings.txt"), "Key Bindings");
-        });
-        myAboutButton.addActionListener(e -> {
-            showDialog(Path.of("resources/about.txt"), "About Trivia Maze");
-        });
+        myHelpButton.addActionListener(e -> showDialog("/help.txt", "Help"));
+        myKeyBindingsButton.addActionListener(e -> showDialog("/key_bindings.txt", "Key Bindings"));
+        myAboutButton.addActionListener(e -> showDialog("/about.txt", "About Trivia Maze"));
         myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
         myMasterKeyCheck.addActionListener(e -> myMasterKey = myMasterKeyCheck.isSelected());
@@ -107,12 +103,19 @@ public class Difficulty extends JPanel {
         //  highlighted answers, etc)
     }
 
-    private void showDialog(final Path theFilePath, final String theTitle) {
+    private void showDialog(final String theFilePath, final String theTitle) {
         try {
-            final String aboutText = Files.readString(theFilePath);
-            JOptionPane.showMessageDialog(this, aboutText,
+            final InputStream in = getClass().getResourceAsStream(theFilePath);
+            final BufferedReader lines =
+                    new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)));
+            final StringJoiner content = new StringJoiner("\n");
+            String line;
+            while ((line = lines.readLine()) != null) {
+                content.add(line);
+            }
+            JOptionPane.showMessageDialog(this, content.toString(),
                     theTitle, JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

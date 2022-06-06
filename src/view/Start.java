@@ -2,9 +2,11 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static view.AppTheme.*;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
@@ -42,12 +44,19 @@ public class Start extends JPanel {
         }));
         myAboutBtn.addActionListener(e -> {
             try {
-                final String aboutText = Files.readString(Path.of(
-                        "resources/about.txt"));
+                final InputStream in = getClass()
+                        .getResourceAsStream("/about.txt");
+                final BufferedReader lines =
+                        new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)));
+                final StringJoiner content = new StringJoiner("\n");
+                String line;
+                while ((line = lines.readLine()) != null) {
+                    content.add(line);
+                }
                 JOptionPane.showMessageDialog(this,
-                        aboutText, "About Trivia Maze",
+                        content.toString(), "About Trivia Maze",
                         JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
