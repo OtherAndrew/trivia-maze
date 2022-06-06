@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.Optional;
 
@@ -12,8 +13,9 @@ public class FileAccessor {
     private final JFileChooser myChooser;
     
     private FileAccessor() {
-        final File saveFolder = new File("saves");
-        final boolean createFolder = saveFolder.mkdir();
+        final File saveFolder = new File(
+                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
+        saveFolder.mkdir();
         myChooser = new JFileChooser(saveFolder);
         myChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         myChooser.setAcceptAllFileFilterUsed(false);

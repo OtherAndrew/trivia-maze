@@ -5,6 +5,7 @@ import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
@@ -514,8 +515,10 @@ public class Maze implements Serializable {
     }
 
     public void save() {
-        final boolean createFolder = new File("saves").mkdir();
-        save(new File("saves/quickSave.ser"));
+        final File saveFolder = new File(
+                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
+        saveFolder.mkdir();
+        save(new File(saveFolder + "/quickSave.ser"));
     }
 
     public void save(final File theSaveFile) {
@@ -524,7 +527,8 @@ public class Maze implements Serializable {
     }
 
     public boolean load() {
-        return load(new File("saves/quickSave.ser"));
+        return load(new File(
+                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze/quickSave.ser"));
     }
 
     public boolean load(final File theSaveFile) {
