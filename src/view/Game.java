@@ -399,6 +399,7 @@ public class Game {
 
     public void updateQA(final String theQuery) {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery));
+        myAnswerPrompt.requestFocus();
     }
 
     public void updateQA(final String theQuery, final List<String> theAnswers) {
