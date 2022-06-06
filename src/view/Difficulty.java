@@ -37,10 +37,10 @@ public class Difficulty extends JPanel {
         myMasterKey = false;
         myXRay = false;
 
+        myMainMenuButton = buildButton("Main Menu");
         myHelpButton = buildButton("Help");
         myKeyBindingsButton = buildButton("Key Bindings");
         myAboutButton = buildButton("About");
-        myMainMenuButton = buildButton("Main Menu");
 
         myEasyButton = buildButton("4 x 4");
         myEasyButton.setBackground(GREEN);
@@ -70,7 +70,7 @@ public class Difficulty extends JPanel {
         myCheatPanel.setBackground(DARK_GREY);
         myCheatPanel.setBorder(GENERAL_BORDER);
 
-        myMenubar = buildMenubar(myHelpButton, myKeyBindingsButton, myAboutButton, myMainMenuButton);
+        myMenubar = buildMenubar(myMainMenuButton, myHelpButton, myKeyBindingsButton, myAboutButton);
 
         myHelpButton.addActionListener(e -> {
             showDialog(Path.of("resources/help.txt"), "Help");
