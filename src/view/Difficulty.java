@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static view.AppTheme.*;
 
@@ -104,16 +106,11 @@ public class Difficulty extends JPanel {
     }
 
     private void showDialog(final String theFilePath, final String theTitle) {
-        try {
-            final InputStream in = getClass().getResourceAsStream(theFilePath);
-            final BufferedReader lines =
-                    new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)));
-            final StringJoiner content = new StringJoiner("\n");
-            String line;
-            while ((line = lines.readLine()) != null) {
-                content.add(line);
-            }
-            JOptionPane.showMessageDialog(this, content.toString(),
+        try (final InputStream in = getClass().getResourceAsStream(theFilePath);
+             final BufferedReader br = new BufferedReader(
+                     new InputStreamReader(Objects.requireNonNull(in)))) {
+            JOptionPane.showMessageDialog(this,
+                    br.lines().collect(Collectors.joining("\n")),
                     theTitle, JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             ex.printStackTrace();

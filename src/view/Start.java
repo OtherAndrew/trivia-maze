@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import static view.AppTheme.*;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
@@ -43,19 +44,12 @@ public class Start extends JPanel {
             theCards.show(theGame.getContentPanel(), "game");
         }));
         myAboutBtn.addActionListener(e -> {
-            try {
-                final InputStream in = getClass()
-                        .getResourceAsStream("/about.txt");
-                final BufferedReader lines =
-                        new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)));
-                final StringJoiner content = new StringJoiner("\n");
-                String line;
-                while ((line = lines.readLine()) != null) {
-                    content.add(line);
-                }
+            try (final InputStream in = getClass().getResourceAsStream("/about.txt");
+                 final BufferedReader br = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(in)))) {
                 JOptionPane.showMessageDialog(this,
-                        content.toString(), "About Trivia Maze",
-                        JOptionPane.INFORMATION_MESSAGE);
+                        br.lines().collect(Collectors.joining("\n")),
+                        "About Trivia Maze", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
