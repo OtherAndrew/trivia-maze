@@ -74,10 +74,16 @@ public class Game {
         myContentPanel.add(new Difficulty(this, cards), "difficulty");
         myContentPanel.add(new Start(this, cards), "start");
 
-        myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
-        myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled) {
-            myController.quickSave();
-        }
+        myNewGameButton.addActionListener(e -> {
+            if (mySaveEnabled) {
+                myController.quickSave();
+            }
+            cards.show(myContentPanel, "difficulty");
+        });
+        myQuickSaveButton.addActionListener(e -> {
+            if (mySaveEnabled) {
+                myController.quickSave();
+            }
         });
         myQuickLoadButton.addActionListener(e -> {
             if (myController.quickLoad()) {
