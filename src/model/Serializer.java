@@ -7,9 +7,24 @@ import java.util.Optional;
 
 public class Serializer {
 
+    /**
+     * Empty constructor
+     */
+    private Serializer() {}
+
+    private static File checkExtension(final File theSaveFile) {
+        File returnFile = theSaveFile;
+        final String absolutePath = theSaveFile.getAbsolutePath();
+        if (!absolutePath.endsWith(".ser")) {
+            returnFile = new File(absolutePath + ".ser");
+        }
+        return returnFile;
+    }
+
     public static void save(final Memento theMaze, final File theSaveFile) {
         try {
-            final FileOutputStream file = new FileOutputStream(theSaveFile);
+            final File saveFile = checkExtension(theSaveFile);
+            final FileOutputStream file = new FileOutputStream(saveFile);
             final ObjectOutputStream out = new ObjectOutputStream(file);
             out.writeObject(theMaze);
             out.close();

@@ -1,5 +1,6 @@
 package model;
 
+import controller.TriviaMaze;
 import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
@@ -43,6 +44,8 @@ public class Maze implements Serializable {
      * Represents maze walls.
      */
     public static final char WALL_SYMBOL = '█';
+
+    private TriviaMaze myController;
     /**
      * Number of rows.
      */
@@ -72,17 +75,26 @@ public class Maze implements Serializable {
      */
     private Room myGoalLocation;
 
-    /**
-     * Constructs a maze of arbitrary size greater than 3 x 3.
-     *
-     * @param theRows the number of rows the maze should have.
-     * @param theCols the number of columns the maze should have.
-     */
-    public Maze(final int theRows, final int theCols) throws IllegalArgumentException {
+    public Maze(final TriviaMaze theController, final int theRows,
+                final int theCols) throws IllegalArgumentException {
+        myController = theController;
+        theController.registerModel(this);
         if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
             throw new IllegalArgumentException("dimensions passed to Maze " +
                     "cannot be outside the range of 4-10 (passed values: " + theRows + ", " + theCols);
         }
+        build(theRows, theCols);
+    }
+
+    private Maze(final int theRows, final int theCols) throws IllegalArgumentException {
+        if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
+            throw new IllegalArgumentException("dimensions passed to Maze " +
+                    "cannot be outside the range of 4-10 (passed values: " + theRows + ", " + theCols);
+        }
+        build(theRows, theCols);
+    }
+
+    public void build(final int theRows, final int theCols)  {
         myHeight = theRows;
         myWidth = theCols;
         myRooms = generateRoomMatrix(theRows, theCols);
@@ -191,22 +203,21 @@ public class Maze implements Serializable {
             if (!djSet.find(room1).equals(djSet.find(room2))) {
                 djSet.join(room1, room2);
                 door.addToRooms();
-                 myQuestionMap.put(door, qf.createQuestion());
+                myQuestionMap.put(door, qf.createQuestion());
             }
         }
         qf.cleanUp();
     }
 
     public void attemptMove(final Direction theDirection) {
-        if (myPlayerLocation.hasDoor(theDirection)) {
-            State doorState = myPlayerLocation.getDoorState(theDirection);
-            if (doorState == CLOSED) {
-                getQuestion(theDirection); // PLACEHOLDER
-                // Tell GUI to display the question and answer choices
-                // enable listeners for input which will indirectly call response
-            } else if (doorState == OPEN) {
-                move(theDirection);
-            }
+        State doorState = myPlayerLocation.getDoorState(theDirection);
+        if (doorState == CLOSED || doorState == LOCKED) {
+            final Question question = getQuestion(theDirection);
+            myController.updateQA(question.getQuery(), question.getAnswers());
+        } else if (doorState == OPEN) {
+            move(theDirection);
+        } else {
+            myController.updateQA();
         }
     }
 
@@ -218,6 +229,9 @@ public class Maze implements Serializable {
     private void move(final Direction theDirection) {
         myPlayerLocation = myPlayerLocation.getOtherSide(theDirection);
         myPlayerLocation.visit();
+        myController.updateMap(false);
+        myController.updateQA();
+        atGoal();
     }
 
     /**
@@ -234,14 +248,14 @@ public class Maze implements Serializable {
      */
     public void respond(final Direction theDirection,
                         final String theResponse) {
-        if (myPlayerLocation.hasDoor(theDirection)
-                && myPlayerLocation.getDoorState(theDirection) == CLOSED) {
-            if (getQuestion(theDirection).checkAnswer(theResponse)) {
+        if (myPlayerLocation.getDoorState(theDirection) == CLOSED) {
+            if (getQuestion(theDirection).checkAnswer(theResponse.toLowerCase().trim())) {
                 myPlayerLocation.setDoorState(theDirection, OPEN);
                 move(theDirection);
-                atGoal();
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
+                myController.updateMap(false);
+                myController.updateQA();
                 gameLoss();
             }
         }
@@ -258,20 +272,6 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Checks if player has reached the goal room.
-     *
-     * @return if the player reached the goal.
-     */
-    public boolean atGoal() {
-        boolean atGoal = false;
-        if (atRoom(myGoalLocation)) {
-            atGoal = true;
-            endGame(true);
-        }
-        return atGoal;
-    }
-
-    /**
      * Checks if player is in the start room.
      *
      * @return if the player is at the start room.
@@ -281,18 +281,22 @@ public class Maze implements Serializable {
     }
 
     /**
+     * Checks if player has reached the goal room.
+     */
+    public void atGoal() {
+        if (atRoom(myGoalLocation)) { // delete atRoom and atStart if not needed
+            endGame(true);
+        }
+    }
+
+    /**
      * Determines if there is no longer a viable path to the goal, meaning
      * the game is lost.
-     *
-     * @return if the game is lost.
      */
-    public boolean gameLoss() {
-        boolean loss = false;
+    public void gameLoss() {
         if (BFSRunner.findPath(this).isEmpty()) {
-            loss = true;
             endGame(false);
         }
-        return loss;
     }
 
     /**
@@ -305,8 +309,8 @@ public class Maze implements Serializable {
         return myPlayerLocation == theRoom;
     }
 
-    private void endGame(final boolean theWin) {
-        // Tells GUI to show end of game frames
+    private void endGame(final boolean theWinStatus) {
+        myController.endGame(theWinStatus);
     }
 
     /**
@@ -324,6 +328,7 @@ public class Maze implements Serializable {
     public Room getStartLocation() {
         return myStartLocation;
     }
+
     /**
      * Gets the room where the player is located.
      *
@@ -331,73 +336,6 @@ public class Maze implements Serializable {
      */
     public Room getPlayerLocation() {
         return myPlayerLocation;
-    }
-
-    public static class Memento implements Serializable {
-
-        @Serial
-        private static final long serialVersionUID = -4739895132858153478L;
-
-        /**
-         * The rooms in the maze.
-         */
-        private final Room[][] mySavedRooms;
-        /**
-         * Doors with corresponding question.
-         */
-        private final Map<Door, Question> mySavedQuestionMap;
-        /**
-         * The player's location.
-         */
-        private final Room mySavedPlayerLocation;
-        /**
-         * The goal location.
-         */
-        private final Room mySavedGoalLocation;
-        /**
-         * The start location.
-         */
-        private final Room mySavedStartLocation;
-
-        private Memento(final Room[][] theRooms,
-                        final Map<Door, Question> theQuestionMap,
-                        final Room thePlayerLocation,
-                        final Room theGoalLocation,
-                        final Room theStartLocation) {
-            mySavedRooms = theRooms;
-            mySavedQuestionMap = theQuestionMap;
-            mySavedPlayerLocation = thePlayerLocation;
-            mySavedGoalLocation = theGoalLocation;
-            mySavedStartLocation = theStartLocation;
-        }
-    }
-
-    public void save() {
-        final boolean quickSave = new File("saves").mkdir();
-        save(new File("saves/quickSave.ser"));
-    }
-
-    public void save(final File theSaveFile) {
-        Serializer.save(new Memento(myRooms, myQuestionMap,
-                myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
-    }
-
-    public void load() {
-        load(new File("saves/quickSave.ser"));
-    }
-
-    public void load(final File theSaveFile) {
-        Serializer.load(theSaveFile).ifPresent(this::restore);
-    }
-
-    private void restore(final Memento theMemento) {
-        myRooms = theMemento.mySavedRooms;
-        myHeight = myRooms.length;
-        myWidth = myRooms[0].length;
-        myQuestionMap = theMemento.mySavedQuestionMap;
-        myPlayerLocation = theMemento.mySavedPlayerLocation;
-        myGoalLocation = theMemento.mySavedGoalLocation;
-        myStartLocation = theMemento.mySavedStartLocation;
     }
 
     /**
@@ -517,6 +455,7 @@ public class Maze implements Serializable {
     @Override
     public String toString() {
         return concatenateMatrix(toCharArray());
+        // merge if playerRoomToString not needed
     }
 
     /**
@@ -567,16 +506,83 @@ public class Maze implements Serializable {
         return concatenateMatrix(playerRoomToCharArray());
     }
 
-    // FOR TESTING
-    public static void main(final String[] theArgs) {
-        Random r = new Random();
-        Maze maze = new Maze(r.nextInt(8)+3, r.nextInt(8)+3);
-        System.out.println(maze);
-        System.out.println();
-//        maze.setAllDoors(LOCKED);
-//        System.out.println(maze);
-//        System.out.println();
-//        System.out.println(maze.playerRoomToString());
-        maze.save();
+    public char[][] generateDummy() {
+        final int dim = new Random().nextInt(7) + 4;
+        final Maze dummyMaze = new Maze(dim, dim);
+        dummyMaze.setAllDoors(State.UNDISCOVERED);
+        return dummyMaze.toCharArray();
+    }
+
+    public void save() {
+        final boolean createFolder = new File("saves").mkdir();
+        save(new File("saves/quickSave.ser"));
+    }
+
+    public void save(final File theSaveFile) {
+        Serializer.save(new Memento(myRooms, myQuestionMap, myPlayerLocation,
+                myGoalLocation, myStartLocation), theSaveFile);
+    }
+
+    public boolean load() {
+        return load(new File("saves/quickSave.ser"));
+    }
+
+    public boolean load(final File theSaveFile) {
+        return Serializer.load(theSaveFile)
+                .map(memento -> {
+                    restore(memento);
+                    myController.updateMap(false);
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    private void restore(final Memento theMemento) {
+        myRooms = theMemento.mySavedRooms;
+        myHeight = myRooms.length;
+        myWidth = myRooms[0].length;
+        myQuestionMap = theMemento.mySavedQuestionMap;
+        myPlayerLocation = theMemento.mySavedPlayerLocation;
+        myGoalLocation = theMemento.mySavedGoalLocation;
+        myStartLocation = theMemento.mySavedStartLocation;
+    }
+
+    static class Memento implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = -4739895132858153478L;
+
+        /**
+         * The rooms in the maze.
+         */
+        private final Room[][] mySavedRooms;
+        /**
+         * Doors with corresponding question.
+         */
+        private final Map<Door, Question> mySavedQuestionMap;
+        /**
+         * The player's location.
+         */
+        private final Room mySavedPlayerLocation;
+        /**
+         * The goal location.
+         */
+        private final Room mySavedGoalLocation;
+        /**
+         * The start location.
+         */
+        private final Room mySavedStartLocation;
+
+        private Memento(final Room[][] theRooms,
+                        final Map<Door, Question> theQuestionMap,
+                        final Room thePlayerLocation,
+                        final Room theGoalLocation,
+                        final Room theStartLocation) {
+            mySavedRooms = theRooms;
+            mySavedQuestionMap = theQuestionMap;
+            mySavedPlayerLocation = thePlayerLocation;
+            mySavedGoalLocation = theGoalLocation;
+            mySavedStartLocation = theStartLocation;
+        }
     }
 }

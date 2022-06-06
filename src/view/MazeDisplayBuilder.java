@@ -1,7 +1,6 @@
 package view;
 
-import model.Maze;
-import model.mazecomponents.State;
+import controller.TriviaMaze;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +13,7 @@ import static model.mazecomponents.Room.UNVISITED_SYMBOL;
 import static model.mazecomponents.Room.VISITED_SYMBOL;
 import static view.AppTheme.*;
 
-
 public final class MazeDisplayBuilder {
-
-
 
     /**
      * Draws a map display from the character array representation of one or
@@ -56,13 +52,10 @@ public final class MazeDisplayBuilder {
     /**
      * Draws a map display for display purposes only.
      *
-     * @param theSize the x and y size of the maze.
      * @return a map with all paths visible.
      */
-    public static JPanel buildDummyMapDisplay(final int theSize) {
-        final Maze dummyMaze = new Maze(theSize, theSize);
-        dummyMaze.setAllDoors(State.UNDISCOVERED);
-        return buildMapDisplay(dummyMaze.toCharArray(), true);
+    public static JPanel buildDummyMapDisplay(final TriviaMaze theController) {
+        return buildMapDisplay(theController.getDummyCharArray(), true);
     }
 
     /**

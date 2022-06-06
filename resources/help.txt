@@ -1,0 +1,16 @@
+- Reach the goal room to win the game!
+
+- Move with the direction buttons on the bottom left,
+  the WASD keys, or the arrow keys.
+- To pass through the question doors, you must correctly answer a question.
+    - If you answer incorrectly, the door will lock.
+    - Press "Cancel" or Escape to choose a different door.
+- If a door leading to the goal is locked then the game is lost.
+
+- Save your game by using the "Q.Save" or "Save" button.
+- Load a game by using the "Resume" button on the main menu
+  or by pressing "Q.Load" or "Load."
+
+- Cheats:
+    - Master Key: Pass through doors without answering a question.
+    - X-Ray: See the entire maze.

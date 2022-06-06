@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static model.mazecomponents.State.*;
 
@@ -53,9 +54,8 @@ public class Room implements Serializable {
      */
     public Room(final int theRow, final int theCol) throws IllegalArgumentException {
         if (theRow < 0 || theCol < 0) {
-            throw new IllegalArgumentException(
-                    "Coordinates passed to Room cannot be less than 0"
-                            + " (passed values: " + theRow + ", " + theCol + ")");
+            throw new IllegalArgumentException("Coordinates passed to Room " +
+                    "cannot be less than 0 (passed values: " + theRow + ", " + theCol + ")");
         }
         myRow = theRow;
         myCol = theCol;
@@ -82,8 +82,16 @@ public class Room implements Serializable {
         return myCol;
     }
 
+    /**
+     * Get the room on the other side of the door in a specified direction.
+     *
+     * @param theDirection  the direction the door is in.
+     * @return  the room on the other side of the door if it exists or null.
+     */
     public Room getOtherSide(final Direction theDirection) {
-        return getDoor(theDirection).getOtherSide(this);
+        return Optional.ofNullable(getDoor(theDirection))
+                .map(door -> door.getOtherSide(this))
+                .orElse(null);
     }
 
     /**
@@ -138,17 +146,17 @@ public class Room implements Serializable {
      * Gets the state of the door in the direction.
      *
      * @param theDirection the direction the door is in.
-     * @return the state of the specified door.
+     * @return the state of the specified door or null if door does not exist.
      */
     public State getDoorState(final Direction theDirection) {
-        return getDoor(theDirection).getState();
+        return Optional.ofNullable(getDoor(theDirection))
+                .map(Door::getState)
+                .orElse(null);
     }
 
     public void setDoorState(final Direction theDirection,
                              final State theState) {
-        if (hasDoor(theDirection)) {
-            getDoor(theDirection).setState(theState);
-        }
+        Optional.ofNullable(getDoor(theDirection)).ifPresent(door -> door.setState(theState));
     }
 
     /**

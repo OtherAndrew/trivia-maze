@@ -8,7 +8,7 @@ public class ChoiceSelect extends Question implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2189392842155253463L;
-    private static final String[] OPTIONS = {"A", "B", "C", "D"};
+    private static final String[] OPTIONS = {"a", "b", "c", "d"};
 
     private final Map<String, Answer> myAnswers;
 
@@ -30,17 +30,6 @@ public class ChoiceSelect extends Question implements Serializable {
     }
 
     /**
-     * Checks if the provided option is one of the possible answers to the
-     * query.
-     *
-     * @param theOption the option to check for.
-     * @return if the option is one of the possible answers to the query.
-     */
-    public boolean validChoice(final String theOption) {
-        return myAnswers.containsKey(theOption);
-    }
-
-    /**
      * Checks if an answer submitted by a player to a true/false or multiple
      * choice question is true.
      *
@@ -49,7 +38,9 @@ public class ChoiceSelect extends Question implements Serializable {
      */
     @Override
     public boolean checkAnswer(final String theOption) {
-        return myAnswers.get(theOption).isCorrect();
+        return Optional.ofNullable(myAnswers.get(theOption))
+                .map(Answer::isCorrect)
+                .orElse(false);
     }
 
     /**
@@ -57,9 +48,9 @@ public class ChoiceSelect extends Question implements Serializable {
      */
     @Override
     public List<String> getAnswers() {
-        final List<String> choiceList = new ArrayList<>(myAnswers.size());
+        final List<String> choiceList = new LinkedList<>();
         for (String choice : myAnswers.keySet()) {
-            choiceList.add(myAnswers.get(choice).toString());
+            choiceList.add(choice + ". " + myAnswers.get(choice).toString());
         }
         return choiceList;
     }

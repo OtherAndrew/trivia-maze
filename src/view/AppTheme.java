@@ -14,7 +14,7 @@ public final class AppTheme {
     public static final Color ORANGE = Color.decode("#ffb86c");
     public static final Color YELLOW = Color.decode("#f1fa8c");
     public static final Color GREEN = Color.decode("#50fa7b");
-    public static final Color CYAN = Color.decode("#8be9fd");
+    public static final Color BLUE = Color.decode("#8be9fd");
     public static final Color PURPLE = Color.decode("#bd93f9");
     public static final Color PINK = Color.decode("#ff79c6");
     public static final Color WHITE = Color.decode("#f8f8f2");
@@ -58,6 +58,22 @@ public final class AppTheme {
         return frame;
     }
 
+    public static JPanel buildPanel() {
+        final JPanel panel  = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setSize(WINDOW_SIZE);
+        panel.setBorder(WINDOW_BORDER);
+        panel.setBackground(MID_GREY);
+        return panel;
+    }
+
+    public static void adjustPanel(final JPanel thePanel) {
+        thePanel.setLayout(new BorderLayout());
+        thePanel.setSize(WINDOW_SIZE);
+        thePanel.setBorder(WINDOW_BORDER);
+        thePanel.setBackground(MID_GREY);
+    }
+
     /**
      * Builds a standard JButton.
      *
@@ -89,12 +105,27 @@ public final class AppTheme {
     }
 
     /**
+     * Builds a standard JCheckBox.
+     *
+     * @param theButtonText the text displayed on the checkbox.
+     * @return the standard JCheckBox.
+     */
+    public static JCheckBox buildCheckBox(final String theButtonText) {
+        final JCheckBox checkbox = new JCheckBox(theButtonText);
+        checkbox.setBackground(DARK_GREY);
+        checkbox.setForeground(WHITE);
+        checkbox.setFont(BUTTON_FONT);
+        checkbox.setFocusPainted(false);
+        return checkbox;
+    }
+
+    /**
      * Builds a standard menubar.
      *
      * @param theButtons the buttons to include in the menubar.
      * @return a standard menubar.
      */
-    public static JPanel buildMenubar(final JComponent[] theButtons) {
+    public static JPanel buildMenubar(final JComponent... theButtons) {
         JPanel menubar = new JPanel(new GridLayout(1, theButtons.length));
         menubar.setBackground(MID_GREY);
         for (JComponent button : theButtons) {

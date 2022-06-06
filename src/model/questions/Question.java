@@ -37,15 +37,6 @@ public abstract class Question implements Serializable {
      */
     public abstract boolean checkAnswer(final String theAnswer);
 
-    // public abstract void display() for GUI display
-
-    /**
-     * @return the number of answer choices available.
-     */
-    public int numberOfChoices() {
-        return getAnswers().size();
-    }
-
     /**
      * @return the question query.
      */
@@ -57,18 +48,4 @@ public abstract class Question implements Serializable {
      * @return list of answers for question.
      */
     public abstract List<String> getAnswers();
-
-    /**
-     * @return question and answer choices as string.
-     */
-    @Override
-    public String toString() {
-        StringJoiner sj = new StringJoiner("\n");
-        sj.add(getQuery());
-        sj.add("\n");
-        for (String answer : getAnswers()) {
-            sj.add(answer);
-        }
-        return sj.toString();
-    }
 }

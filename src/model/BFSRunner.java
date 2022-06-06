@@ -15,38 +15,9 @@ import java.util.*;
 public class BFSRunner {
 
     /**
-     * Node contains a reference to a Room and a parent Node.
+     * Empty constructor
      */
-    private static class Node {
-        /**
-         * A room.
-         */
-        private final Room myRoom;
-        /**
-         * The parent node.
-         */
-        private final Node myParent;
-
-        /**
-         * Constructs a Node with no reference to another Node.
-         *
-         * @param theRoom the Room the Node contains.
-         */
-        private Node(final Room theRoom) {
-            this(theRoom, null);
-        }
-
-        /**
-         * Constructs a Node with a reference to another Node.
-         *
-         * @param theRoom the Room the Node contains.
-         * @param theParent another Node.
-         */
-        private Node(final Room theRoom, final Node theParent) {
-            myRoom = theRoom;
-            myParent = theParent;
-        }
-    }
+    private BFSRunner() {}
 
     /**
      * Finds a path from the player's location to the goal location. If a path
@@ -103,6 +74,40 @@ public class BFSRunner {
             iter = iter.myParent;
         }
         return path;
+    }
+
+    /**
+     * Node contains a reference to a Room and a parent Node.
+     */
+    private static class Node {
+        /**
+         * A room.
+         */
+        private final Room myRoom;
+        /**
+         * The parent node.
+         */
+        private final Node myParent;
+
+        /**
+         * Constructs a Node with no reference to another Node.
+         *
+         * @param theRoom the Room the Node contains.
+         */
+        private Node(final Room theRoom) {
+            this(theRoom, null);
+        }
+
+        /**
+         * Constructs a Node with a reference to another Node.
+         *
+         * @param theRoom the Room the Node contains.
+         * @param theParent another Node.
+         */
+        private Node(final Room theRoom, final Node theParent) {
+            myRoom = theRoom;
+            myParent = theParent;
+        }
     }
 }
 
