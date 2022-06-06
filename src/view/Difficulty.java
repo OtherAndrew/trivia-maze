@@ -11,6 +11,9 @@ import static view.AppTheme.*;
 
 public class Difficulty extends JPanel {
 
+    public static final EmptyBorder DIFFICULTY_BUTTON_BORDER =
+            new EmptyBorder(100, 100, 100, 100);
+
     private final JPanel myMenubar;
     private final JPanel myDifficultyPanel;
     private final JPanel myCheatPanel;
@@ -59,7 +62,7 @@ public class Difficulty extends JPanel {
         difficultyLayout.setVgap(7);
         myDifficultyPanel = new JPanel(difficultyLayout);
         myDifficultyPanel.setBackground(MID_GREY);
-        myDifficultyPanel.setBorder(new EmptyBorder(100, 100, 100, 100));
+        myDifficultyPanel.setBorder(DIFFICULTY_BUTTON_BORDER);
 
         myCheatPanel = new JPanel(new GridLayout(1, 2));
         myCheatPanel.add(myMasterKeyCheck);
@@ -70,43 +73,17 @@ public class Difficulty extends JPanel {
         myMenubar = buildMenubar(myHelpButton, myKeyBindingsButton, myAboutButton, myMainMenuButton);
 
         myHelpButton.addActionListener(e -> {
-            try {
-                final String helpText = Files.readString(Path.of(
-                        "resources/help.txt"));
-                JOptionPane.showMessageDialog(this,
-                        helpText, "Help",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            showDialog(Path.of("resources/help.txt"), "Help");
         });
         myKeyBindingsButton.addActionListener(e -> {
-            try {
-                final String helpText = Files.readString(Path.of(
-                        "resources/key_bindings.txt"));
-                JOptionPane.showMessageDialog(this,
-                        helpText, "Key Bindings",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            showDialog(Path.of("resources/key_bindings.txt"), "Key Bindings");
         });
         myAboutButton.addActionListener(e -> {
-            try {
-                final String aboutText = Files.readString(Path.of(
-                        "resources/about.txt"));
-                JOptionPane.showMessageDialog(this,
-                        aboutText, "About Trivia Maze",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        );
+            showDialog(Path.of("resources/about.txt"), "About Trivia Maze");
+        });
         myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
         myMasterKeyCheck.addActionListener(e -> myMasterKey = myMasterKeyCheck.isSelected());
-
         myXRayCheck.addActionListener(e -> myXRay = myXRayCheck.isSelected());
 
         int dim = 4;
@@ -128,5 +105,15 @@ public class Difficulty extends JPanel {
 
         // TODO: dev mode button/buttons (omniscient map, always open doors,
         //  highlighted answers, etc)
+    }
+
+    private void showDialog(final Path theFilePath, final String theTitle) {
+        try {
+            final String aboutText = Files.readString(theFilePath);
+            JOptionPane.showMessageDialog(this, aboutText,
+                    theTitle, JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
