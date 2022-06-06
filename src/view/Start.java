@@ -43,7 +43,7 @@ public class Start extends JPanel {
         myAboutBtn.addActionListener(e -> {
             try {
                 final String aboutText = Files.readString(Path.of(
-                        "resources/aboutMessage.txt"));
+                        "resources/about.txt"));
                 JOptionPane.showMessageDialog(this,
                         aboutText, "About Trivia Maze",
                         JOptionPane.INFORMATION_MESSAGE);

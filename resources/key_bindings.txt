@@ -1,0 +1,9 @@
+- Movement:
+    - WASD
+    - Arrows
+- Submit question (multiple-choice and true/false):
+    - Spacebar
+- Submit question (all answer types):
+    - Enter
+- Escape question:
+    - Escape

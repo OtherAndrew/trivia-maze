@@ -15,6 +15,7 @@ public class Difficulty extends JPanel {
     private final JPanel myDifficultyPanel;
     private final JPanel myCheatPanel;
     private final JButton myHelpButton;
+    private final JButton myKeyBindingsButton;
     private final JButton myAboutButton;
     private final JButton myMainMenuButton;
     private final JButton myEasyButton;
@@ -34,6 +35,7 @@ public class Difficulty extends JPanel {
         myXRay = false;
 
         myHelpButton = buildButton("Help");
+        myKeyBindingsButton = buildButton("Key Bindings");
         myAboutButton = buildButton("About");
         myMainMenuButton = buildButton("Main Menu");
 
@@ -65,14 +67,25 @@ public class Difficulty extends JPanel {
         myCheatPanel.setBackground(DARK_GREY);
         myCheatPanel.setBorder(GENERAL_BORDER);
 
-        myMenubar = buildMenubar(myHelpButton, myAboutButton, myMainMenuButton);
+        myMenubar = buildMenubar(myHelpButton, myKeyBindingsButton, myAboutButton, myMainMenuButton);
 
         myHelpButton.addActionListener(e -> {
             try {
                 final String helpText = Files.readString(Path.of(
-                        "resources/helpMessage.txt"));
+                        "resources/help.txt"));
                 JOptionPane.showMessageDialog(this,
                         helpText, "Help",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        myKeyBindingsButton.addActionListener(e -> {
+            try {
+                final String helpText = Files.readString(Path.of(
+                        "resources/key_bindings.txt"));
+                JOptionPane.showMessageDialog(this,
+                        helpText, "Key Bindings",
                         JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -81,7 +94,7 @@ public class Difficulty extends JPanel {
         myAboutButton.addActionListener(e -> {
             try {
                 final String aboutText = Files.readString(Path.of(
-                        "resources/aboutMessage.txt"));
+                        "resources/about.txt"));
                 JOptionPane.showMessageDialog(this,
                         aboutText, "About Trivia Maze",
                         JOptionPane.INFORMATION_MESSAGE);

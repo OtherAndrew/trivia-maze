@@ -12,5 +12,5 @@
   or by pressing "Q.Load" or "Load."
 
 - Cheats:
-  - Master Key: Pass through doors without needing to answer a question.
-  - X-Ray: See the entire maze.
+    - Master Key: Pass through doors without needing to answer a question.
+    - X-Ray: See the entire maze.
