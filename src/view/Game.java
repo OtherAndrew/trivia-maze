@@ -341,9 +341,7 @@ public class Game {
     private JPanel drawAnswerSubmitPanel() {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
-        mySubmitButton.setBackground(CYAN);
         myCancelButton = buildButton("Cancel");
-        myCancelButton.setBackground(YELLOW);
         mySubmitButton.addActionListener(mySubmitFunction);
         myCancelButton.addActionListener(myCancelFunction);
         myAnswerSubmissionPanel.add(mySubmitButton);
