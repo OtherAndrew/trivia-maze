@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
-import java.util.Optional;
 import java.util.StringJoiner;
 
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -338,7 +337,9 @@ public class Game {
     private JPanel drawAnswerSubmitPanel() {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
+        mySubmitButton.setBackground(BLUE);
         myCancelButton = buildButton("Cancel");
+        myCancelButton.setBackground(YELLOW);
         mySubmitButton.addActionListener(mySubmitFunction);
         myCancelButton.addActionListener(myCancelFunction);
         myAnswerSubmissionPanel.add(mySubmitButton);
