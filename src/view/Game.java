@@ -7,7 +7,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -25,10 +27,14 @@ public class Game {
 
     private boolean myTextInputEnabled;
     private boolean myMovementEnabled;
-
     private boolean mySaveEnabled;
     private Direction myDirection;
     private String myAnswer;
+
+
+    private final Cancel myCancelFunction;
+    private final Submit mySubmitFunction;
+
     private final TriviaMaze myController;
     private final JFrame myFrame;
     private final JPanel myContentPanel;
@@ -52,6 +58,7 @@ public class Game {
     private ButtonGroup myAnswerButtonsGroup;
 
     public Game(final TriviaMaze theController) {
+
         myController = theController;
         theController.registerView(this);
 
@@ -88,6 +95,9 @@ public class Game {
             cards.show(myContentPanel, "game");
         }));
 
+        myCancelFunction = new Cancel();
+        mySubmitFunction = new Submit();
+
         final updateGui north = new updateGui(NORTH);
         final updateGui east = new updateGui(EAST);
         final updateGui south = new updateGui(SOUTH);
@@ -107,16 +117,26 @@ public class Game {
     }
 
     private void addKeyboardBindings(final updateGui... theDirections) {
-        final InputMap iMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        InputMap iMap = (InputMap) UIManager.get("Button.focusInputMap");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "none");
+        iMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         iMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
         iMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
         iMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
         iMap.put(KeyStroke.getKeyStroke("A"), "moveWest");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveNorth");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveEast");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveSouth");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveWest");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "submit");
+        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
         final ActionMap aMap = myGamePanel.getActionMap();
         aMap.put("moveNorth", theDirections[0]);
         aMap.put("moveEast", theDirections[1]);
         aMap.put("moveSouth", theDirections[2]);
         aMap.put("moveWest", theDirections[3]);
+        aMap.put("submit", mySubmitFunction);
+        aMap.put("cancel", myCancelFunction);
     }
 
     private void setMovementEnabled(final boolean theStatus) {
@@ -269,6 +289,8 @@ public class Game {
             String answer = theAnswerArray.get(i);
             myAnswerButtons[i] = buildRadioButton(answer);
             myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0, 1));
+            myAnswerButtons[i].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "submit");
+            myAnswerButtons[i].getActionMap().put("submit", mySubmitFunction);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myResponsePanel.add(myAnswerButtons[i]);
         }
@@ -290,7 +312,6 @@ public class Game {
         myAnswerPrompt.setBackground(DARK_GREY);
         myAnswerPrompt.setForeground(WHITE);
         myAnswerPrompt.setCaretColor(WHITE);
-        myAnswerPrompt.addActionListener(e -> submit());
 
         final JLabel textIndicator = new JLabel("> ");
         textIndicator.setFont(BUTTON_FONT);
@@ -304,18 +325,6 @@ public class Game {
         return myAnswerPanel;
     }
 
-    private void submit() {
-        if (myTextInputEnabled) {
-            myController.respond(myDirection, myAnswerPrompt.getText());
-            myAnswerPrompt.setText("");
-        } else {
-            if (myAnswer != null) {
-                myController.respond(myDirection, myAnswer);
-            }
-            myAnswer = null;
-        }
-    }
-
     private JPanel drawAnswerPanel() {
         myAnswerPanel = new JPanel(new BorderLayout());
         myAnswerPanel.setBorder(ANSWER_PADDING);
@@ -327,8 +336,8 @@ public class Game {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
         myCancelButton = buildButton("Cancel");
-        mySubmitButton.addActionListener(e -> submit());
-        myCancelButton.addActionListener(e -> updateQA());
+        mySubmitButton.addActionListener(mySubmitFunction);
+        myCancelButton.addActionListener(myCancelFunction);
         myAnswerSubmissionPanel.add(mySubmitButton);
         myAnswerSubmissionPanel.add(myCancelButton);
         myAnswerSubmissionPanel.setBorder(ANSWER_PADDING);
@@ -409,6 +418,32 @@ public class Game {
             if (myMovementEnabled) {
                 doMove(myDirection);
             }
+        }
+    }
+
+    private class Submit extends AbstractAction {
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            if (myTextInputEnabled) {
+                myAnswer = myAnswerPrompt.getText();
+                if (!myAnswer.isEmpty()) {
+                    myController.respond(myDirection, myAnswer);
+                    myAnswerPrompt.setText("");
+                }
+            } else {
+                if (myAnswer != null) {
+                    myController.respond(myDirection, myAnswer);
+                }
+            }
+            myAnswer = null;
+        }
+    }
+
+    private class Cancel extends AbstractAction {
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            myAnswer = null;
+            updateQA();
         }
     }
 }
