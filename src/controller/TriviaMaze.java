@@ -49,14 +49,25 @@ public class TriviaMaze {
      *
      * @param theRows       the number of rows in the maze.
      * @param theCols       the number of columns in the maze.
-     * @param theMasterKey  ability to open doors without answering a question.
-     * @param theXRay       reveals entire maze.
      */
-    public void buildMaze(final int theRows, final int theCols,
-                          final boolean theMasterKey, final boolean theXRay) {
-        myMasterKey = theMasterKey;
-        myXRay = theXRay;
+    public void buildMaze(final int theRows, final int theCols) {
         myMaze.build(theRows, theCols);
+    }
+
+    /**
+     *
+     * @param theStatus  ability to open doors without answering a question.
+     */
+    public void setMasterKeyEnabled(final boolean theStatus) {
+        myMasterKey = theStatus;
+    }
+
+    /**
+     *
+     * @param theStatus reveals entire maze.
+     */
+    public void setXRayEnabled(final boolean theStatus) {
+        myXRay = theStatus;
     }
 
     public void move(final Direction theDirection) {

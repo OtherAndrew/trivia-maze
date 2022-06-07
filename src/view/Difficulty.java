@@ -82,17 +82,21 @@ public class Difficulty extends JPanel {
                 "About Trivia Maze"));
         myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
-        myMasterKeyCheck.addActionListener(e -> myMasterKey =
-                myMasterKeyCheck.isSelected());
-        myXRayCheck.addActionListener(e -> myXRay = myXRayCheck.isSelected());
+        myMasterKeyCheck.addActionListener(e -> {
+            myMasterKey = myMasterKeyCheck.isSelected();
+            theGame.getController().setMasterKeyEnabled(myMasterKey);
+        });
+        myXRayCheck.addActionListener(e -> {
+            myXRay = myXRayCheck.isSelected();
+            theGame.getController().setXRayEnabled(myXRay);
+        });
 
         int dim = 4;
         for (JButton button : new JButton[]{myEasyButton, myMediumButton,
                 myHardButton, myInsaneButton}) {
             int finalDim = dim;
             button.addActionListener(e -> {
-                theGame.getController().buildMaze(finalDim, finalDim,
-                        myMasterKey, myXRay);
+                theGame.getController().buildMaze(finalDim, finalDim);
                 theGame.updateMapDisplay(myXRay);
                 theGame.updateQA();
                 theCards.show(theGame.getContentPanel(), "game");
