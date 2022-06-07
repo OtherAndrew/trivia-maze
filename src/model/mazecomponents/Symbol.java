@@ -53,7 +53,7 @@ public class Symbol {
     /**
      * Representation of open door.
      */
-    public static final char OPEN_SYMBOL = 'O';
+    public static final char OPENED_SYMBOL = 'O';
     /**
      * Representation of undiscovered door.
      */

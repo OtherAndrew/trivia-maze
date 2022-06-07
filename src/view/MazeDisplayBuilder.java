@@ -95,7 +95,7 @@ public final class MazeDisplayBuilder {
                 tile.setBackground(PURPLE);
                 tile.add(drawLabel("?"), BorderLayout.CENTER);
             }
-            case OPEN_SYMBOL, VISITED -> tile.setBackground(LIGHT_GREY);
+            case OPENED_SYMBOL, VISITED -> tile.setBackground(LIGHT_GREY);
             case WALL -> tile.setBackground(DARK_GREY);
             case START ->  tile.setBackground(ORANGE);
         }

@@ -6,6 +6,8 @@ import model.mazecomponents.Room;
 import model.mazecomponents.State;
 import org.junit.jupiter.api.*;
 
+import static model.mazecomponents.State.*;
+import static model.mazecomponents.Symbol.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -23,22 +25,6 @@ class DoorTest {
      * The door.
      */
     private Door myDoor;
-    /**
-     * Representation of closed door.
-     */
-    public static final char CLOSED_SYMBOL = '\\';
-    /**
-     * Representation of locked door.
-     */
-    public static final char LOCKED_SYMBOL = 'X';
-    /**
-     * Representation of open door.
-     */
-    public static final char OPEN_SYMBOL = 'O';
-    /**
-     * Representation of undiscovered door.
-     */
-    public static final char UNDISCOVERED_SYMBOL = '#';
 
     @BeforeAll
     void setUp() {
@@ -82,49 +68,49 @@ class DoorTest {
     @Test
     void getStateTest() {
         State result = myDoor.getState();
-        assertSame(State.UNDISCOVERED, result);
+        assertSame(UNDISCOVERED, result);
     }
 
     @Test
     void setStateTest() {
-        myDoor.setState(State.OPENED);
-        assertSame(State.OPENED, myDoor.getState());
-        myDoor.setState(State.CLOSED);
-        assertSame(State.CLOSED, myDoor.getState());
-        myDoor.setState(State.LOCKED);
-        assertSame(State.LOCKED, myDoor.getState());
-        myDoor.setState(State.UNDISCOVERED);
-        assertSame(State.UNDISCOVERED, myDoor.getState());
+        myDoor.setState(OPENED);
+        assertSame(OPENED, myDoor.getState());
+        myDoor.setState(CLOSED);
+        assertSame(CLOSED, myDoor.getState());
+        myDoor.setState(LOCKED);
+        assertSame(LOCKED, myDoor.getState());
+        myDoor.setState(UNDISCOVERED);
+        assertSame(UNDISCOVERED, myDoor.getState());
     }
 
     @Test
     void testToString() {
-        myDoor.setState(State.UNDISCOVERED);
+        myDoor.setState(UNDISCOVERED);
         String result = myDoor.toString();
         assertEquals(String.valueOf(UNDISCOVERED_SYMBOL), result);
-        myDoor.setState(State.CLOSED);
+        myDoor.setState(CLOSED);
         result = myDoor.toString();
         assertEquals(String.valueOf(CLOSED_SYMBOL), result);
-        myDoor.setState(State.OPENED);
+        myDoor.setState(OPENED);
         result = myDoor.toString();
-        assertEquals(String.valueOf(OPEN_SYMBOL), result);
-        myDoor.setState(State.LOCKED);
+        assertEquals(String.valueOf(OPENED_SYMBOL), result);
+        myDoor.setState(LOCKED);
         result = myDoor.toString();
         assertEquals(String.valueOf(LOCKED_SYMBOL), result);
     }
 
     @Test
     void toChar() {
-        myDoor.setState(State.UNDISCOVERED);
+        myDoor.setState(UNDISCOVERED);
         char result = myDoor.toChar();
         assertEquals(UNDISCOVERED_SYMBOL, result);
-        myDoor.setState(State.CLOSED);
+        myDoor.setState(CLOSED);
         result = myDoor.toChar();
         assertEquals(CLOSED_SYMBOL, result);
-        myDoor.setState(State.OPENED);
+        myDoor.setState(OPENED);
         result = myDoor.toChar();
-        assertEquals(OPEN_SYMBOL, result);
-        myDoor.setState(State.LOCKED);
+        assertEquals(OPENED_SYMBOL, result);
+        myDoor.setState(LOCKED);
         result = myDoor.toChar();
         assertEquals(LOCKED_SYMBOL, result);
     }

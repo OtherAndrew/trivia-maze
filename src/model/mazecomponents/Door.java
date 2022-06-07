@@ -109,7 +109,7 @@ public class Door implements Serializable {
         switch (myState) {
             case CLOSED -> mySymbol = CLOSED_SYMBOL;
             case LOCKED -> mySymbol = LOCKED_SYMBOL;
-            case OPENED -> mySymbol = OPEN_SYMBOL;
+            case OPENED -> mySymbol = OPENED_SYMBOL;
             case UNDISCOVERED -> mySymbol = UNDISCOVERED_SYMBOL;
         }
     }
