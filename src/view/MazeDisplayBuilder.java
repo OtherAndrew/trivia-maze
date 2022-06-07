@@ -5,12 +5,7 @@ import controller.TriviaMaze;
 import javax.swing.*;
 import java.awt.*;
 
-import static model.Maze.*;
-import static model.Maze.START_SYMBOL;
-import static model.mazecomponents.Door.*;
-import static model.mazecomponents.Door.OPEN_SYMBOL;
-import static model.mazecomponents.Room.UNVISITED_SYMBOL;
-import static model.mazecomponents.Room.VISITED_SYMBOL;
+import static model.mazecomponents.Symbol.*;
 import static view.AppTheme.*;
 
 public final class MazeDisplayBuilder {
@@ -69,7 +64,7 @@ public final class MazeDisplayBuilder {
                                         final boolean theOmniscient) {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
-            case UNDISCOVERED_SYMBOL, UNVISITED_SYMBOL -> {
+            case UNDISCOVERED_SYMBOL, UNVISITED -> {
                 if (theOmniscient) tile.setBackground(MID_GREY);
                 else tile.setBackground(DARK_GREY);
             }
@@ -80,15 +75,15 @@ public final class MazeDisplayBuilder {
                 }
                 else tile.setBackground(DARK_GREY);
             }
-            case PLAYER_SYMBOL -> {
+            case PLAYER -> {
                 tile.setBackground(LIGHT_GREY);
                 tile.add(drawLabel("[]"), BorderLayout.CENTER);
             }
-            case PLAYER_AT_START_SYMBOL -> {
+            case PLAYER_AT_START -> {
                 tile.setBackground(ORANGE);
                 tile.add(drawLabel("[]"), BorderLayout.CENTER);
             }
-            case PLAYER_AT_GOAL_SYMBOL -> {
+            case PLAYER_AT_GOAL -> {
                 tile.setBackground(GREEN);
                 tile.add(drawLabel("[]"), BorderLayout.CENTER);
             }
@@ -100,9 +95,9 @@ public final class MazeDisplayBuilder {
                 tile.setBackground(PURPLE);
                 tile.add(drawLabel("?"), BorderLayout.CENTER);
             }
-            case OPEN_SYMBOL, VISITED_SYMBOL -> tile.setBackground(LIGHT_GREY);
-            case WALL_SYMBOL -> tile.setBackground(DARK_GREY);
-            case START_SYMBOL ->  tile.setBackground(ORANGE);
+            case OPEN_SYMBOL, VISITED -> tile.setBackground(LIGHT_GREY);
+            case WALL -> tile.setBackground(DARK_GREY);
+            case START ->  tile.setBackground(ORANGE);
         }
         return tile;
     }

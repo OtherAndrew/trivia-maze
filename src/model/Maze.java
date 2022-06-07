@@ -13,6 +13,7 @@ import java.util.*;
 
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.*;
+import static model.mazecomponents.Symbol.*;
 
 /**
  * Maze is a class that represents a maze with doors.
@@ -21,30 +22,6 @@ public class Maze implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6708702333356795697L;
-    /**
-     * Represents the goal position.
-     */
-    public static final char GOAL = '!';
-    /**
-     * Represents the player position.
-     */
-    public static final char PLAYER_SYMBOL = '@';
-    /**
-     * Represents the player at goal position.
-     */
-    public static final char PLAYER_AT_GOAL_SYMBOL = 'G';
-    /**
-     * Represents the player at start position.
-     */
-    public static final char PLAYER_AT_START_SYMBOL = 'S';
-    /**
-     * Represents the start position.
-     */
-    public static final char START_SYMBOL = '*';
-    /**
-     * Represents maze walls.
-     */
-    public static final char WALL_SYMBOL = '█';
 
     private TriviaMaze myController;
     /**
@@ -215,7 +192,7 @@ public class Maze implements Serializable {
         if (doorState == CLOSED || doorState == LOCKED) {
             final Question question = getQuestion(theDirection);
             myController.updateQA(question.getQuery(), question.getAnswers());
-        } else if (doorState == OPEN) {
+        } else if (doorState == OPENED) {
             move(theDirection);
         } else {
             myController.updateQA();
@@ -251,7 +228,7 @@ public class Maze implements Serializable {
                         final String theResponse) {
         if (myPlayerLocation.getDoorState(theDirection) == CLOSED) {
             if (getQuestion(theDirection).checkAnswer(theResponse.toLowerCase().trim())) {
-                myPlayerLocation.setDoorState(theDirection, OPEN);
+                myPlayerLocation.setDoorState(theDirection, OPENED);
                 move(theDirection);
             } else {
                 myPlayerLocation.setDoorState(theDirection, LOCKED);
@@ -273,20 +250,11 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Checks if player is in the start room.
-     *
-     * @return if the player is at the start room.
-     */
-    public boolean atStart() {
-        return atRoom(myStartLocation);
-    }
-
-    /**
      * Checks if player has reached the goal room.
      */
     public void atGoal() {
-        if (atRoom(myGoalLocation)) { // delete atRoom and atStart if not needed
-            endGame(true);
+        if (myPlayerLocation == myGoalLocation) {
+            myController.endGame(true);
         }
     }
 
@@ -296,22 +264,8 @@ public class Maze implements Serializable {
      */
     public void gameLoss() {
         if (BFSRunner.findPath(this).isEmpty()) {
-            endGame(false);
+            myController.endGame(false);
         }
-    }
-
-    /**
-     * Determines if the player is in the specified room.
-     *
-     * @param theRoom the room to look in.
-     * @return if the player is in the room.
-     */
-    public boolean atRoom(final Room theRoom) {
-        return myPlayerLocation == theRoom;
-    }
-
-    private void endGame(final boolean theWinStatus) {
-        myController.endGame(theWinStatus);
     }
 
     /**
@@ -321,13 +275,6 @@ public class Maze implements Serializable {
      */
     public Room getGoalLocation() {
         return myGoalLocation;
-    }
-
-    /**
-     * Gets the room where the start is located.
-     */
-    public Room getStartLocation() {
-        return myStartLocation;
     }
 
     /**
@@ -357,15 +304,6 @@ public class Maze implements Serializable {
             }
         }
         return numVisited;
-    }
-
-    /**
-     * Determines the number of rooms visited by the player.
-     *
-     * @return the number of rooms visited by the player.
-     */
-    public int getRoomVisitedNum() {
-        return getRoomVisitedNum(true);
     }
 
     /**
@@ -409,16 +347,16 @@ public class Maze implements Serializable {
                 final Room currentRoom = myRooms[mazeRow][mazeCol];
                 if (currentRoom.equals(myPlayerLocation)) {
                     if (currentRoom.equals(myStartLocation)) {
-                        out[row][col] = PLAYER_AT_START_SYMBOL;
+                        out[row][col] = PLAYER_AT_START;
                     } else if (currentRoom.equals(myGoalLocation)) {
-                        out[row][col] = PLAYER_AT_GOAL_SYMBOL;
+                        out[row][col] = PLAYER_AT_GOAL;
                     } else {
-                        out[row][col] = PLAYER_SYMBOL;
+                        out[row][col] = PLAYER;
                     }
                 } else if (currentRoom.equals(myGoalLocation)) {
                     out[row][col] = GOAL;
                 } else if (currentRoom.equals(myStartLocation)) {
-                    out[row][col] = START_SYMBOL;
+                    out[row][col] = START;
                 } else {
                     out[row][col] = currentRoom.toChar();
                 }
@@ -443,7 +381,7 @@ public class Maze implements Serializable {
     private char[][] generateWallMatrix(final int theHeight, final int theWidth) {
         final char[][] mazeFrame = new char[theHeight * 2 + 1][theWidth * 2 + 1];
         for (char[] row : mazeFrame) {
-            Arrays.fill(row, WALL_SYMBOL);
+            Arrays.fill(row, WALL);
         }
         return mazeFrame;
     }
@@ -455,56 +393,11 @@ public class Maze implements Serializable {
      */
     @Override
     public String toString() {
-        return concatenateMatrix(toCharArray());
-        // merge if playerRoomToString not needed
-    }
-
-    /**
-     * Gets a string concatenation of the input matrix.
-     *
-     * @param theMatrix a character matrix.
-     * @return the concatenation of the input matrix.
-     */
-    private String concatenateMatrix(final char[][] theMatrix) {
         final StringJoiner sj = new StringJoiner("\n");
-        for (char[] row : theMatrix) {
+        for (char[] row : toCharArray()) {
             sj.add(String.valueOf(row));
         }
         return sj.toString();
-    }
-
-    /**
-     * Returns a representation of the Room the player is in along with the
-     * doors and walls immediately surrounding it.
-     *
-     * @return a representation of the player room.
-     */
-    public char[][] playerRoomToCharArray() {
-        final char[][] out = generateWallMatrix(1, 1);
-        out[1][1] = PLAYER_SYMBOL;
-        if (myPlayerLocation.hasDoor(NORTH)) {
-            out[0][1] = myPlayerLocation.getDoor(NORTH).toChar();
-        }
-        if (myPlayerLocation.hasDoor(SOUTH)) {
-            out[2][1] = myPlayerLocation.getDoor(SOUTH).toChar();
-        }
-        if (myPlayerLocation.hasDoor(EAST)) {
-            out[1][2] = myPlayerLocation.getDoor(EAST).toChar();
-        }
-        if (myPlayerLocation.hasDoor(WEST)) {
-            out[1][0] = myPlayerLocation.getDoor(WEST).toChar();
-        }
-        return out;
-    }
-
-    /**
-     * Returns a representation of the Room the player is in along with the
-     * doors and walls immediately surrounding it.
-     *
-     * @return a representation of the player room.
-     */
-    public String playerRoomToString() {
-        return concatenateMatrix(playerRoomToCharArray());
     }
 
     public char[][] generateDummy() {

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static model.mazecomponents.State.*;
+import static model.mazecomponents.Symbol.*;
 
 /**
  * Room is a class that represents a space in the maze that the player can
@@ -17,14 +18,7 @@ public class Room implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 7855965211246841891L;
-    /**
-     * Representation for unvisited room.
-     */
-    public static final char UNVISITED_SYMBOL = ' ';
-    /**
-     * Representation for visited room.
-     */
-    public static final char VISITED_SYMBOL = '.';
+
     /**
      * Row position.
      */
@@ -61,7 +55,7 @@ public class Room implements Serializable {
         myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
-        mySymbol = UNVISITED_SYMBOL;
+        mySymbol = UNVISITED;
     }
 
     /**
@@ -164,7 +158,7 @@ public class Room implements Serializable {
      */
     public void visit() {
         myVisited = true;
-        mySymbol = VISITED_SYMBOL;
+        mySymbol = VISITED;
         for (Door door : myDoors.values()) {
             if (door.getState() == UNDISCOVERED) {
                 door.setState(CLOSED);

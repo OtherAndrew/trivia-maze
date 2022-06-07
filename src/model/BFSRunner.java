@@ -37,16 +37,14 @@ public class BFSRunner {
             final Node cur = toVisit.remove();
             final Room curRoom = cur.myRoom;
 
+            if (curRoom == theMaze.getGoalLocation()) return tracePath(cur);
+
             if (visited.containsKey(cur)) continue;
 
-            if (curRoom.getDoorCount() == 1
-                    && curRoom != theMaze.getPlayerLocation()
-                    && curRoom != theMaze.getGoalLocation()) {
+            if (curRoom.getDoorCount() == 1 && curRoom != theMaze.getPlayerLocation()) {
                 visited.put(cur, curRoom);
                 continue;
             }
-
-            if (curRoom == theMaze.getGoalLocation()) return tracePath(cur);
 
             for (Door door : curRoom.getAllDoors()) {
                 if (door.getState() != State.LOCKED) {

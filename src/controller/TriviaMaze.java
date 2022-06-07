@@ -31,20 +31,9 @@ public class TriviaMaze {
      */
     private boolean myXRay;
 
-    /**
-     * Creates TriviaMaze
-     *
-     * @param theMasterKey  ability to open doors without answering a question.
-     * @param theXRay       reveals entire maze.
-     */
-    public TriviaMaze(final boolean theMasterKey,
-                      final boolean theXRay) {
-        myMasterKey = theMasterKey;
-        myXRay = theXRay;
-    }
-
     public TriviaMaze() {
-        this(false, false);
+        myMasterKey = false;
+        myXRay = false;
     }
 
     public void registerView(final Game theGUI) {
@@ -55,6 +44,14 @@ public class TriviaMaze {
         myMaze = theMaze;
     }
 
+    /**
+     * Builds a new maze.
+     *
+     * @param theRows       the number of rows in the maze.
+     * @param theCols       the number of columns in the maze.
+     * @param theMasterKey  ability to open doors without answering a question.
+     * @param theXRay       reveals entire maze.
+     */
     public void buildMaze(final int theRows, final int theCols,
                           final boolean theMasterKey, final boolean theXRay) {
         myMasterKey = theMasterKey;
@@ -64,17 +61,13 @@ public class TriviaMaze {
 
     public void move(final Direction theDirection) {
         if (myMasterKey) {
-            myMaze.getPlayerLocation().setDoorState(theDirection, State.OPEN);
+            myMaze.getPlayerLocation().setDoorState(theDirection, State.OPENED);
         }
         myMaze.attemptMove(theDirection);
     }
 
     public void respond(final Direction theDirection, final String myAnswer) {
         myMaze.respond(theDirection, myAnswer);
-    }
-
-    public char[][] getMazeCharArray() {
-        return myMaze.toCharArray();
     }
 
     public int getVisitCount(final boolean theVisited) {
@@ -87,6 +80,10 @@ public class TriviaMaze {
 
     public void endGame(final boolean theWinStatus) {
         myGUI.displayEndGame(theWinStatus);
+    }
+
+    public char[][] getMazeCharArray() {
+        return myMaze.toCharArray();
     }
 
     public char[][] getDummyCharArray() {

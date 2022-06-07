@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 import static model.mazecomponents.State.*;
+import static model.mazecomponents.Symbol.*;
 
 /**
  * Door is a class that represents a maze door. Door connects two Rooms and
@@ -13,22 +14,7 @@ public class Door implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -6572203977734228079L;
-    /**
-     * Representation of closed door.
-     */
-    public static final char CLOSED_SYMBOL = '\\';
-    /**
-     * Representation of locked door.
-     */
-    public static final char LOCKED_SYMBOL = 'X';
-    /**
-     * Representation of open door.
-     */
-    public static final char OPEN_SYMBOL = 'O';
-    /**
-     * Representation of undiscovered door.
-     */
-    public static final char UNDISCOVERED_SYMBOL = '#';
+
     /**
      * The first room the door connects to.
      */
@@ -123,7 +109,7 @@ public class Door implements Serializable {
         switch (myState) {
             case CLOSED -> mySymbol = CLOSED_SYMBOL;
             case LOCKED -> mySymbol = LOCKED_SYMBOL;
-            case OPEN -> mySymbol = OPEN_SYMBOL;
+            case OPENED -> mySymbol = OPEN_SYMBOL;
             case UNDISCOVERED -> mySymbol = UNDISCOVERED_SYMBOL;
         }
     }

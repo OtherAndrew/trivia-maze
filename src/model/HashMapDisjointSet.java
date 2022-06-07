@@ -61,11 +61,10 @@ public class HashMapDisjointSet {
      * @param theRoom2 item belonging to second group.
      */
     public void join(final Room theRoom1, final Room theRoom2) {
-        Room group1 = find(theRoom1);
-        Room group2 = find(theRoom2);
+        final Room group1 = find(theRoom1);
+        final Room group2 = find(theRoom2);
         --mySize;
-        if (mySizes.get(group1) > mySizes.get(group2))
-            joinHelper(group1, group2);
+        if (mySizes.get(group1) > mySizes.get(group2)) joinHelper(group1, group2);
         else joinHelper(group2, group1);
     }
 
@@ -77,8 +76,7 @@ public class HashMapDisjointSet {
      */
     private void joinHelper(final Room theLarger, final Room theSmaller) {
         myMap.replace(theSmaller, theLarger);
-        Integer newSize = mySizes.get(theLarger) + mySizes.get(theSmaller);
-        mySizes.replace(theLarger, newSize);
+        mySizes.replace(theLarger, mySizes.get(theLarger) + mySizes.get(theSmaller));
     }
 
     /**

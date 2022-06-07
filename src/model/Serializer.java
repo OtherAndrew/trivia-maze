@@ -23,8 +23,7 @@ public class Serializer {
 
     public static void save(final Memento theMaze, final File theSaveFile) {
         try {
-            final File saveFile = checkExtension(theSaveFile);
-            final FileOutputStream file = new FileOutputStream(saveFile);
+            final FileOutputStream file = new FileOutputStream(checkExtension(theSaveFile));
             final ObjectOutputStream out = new ObjectOutputStream(file);
             out.writeObject(theMaze);
             out.close();

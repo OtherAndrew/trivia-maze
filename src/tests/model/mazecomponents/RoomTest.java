@@ -11,6 +11,8 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.util.Random;
 
+import static model.mazecomponents.Symbol.UNVISITED;
+import static model.mazecomponents.Symbol.VISITED;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -149,15 +151,15 @@ class RoomTest {
 
     @Test
     void testToString() {
-        assertEquals(String.valueOf(Room.UNVISITED_SYMBOL), myTestRoom.toString());
+        assertEquals(String.valueOf(UNVISITED), myTestRoom.toString());
         myTestRoom.visit();
-        assertEquals(String.valueOf(Room.VISITED_SYMBOL), myTestRoom.toString());
+        assertEquals(String.valueOf(VISITED), myTestRoom.toString());
     }
 
     @Test
     void toChar() {
-        assertEquals(Room.UNVISITED_SYMBOL, myTestRoom.toChar());
+        assertEquals(UNVISITED, myTestRoom.toChar());
         myTestRoom.visit();
-        assertEquals(Room.VISITED_SYMBOL, myTestRoom.toChar());
+        assertEquals(VISITED, myTestRoom.toChar());
     }
 }

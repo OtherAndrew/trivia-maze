@@ -11,10 +11,6 @@ public class QuestionFactory {
     private Statement myStatement;
 
     public QuestionFactory() {
-        setUp();
-    }
-
-    private void setUp() {
         try {
             myConnection = DriverManager.getConnection(
                     "jdbc:sqlite::resource:Questions.db");

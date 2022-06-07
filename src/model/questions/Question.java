@@ -3,7 +3,6 @@ package model.questions;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.StringJoiner;
 
 /**
  * Question is a class that represents a question and its answer choices,

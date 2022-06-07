@@ -87,8 +87,8 @@ class DoorTest {
 
     @Test
     void setStateTest() {
-        myDoor.setState(State.OPEN);
-        assertSame(State.OPEN, myDoor.getState());
+        myDoor.setState(State.OPENED);
+        assertSame(State.OPENED, myDoor.getState());
         myDoor.setState(State.CLOSED);
         assertSame(State.CLOSED, myDoor.getState());
         myDoor.setState(State.LOCKED);
@@ -105,7 +105,7 @@ class DoorTest {
         myDoor.setState(State.CLOSED);
         result = myDoor.toString();
         assertEquals(String.valueOf(CLOSED_SYMBOL), result);
-        myDoor.setState(State.OPEN);
+        myDoor.setState(State.OPENED);
         result = myDoor.toString();
         assertEquals(String.valueOf(OPEN_SYMBOL), result);
         myDoor.setState(State.LOCKED);
@@ -121,7 +121,7 @@ class DoorTest {
         myDoor.setState(State.CLOSED);
         result = myDoor.toChar();
         assertEquals(CLOSED_SYMBOL, result);
-        myDoor.setState(State.OPEN);
+        myDoor.setState(State.OPENED);
         result = myDoor.toChar();
         assertEquals(OPEN_SYMBOL, result);
         myDoor.setState(State.LOCKED);

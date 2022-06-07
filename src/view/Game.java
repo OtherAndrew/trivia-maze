@@ -73,9 +73,7 @@ public class Game {
         myContentPanel.add(new Difficulty(this, cards), "difficulty");
         myContentPanel.add(new Start(this, cards), "start");
 
-        myNewGameButton.addActionListener(e -> {
-            cards.show(myContentPanel, "difficulty");
-        });
+        myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
         myQuickSaveButton.addActionListener(e -> {
             if (mySaveEnabled) {
                 myController.quickSave();
@@ -166,7 +164,7 @@ public class Game {
         sj.add("Rooms visited: " + myController.getVisitCount(true));
         sj.add("Rooms not visited: " + myController.getVisitCount(false));
         sj.add("");
-        sj.add("Opened doors: " + myController.getMazeDoorCount(OPEN));
+        sj.add("Opened doors: " + myController.getMazeDoorCount(OPENED));
         sj.add("Closed doors: " + myController.getMazeDoorCount(CLOSED));
         sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
         sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
