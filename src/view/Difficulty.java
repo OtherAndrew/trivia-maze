@@ -60,13 +60,13 @@ public class Difficulty extends JPanel {
         myMasterKeyCheck = buildCheckBox("Master Key");
         myXRayCheck = buildCheckBox("X-Ray");
 
-        final GridLayout difficultyLayout = new GridLayout(4, 1);
+        final GridLayout difficultyLayout = new GridLayout(5, 1);
         difficultyLayout.setVgap(7);
         myDifficultyPanel = new JPanel(difficultyLayout);
         myDifficultyPanel.setBackground(MID_GREY);
         myDifficultyPanel.setBorder(DIFFICULTY_BUTTON_BORDER);
 
-        myCheatPanel = new JPanel(new FlowLayout());
+        myCheatPanel = new JPanel(new GridLayout(1, 2));
         myCheatPanel.add(myMasterKeyCheck);
         myCheatPanel.add(myXRayCheck);
         myCheatPanel.setBackground(DARK_GREY);
@@ -104,10 +104,10 @@ public class Difficulty extends JPanel {
             dim += 2;
             myDifficultyPanel.add(button);
         }
+        myDifficultyPanel.add(myCheatPanel);
 
         add(myMenubar, BorderLayout.NORTH);
         add(myDifficultyPanel, BorderLayout.CENTER);
-        add(myCheatPanel, BorderLayout.SOUTH);
     }
 
     private void showDialog(final String theFilePath, final String theTitle) {
