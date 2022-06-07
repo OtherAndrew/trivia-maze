@@ -30,7 +30,6 @@ public class Game {
     private Direction myDirection;
     private String myAnswer;
 
-
     private final Cancel myCancelFunction;
     private final Submit mySubmitFunction;
 
@@ -57,7 +56,6 @@ public class Game {
     private ButtonGroup myAnswerButtonsGroup;
 
     public Game(final TriviaMaze theController) {
-
         myController = theController;
         theController.registerView(this);
 
@@ -86,10 +84,10 @@ public class Game {
             }
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
-                FileAccessor.getInstance().saveFile().ifPresent(myController::save);
+                FileAccessor.getInstance().saveFile(myContentPanel).ifPresent(myController::save);
             }
         });
-        myLoadButton.addActionListener(e -> FileAccessor.getInstance().loadFile().ifPresent(file -> {
+        myLoadButton.addActionListener(e -> FileAccessor.getInstance().loadFile(myContentPanel).ifPresent(file -> {
             myController.load(file);
             updateQA();
             cards.show(myContentPanel, "game");
@@ -386,9 +384,9 @@ public class Game {
         myFrame.repaint();
     }
 
-    private void update(final JPanel theContainer, final JPanel theReplacee,
+    private void update(final JPanel theContainer, final JPanel theReplaced,
                         final JPanel theReplacer) {
-        theContainer.remove(theReplacee);
+        theContainer.remove(theReplaced);
         theContainer.add(theReplacer, BorderLayout.CENTER);
         myFrame.revalidate();
         myFrame.repaint();

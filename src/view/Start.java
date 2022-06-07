@@ -37,26 +37,25 @@ public class Start extends JPanel {
                 theCards.show(theGame.getContentPanel(), "game");
             }
         });
-        myLoadGameBtn.addActionListener(e -> FileAccessor.getInstance().loadFile().ifPresent(file -> {
+        myLoadGameBtn.addActionListener(e -> FileAccessor.getInstance().loadFile(this).ifPresent(file -> {
             theGame.getController().load(file);
             theGame.updateQA();
             theCards.show(theGame.getContentPanel(), "game");
         }));
         myAboutBtn.addActionListener(e -> {
             try (final InputStream in = getClass().getResourceAsStream("/about.txt");
-                 final BufferedReader br = new BufferedReader(
-                         new InputStreamReader(Objects.requireNonNull(in)))) {
+                 final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
                 JOptionPane.showMessageDialog(this,
                         br.lines().collect(Collectors.joining("\n")),
                         "About Trivia Maze", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 ex.printStackTrace();
             }
         });
         myQuitBtn.addActionListener(e -> System.exit(1));
 
-        myMenuBar = buildMenubar(myNewGameBtn, myResumeBtn,
-                myLoadGameBtn, myAboutBtn, myQuitBtn);
+        myMenuBar = buildMenubar(myNewGameBtn, myResumeBtn, myLoadGameBtn,
+                myAboutBtn, myQuitBtn);
 
         add(myMenuBar, BorderLayout.NORTH);
         add(buildDummyMapDisplay(theGame.getController()), BorderLayout.CENTER);

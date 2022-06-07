@@ -3,7 +3,7 @@ package model.mazecomponents;
 /**
  * Data class containing symbology for representation.
  */
-public final class Symbol {
+public class Symbol {
 
     // Maze
     /**

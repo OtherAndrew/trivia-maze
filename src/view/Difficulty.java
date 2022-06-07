@@ -60,33 +60,39 @@ public class Difficulty extends JPanel {
         myMasterKeyCheck = buildCheckBox("Master Key");
         myXRayCheck = buildCheckBox("X-Ray");
 
-        final GridLayout difficultyLayout = new GridLayout(5, 1);
+        final GridLayout difficultyLayout = new GridLayout(4, 1);
         difficultyLayout.setVgap(7);
         myDifficultyPanel = new JPanel(difficultyLayout);
         myDifficultyPanel.setBackground(MID_GREY);
         myDifficultyPanel.setBorder(DIFFICULTY_BUTTON_BORDER);
 
-        myCheatPanel = new JPanel(new GridLayout(1, 2));
+        myCheatPanel = new JPanel(new FlowLayout());
         myCheatPanel.add(myMasterKeyCheck);
         myCheatPanel.add(myXRayCheck);
         myCheatPanel.setBackground(DARK_GREY);
         myCheatPanel.setBorder(GENERAL_BORDER);
 
-        myMenubar = buildMenubar(myMainMenuButton, myHelpButton, myKeyBindingsButton, myAboutButton);
+        myMenubar = buildMenubar(myMainMenuButton, myHelpButton,
+                myKeyBindingsButton, myAboutButton);
 
         myHelpButton.addActionListener(e -> showDialog("/help.txt", "Help"));
-        myKeyBindingsButton.addActionListener(e -> showDialog("/key_bindings.txt", "Key Bindings"));
-        myAboutButton.addActionListener(e -> showDialog("/about.txt", "About Trivia Maze"));
+        myKeyBindingsButton.addActionListener(e -> showDialog("/key_bindings.txt",
+                "Key Bindings"));
+        myAboutButton.addActionListener(e -> showDialog("/about.txt",
+                "About Trivia Maze"));
         myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
 
-        myMasterKeyCheck.addActionListener(e -> myMasterKey = myMasterKeyCheck.isSelected());
+        myMasterKeyCheck.addActionListener(e -> myMasterKey =
+                myMasterKeyCheck.isSelected());
         myXRayCheck.addActionListener(e -> myXRay = myXRayCheck.isSelected());
 
         int dim = 4;
-        for (JButton button : new JButton[]{myEasyButton, myMediumButton, myHardButton, myInsaneButton}) {
+        for (JButton button : new JButton[]{myEasyButton, myMediumButton,
+                myHardButton, myInsaneButton}) {
             int finalDim = dim;
             button.addActionListener(e -> {
-                theGame.getController().buildMaze(finalDim, finalDim, myMasterKey, myXRay);
+                theGame.getController().buildMaze(finalDim, finalDim,
+                        myMasterKey, myXRay);
                 theGame.updateMapDisplay(myXRay);
                 theGame.updateQA();
                 theCards.show(theGame.getContentPanel(), "game");
@@ -94,23 +100,19 @@ public class Difficulty extends JPanel {
             dim += 2;
             myDifficultyPanel.add(button);
         }
-        myDifficultyPanel.add(myCheatPanel);
 
         add(myMenubar, BorderLayout.NORTH);
         add(myDifficultyPanel, BorderLayout.CENTER);
-
-        // TODO: dev mode button/buttons (omniscient map, always open doors,
-        //  highlighted answers, etc)
+        add(myCheatPanel, BorderLayout.SOUTH);
     }
 
     private void showDialog(final String theFilePath, final String theTitle) {
         try (final InputStream in = getClass().getResourceAsStream(theFilePath);
-             final BufferedReader br = new BufferedReader(
-                     new InputStreamReader(Objects.requireNonNull(in)))) {
+             final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             JOptionPane.showMessageDialog(this,
-                    br.lines().collect(Collectors.joining("\n")),
-                    theTitle, JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
+                    br.lines().collect(Collectors.joining("\n")), theTitle,
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (final Exception ex) {
             ex.printStackTrace();
         }
     }

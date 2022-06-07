@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * AppTheme defines the shared GUI elements for every GUI class.
  * Colors are pulled from the Dracula text editor color scheme by Zeno Rocha
- * (https://draculatheme.com/contribute).
+ * (<a href="https://draculatheme.com/contribute">...</a>).
  */
 public final class AppTheme {
     public static final Color RED = Color.decode("#ff5555");

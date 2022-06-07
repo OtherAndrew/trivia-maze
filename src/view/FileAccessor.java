@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
 import java.io.File;
 import java.util.Optional;
 
@@ -27,19 +28,19 @@ public class FileAccessor {
         return Optional.ofNullable(uniqueInstance).orElse(uniqueInstance = new FileAccessor());
     }
 
-    Optional<File> loadFile() {
+    Optional<File> loadFile(final Component theParent) {
         myChooser.setDialogTitle("Load a previous game");
         File myLoadFile = null;
-        if (myChooser.showDialog(null, "Resume") == JFileChooser.APPROVE_OPTION) {
+        if (myChooser.showDialog(theParent, "Resume") == JFileChooser.APPROVE_OPTION) {
             myLoadFile = myChooser.getSelectedFile();
         }
         return Optional.ofNullable(myLoadFile);
     }
 
-    Optional<File> saveFile() {
+    Optional<File> saveFile(final Component theParent) {
         myChooser.setDialogTitle("Save your game");
         File mySaveFile = null;
-        if (myChooser.showDialog(null, "Save") == JFileChooser.APPROVE_OPTION) {
+        if (myChooser.showDialog(theParent, "Save") == JFileChooser.APPROVE_OPTION) {
             mySaveFile = myChooser.getSelectedFile();
         }
         return Optional.ofNullable(mySaveFile);
