@@ -64,6 +64,10 @@ public final class MazeDisplayBuilder {
                                         final boolean theOmniscient) {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
+            case PATH -> {
+                tile.setBackground(Color.MAGENTA);
+                tile.add(drawLabel("+"), BorderLayout.CENTER);
+            }
             case UNDISCOVERED_SYMBOL, UNVISITED -> {
                 if (theOmniscient) tile.setBackground(MID_GREY);
                 else tile.setBackground(DARK_GREY);

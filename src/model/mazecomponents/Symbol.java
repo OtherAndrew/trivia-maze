@@ -40,6 +40,10 @@ public class Symbol {
      * Representation for visited room.
      */
     public static final char VISITED = '.';
+    /**
+     * Representation for a room in the path to goal position.
+     */
+    public static final char PATH = '+';
 
     // Door
     /**
