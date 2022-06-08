@@ -424,8 +424,8 @@ public class Maze implements Serializable {
     }
 
     public void save(final File theSaveFile) {
-        Serializer.save(new Memento(myRooms, myQuestionMap, myPlayerLocation,
-                myGoalLocation, myStartLocation), theSaveFile);
+        Serializer.save(new Memento(myRooms, myPath, myQuestionMap,
+                myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
     }
 
     public boolean load() {
@@ -445,6 +445,7 @@ public class Maze implements Serializable {
 
     private void restore(final Memento theMemento) {
         myRooms = theMemento.mySavedRooms;
+        myPath = theMemento.mySavedPath;
         myHeight = myRooms.length;
         myWidth = myRooms[0].length;
         myQuestionMap = theMemento.mySavedQuestionMap;
@@ -463,6 +464,10 @@ public class Maze implements Serializable {
          */
         private final Room[][] mySavedRooms;
         /**
+         * The path to the goal location.
+         */
+        private final List<Room> mySavedPath;
+        /**
          * Doors with corresponding question.
          */
         private final Map<Door, Question> mySavedQuestionMap;
@@ -479,12 +484,13 @@ public class Maze implements Serializable {
          */
         private final Room mySavedStartLocation;
 
-        private Memento(final Room[][] theRooms,
+        private Memento(final Room[][] theRooms, final List<Room> thePath,
                         final Map<Door, Question> theQuestionMap,
                         final Room thePlayerLocation,
                         final Room theGoalLocation,
                         final Room theStartLocation) {
             mySavedRooms = theRooms;
+            mySavedPath = thePath;
             mySavedQuestionMap = theQuestionMap;
             mySavedPlayerLocation = thePlayerLocation;
             mySavedGoalLocation = theGoalLocation;
