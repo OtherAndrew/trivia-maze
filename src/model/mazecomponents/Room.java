@@ -176,9 +176,7 @@ public class Room implements Serializable {
     }
 
     public void setPathSymbol() {
-        if (!myVisited) {
-            mySymbol = PATH;
-        }
+        if (!myVisited) mySymbol = PATH;
     }
 
     /**

@@ -114,6 +114,10 @@ public class Door implements Serializable {
         }
     }
 
+    public void setPathSymbol() {
+        if (mySymbol == UNDISCOVERED_SYMBOL) mySymbol = PATH;
+    }
+
     /**
      * Returns the String representation of this door.
      *

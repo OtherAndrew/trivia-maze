@@ -39,7 +39,7 @@ public class Maze implements Serializable {
     /**
      * The rooms in the path to the goal location.
      */
-    private List<Room> myPath;
+    private Path myPath;
     /**
      * Doors with corresponding question.
      */
@@ -86,7 +86,7 @@ public class Maze implements Serializable {
         myPlayerLocation = myStartLocation;
         myGoalLocation = chooseExit();
         generateMaze(generatePossibleDoors());
-        myPath = BFSRunner.findPath(this);
+        BFSRunner.findPath(this).ifPresent(path -> myPath = path);
         myPlayerLocation.visit();
     }
 
@@ -270,9 +270,7 @@ public class Maze implements Serializable {
      */
     public void gameLoss() {
         if (BFSRunner.findPath(this).isEmpty()) {
-            for (Room room : myPath) {
-                room.setPathSymbol();
-            }
+            myPath.mark();
             myController.endGame(false);
         }
     }
@@ -466,7 +464,7 @@ public class Maze implements Serializable {
         /**
          * The path to the goal location.
          */
-        private final List<Room> mySavedPath;
+        private final Path mySavedPath;
         /**
          * Doors with corresponding question.
          */
@@ -484,7 +482,7 @@ public class Maze implements Serializable {
          */
         private final Room mySavedStartLocation;
 
-        private Memento(final Room[][] theRooms, final List<Room> thePath,
+        private Memento(final Room[][] theRooms, final Path thePath,
                         final Map<Door, Question> theQuestionMap,
                         final Room thePlayerLocation,
                         final Room theGoalLocation,

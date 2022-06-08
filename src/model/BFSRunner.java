@@ -28,7 +28,9 @@ public class BFSRunner {
      * @return the List of Rooms that leads to the goal, or an empty List if
      *         no such path exists.
      */
-    public static List<Room> findPath(final Maze theMaze) {
+    public static Optional<Path> findPath(final Maze theMaze) {
+        Path path = null;
+
         final Map<Node, Room> visited = new HashMap<>();
         final LinkedList<Node> toVisit = new LinkedList<>();
         toVisit.add(new Node(theMaze.getPlayerLocation()));
@@ -37,7 +39,10 @@ public class BFSRunner {
             final Node cur = toVisit.remove();
             final Room curRoom = cur.myRoom;
 
-            if (curRoom == theMaze.getGoalLocation()) return tracePath(cur);
+            if (curRoom == theMaze.getGoalLocation()) {
+                path = tracePath(cur);
+                break;
+            }
 
             if (visited.containsKey(cur)) continue;
 
@@ -55,7 +60,7 @@ public class BFSRunner {
             }
             visited.put(cur, curRoom);
         }
-        return Collections.emptyList();
+        return Optional.ofNullable(path);
     }
 
     /**
@@ -64,14 +69,23 @@ public class BFSRunner {
      * @param theGoal the Node that contains the goal room.
      * @return a List of Rooms from the player's position to the goal
      */
-    private static List<Room> tracePath(final Node theGoal) {
-        final LinkedList<Room> path = new LinkedList<>();
+    private static Path tracePath(final Node theGoal) {
+        final LinkedList<Room> rooms = new LinkedList<>();
         Node iter = theGoal;
         while (iter != null) {
-            path.push(iter.myRoom);
+            rooms.push(iter.myRoom);
             iter = iter.myParent;
         }
-        return path;
+        final LinkedList<Door> doors = new LinkedList<>();
+        for (int i = 0; i < rooms.size() - 1; i++) {
+            final Room curRoom = rooms.get(i);
+            for (Door door : curRoom.getAllDoors()) {
+                if (door.getOtherSide(curRoom).equals(rooms.get(i + 1))) {
+                    doors.add(door);
+                }
+            }
+        }
+        return new Path(rooms, doors);
     }
 
     /**
