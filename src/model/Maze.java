@@ -37,6 +37,10 @@ public class Maze implements Serializable {
      */
     private Room[][] myRooms;
     /**
+     * The rooms in the path to the goal location.
+     */
+    private List<Room> myPath;
+    /**
      * Doors with corresponding question.
      */
     private Map<Door, Question> myQuestionMap;
@@ -52,6 +56,7 @@ public class Maze implements Serializable {
      * The goal location.
      */
     private Room myGoalLocation;
+
 
     public Maze(final TriviaMaze theController, final int theRows,
                 final int theCols) throws IllegalArgumentException {
@@ -81,7 +86,7 @@ public class Maze implements Serializable {
         myPlayerLocation = myStartLocation;
         myGoalLocation = chooseExit();
         generateMaze(generatePossibleDoors());
-        markPath();
+        myPath = BFSRunner.findPath(this);
         myPlayerLocation.visit();
     }
 
@@ -188,12 +193,6 @@ public class Maze implements Serializable {
         qf.cleanUp();
     }
 
-    private void markPath() {
-        for (Room room : BFSRunner.findPath(this)) {
-            room.markPath();
-        }
-    }
-
     public void attemptMove(final Direction theDirection) {
         State doorState = myPlayerLocation.getDoorState(theDirection);
         if (doorState == CLOSED || doorState == LOCKED) {
@@ -271,10 +270,8 @@ public class Maze implements Serializable {
      */
     public void gameLoss() {
         if (BFSRunner.findPath(this).isEmpty()) {
-            for (Room[] row : myRooms) {
-                for (Room room : row) {
-                    room.setPathSymbol();
-                }
+            for (Room room : myPath) {
+                room.setPathSymbol();
             }
             myController.endGame(false);
         }

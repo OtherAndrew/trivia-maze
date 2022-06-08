@@ -36,10 +36,6 @@ public class Room implements Serializable {
      */
     private boolean myVisited;
     /**
-     * If the room is part of the path to the goal position.
-     */
-    private boolean myPath;
-    /**
      * The room's character representation.
      */
     private char mySymbol;
@@ -59,7 +55,6 @@ public class Room implements Serializable {
         myCol = theCol;
         myDoors = new EnumMap<>(Direction.class);
         myVisited = false;
-        myPath = false;
         mySymbol = UNVISITED;
     }
 
@@ -180,12 +175,8 @@ public class Room implements Serializable {
         return myVisited;
     }
 
-    public void markPath() {
-        myPath = true;
-    }
-
     public void setPathSymbol() {
-        if (!myVisited && myPath) {
+        if (!myVisited) {
             mySymbol = PATH;
         }
     }

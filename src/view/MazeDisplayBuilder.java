@@ -65,7 +65,7 @@ public final class MazeDisplayBuilder {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
             case PATH -> {
-                tile.setBackground(Color.MAGENTA);
+                tile.setBackground(Color.YELLOW);
                 tile.add(drawLabel("+"), BorderLayout.CENTER);
             }
             case UNDISCOVERED_SYMBOL, UNVISITED -> {
