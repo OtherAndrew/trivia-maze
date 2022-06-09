@@ -8,6 +8,10 @@ import java.awt.*;
 import static model.mazecomponents.Symbol.*;
 import static view.AppTheme.*;
 
+/**
+ * MazeDisplayBuilder is a helper class that provides the ability to
+ * construct displays for mazes.
+ */
 public final class MazeDisplayBuilder {
 
     /**

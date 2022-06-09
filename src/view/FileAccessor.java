@@ -12,8 +12,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
-
 public final class FileAccessor {
 
     private static FileAccessor myAccessor;
