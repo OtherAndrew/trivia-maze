@@ -64,7 +64,6 @@ public final class MazeDisplayBuilder {
                                         final boolean theOmniscient) {
         final JComponent tile = new JPanel(new BorderLayout());
         switch (theChar) {
-            case PATH -> tile.setBackground(BLUE);
             case UNDISCOVERED_SYMBOL, UNVISITED -> {
                 if (theOmniscient) tile.setBackground(MID_GREY);
                 else tile.setBackground(DARK_GREY);
@@ -72,31 +71,31 @@ public final class MazeDisplayBuilder {
             case GOAL -> {
                 if (theOmniscient) {
                     tile.setBackground(GREEN);
-                    tile.add(drawLabel("!"), BorderLayout.CENTER);
+                    tile.add(drawLabel("!"));
                 }
                 else tile.setBackground(DARK_GREY);
             }
             case PLAYER -> {
                 tile.setBackground(LIGHT_GREY);
-                tile.add(drawLabel("[]"), BorderLayout.CENTER);
+                tile.add(drawLabel("[]"));
             }
             case PLAYER_AT_START -> {
                 tile.setBackground(ORANGE);
-                tile.add(drawLabel("[]"), BorderLayout.CENTER);
+                tile.add(drawLabel("[]"));
             }
             case PLAYER_AT_GOAL -> {
                 tile.setBackground(GREEN);
-                tile.add(drawLabel("[]"), BorderLayout.CENTER);
+                tile.add(drawLabel("[]"));
             }
             case LOCKED_SYMBOL -> {
                 tile.setBackground(RED);
-                tile.add(drawLabel("X"), BorderLayout.CENTER);
+                tile.add(drawLabel("X"));
             }
             case CLOSED_SYMBOL -> {
                 tile.setBackground(PURPLE);
-                tile.add(drawLabel("?"), BorderLayout.CENTER);
+                tile.add(drawLabel("?"));
             }
-            case OPENED_SYMBOL, VISITED -> tile.setBackground(LIGHT_GREY);
+            case OPENED_SYMBOL, VISITED, PATH -> tile.setBackground(LIGHT_GREY);
             case WALL -> tile.setBackground(DARK_GREY);
             case START ->  tile.setBackground(ORANGE);
         }
