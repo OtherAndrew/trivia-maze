@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -66,32 +67,22 @@ public class Game {
 
         final CardLayout cards = new CardLayout();
         myContentPanel.setLayout(cards);
-
         myContentPanel.add(drawGamePanel(), "game");
-        myContentPanel.add(new Difficulty(this, cards), "difficulty");
-        myContentPanel.add(new Start(this, cards), "start");
+        myContentPanel.add(new Difficulty(this), "difficulty");
+        myContentPanel.add(new Start(this), "start");
 
-        myNewGameButton.addActionListener(e -> cards.show(myContentPanel, "difficulty"));
-        myQuickSaveButton.addActionListener(e -> {
-            if (mySaveEnabled) {
-                myController.quickSave();
-            }
+        myNewGameButton.addActionListener(e -> show("difficulty"));
+        myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled)
+            myController.quickSave();
         });
-        myQuickLoadButton.addActionListener(e -> {
-            if (myController.quickLoad()) {
-                updateQA();
-                cards.show(myContentPanel, "game");
-            }
+        myQuickLoadButton.addActionListener(e -> { if (myController.quickLoad())
+            show("game");
         });
-        mySaveButton.addActionListener(e -> { if (mySaveEnabled) {
-                FileAccessor.getInstance().saveFile(myContentPanel).ifPresent(myController::save);
-            }
+        mySaveButton.addActionListener(e -> { if (mySaveEnabled)
+            FileAccessor.getInstance().saveFile(myContentPanel).ifPresent(myController::save);
         });
-        myLoadButton.addActionListener(e -> FileAccessor.getInstance().loadFile(myContentPanel).ifPresent(file -> {
-            myController.load(file);
-            updateQA();
-            cards.show(myContentPanel, "game");
-        }));
+        myLoadButton.addActionListener(e ->
+                FileAccessor.getInstance().loadFile(myContentPanel).ifPresent(this::load));
 
         myCancelFunction = new Cancel();
         mySubmitFunction = new Submit();
@@ -153,15 +144,10 @@ public class Game {
 
     public void displayEndGame(final boolean theWinStatus) {
         final StringJoiner sj = new StringJoiner("\n");
-        if (theWinStatus) {
-            sj.add("You won!");
-        } else {
-            sj.add("You lost!");
-        }
-        sj.add("");
+        if (theWinStatus) sj.add("You won!");
+        else sj.add("You lost!\n");
         sj.add("Rooms visited: " + myController.getVisitCount(true));
-        sj.add("Rooms not visited: " + myController.getVisitCount(false));
-        sj.add("");
+        sj.add("Rooms not visited: " + myController.getVisitCount(false) + "\n");
         sj.add("Opened doors: " + myController.getMazeDoorCount(OPENED));
         sj.add("Closed doors: " + myController.getMazeDoorCount(CLOSED));
         sj.add("Locked doors: " + myController.getMazeDoorCount(LOCKED));
@@ -287,7 +273,8 @@ public class Game {
             String answer = theAnswerArray.get(i);
             myAnswerButtons[i] = buildRadioButton(answer);
             myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0, 1));
-            myAnswerButtons[i].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "submit");
+            myAnswerButtons[i].getInputMap().put(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "submit");
             myAnswerButtons[i].getActionMap().put("submit", mySubmitFunction);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myResponsePanel.add(myAnswerButtons[i]);
@@ -370,10 +357,6 @@ public class Game {
         return myController;
     }
 
-    JPanel getContentPanel() {
-        return myContentPanel;
-    }
-
     public void updateMapDisplay(final boolean theReveal) {
         setMovementEnabled(true);
         setSaveEnabled(true);
@@ -404,6 +387,17 @@ public class Game {
 
     public void updateQA(final String theQuery, final List<String> theAnswers) {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery, theAnswers));
+    }
+
+    public void show(final String theCard) {
+        updateQA();
+        final CardLayout cards = (CardLayout) myContentPanel.getLayout();
+        cards.show(myContentPanel, theCard);
+    }
+
+    public void load(final File theFile) {
+        myController.load(theFile);
+        show("game");
     }
 
     private class updateGui extends AbstractAction {

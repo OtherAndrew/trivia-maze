@@ -69,32 +69,14 @@ public final class MazeDisplayBuilder {
                 else tile.setBackground(DARK_GREY);
             }
             case GOAL -> {
-                if (theOmniscient) {
-                    tile.setBackground(GREEN);
-                    tile.add(drawLabel("!"));
-                }
+                if (theOmniscient) drawTile(tile, GREEN, "!");
                 else tile.setBackground(DARK_GREY);
             }
-            case PLAYER -> {
-                tile.setBackground(LIGHT_GREY);
-                tile.add(drawLabel("[]"));
-            }
-            case PLAYER_AT_START -> {
-                tile.setBackground(ORANGE);
-                tile.add(drawLabel("[]"));
-            }
-            case PLAYER_AT_GOAL -> {
-                tile.setBackground(GREEN);
-                tile.add(drawLabel("[]"));
-            }
-            case LOCKED_SYMBOL -> {
-                tile.setBackground(RED);
-                tile.add(drawLabel("X"));
-            }
-            case CLOSED_SYMBOL -> {
-                tile.setBackground(PURPLE);
-                tile.add(drawLabel("?"));
-            }
+            case PLAYER -> drawTile(tile, LIGHT_GREY, "[]");
+            case PLAYER_AT_START -> drawTile(tile, ORANGE, "[]");
+            case PLAYER_AT_GOAL -> drawTile(tile, GREEN, "[]");
+            case LOCKED_SYMBOL -> drawTile(tile, RED, "X");
+            case CLOSED_SYMBOL -> drawTile(tile, PURPLE, "?");
             case OPENED_SYMBOL, VISITED, PATH -> tile.setBackground(LIGHT_GREY);
             case WALL -> tile.setBackground(DARK_GREY);
             case START ->  tile.setBackground(ORANGE);
@@ -103,17 +85,22 @@ public final class MazeDisplayBuilder {
     }
 
     /**
-     * Draws a label for a map tile with the specified text.
+     * Adjusts a map tile's color and draws a label for it with the
+     * specified text.
      *
+     * @param theTile the tile being altered.
+     * @param theColor the color to the set the tile.
      * @param theLabelText the text the label should display.
-     * @return a label with the specified text.
      */
-    private static JLabel drawLabel(final String theLabelText) {
-        final JLabel output = new JLabel(theLabelText);
-        output.setHorizontalAlignment(SwingConstants.CENTER);
-        output.setForeground(BLACK);
-        output.setFont(LARGE_FONT);
-        return output;
+    private static void drawTile(final JComponent theTile,
+                                 final Color theColor,
+                                 final String theLabelText) {
+        theTile.setBackground(theColor);
+        final JLabel label = new JLabel(theLabelText);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setForeground(BLACK);
+        label.setFont(LARGE_FONT);
+        theTile.add(label);
     }
 
     /**

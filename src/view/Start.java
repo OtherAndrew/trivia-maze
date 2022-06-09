@@ -2,13 +2,9 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static view.AppTheme.*;
+import static view.FileAccessor.showDialog;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
 
 public class Start extends JPanel {
@@ -20,7 +16,7 @@ public class Start extends JPanel {
     private final JButton myAboutBtn;
     private final JButton myQuitBtn;
 
-    Start(final Game theGame, final CardLayout theCards) {
+    Start(final Game theGame) {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         adjustPanel(this);
 
@@ -30,28 +26,14 @@ public class Start extends JPanel {
         myAboutBtn = buildButton("About");
         myQuitBtn = buildButton("Quit");
 
-        myNewGameBtn.addActionListener(e -> theCards.show(theGame.getContentPanel(), "difficulty"));
-        myResumeBtn.addActionListener(e -> {
-            if (theGame.getController().quickLoad()) {
-                theGame.updateQA();
-                theCards.show(theGame.getContentPanel(), "game");
-            }
+        myNewGameBtn.addActionListener(e -> theGame.show("difficulty"));
+        myResumeBtn.addActionListener(e -> { if (theGame.getController().quickLoad())
+            theGame.show("game");
         });
-        myLoadGameBtn.addActionListener(e -> FileAccessor.getInstance().loadFile(this).ifPresent(file -> {
-            theGame.getController().load(file);
-            theGame.updateQA();
-            theCards.show(theGame.getContentPanel(), "game");
-        }));
-        myAboutBtn.addActionListener(e -> {
-            try (final InputStream in = getClass().getResourceAsStream("/about.txt");
-                 final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
-                JOptionPane.showMessageDialog(this,
-                        br.lines().collect(Collectors.joining("\n")),
-                        "About Trivia Maze", JOptionPane.INFORMATION_MESSAGE);
-            } catch (final Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        myLoadGameBtn.addActionListener(e ->
+                FileAccessor.getInstance().loadFile(this).ifPresent(theGame::load));
+        myAboutBtn.addActionListener(e -> showDialog(this, "/about.txt",
+                        "About Trivia Maze"));
         myQuitBtn.addActionListener(e -> System.exit(1));
 
         myMenuBar = buildMenubar(myNewGameBtn, myResumeBtn, myLoadGameBtn,

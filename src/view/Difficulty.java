@@ -3,13 +3,9 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static view.AppTheme.*;
+import static view.FileAccessor.showDialog;
 
 public class Difficulty extends JPanel {
 
@@ -23,101 +19,71 @@ public class Difficulty extends JPanel {
     private final JButton myKeyBindingsButton;
     private final JButton myAboutButton;
     private final JButton myMainMenuButton;
-    private final JButton myEasyButton;
-    private final JButton myMediumButton;
-    private final JButton myHardButton;
-    private final JButton myInsaneButton;
     private final JCheckBox myMasterKeyCheck;
     private final JCheckBox myXRayCheck;
 
-    private boolean myMasterKey;
     private boolean myXRay;
 
-    Difficulty(final Game theGame, final CardLayout theCards) {
+    Difficulty(final Game theGame) {
+        myXRay = false;
+
         System.setProperty("awt.useSystemAAFontSettings", "on");
         adjustPanel(this);
-        myMasterKey = false;
-        myXRay = false;
 
         myMainMenuButton = buildButton("Main Menu");
         myHelpButton = buildButton("Help");
         myKeyBindingsButton = buildButton("Key Bindings");
         myAboutButton = buildButton("About");
-
-        myEasyButton = buildButton("4 x 4");
-        myEasyButton.setBackground(GREEN);
-        myEasyButton.setFont(LARGE_FONT);
-        myMediumButton = buildButton("6 x 6");
-        myMediumButton.setBackground(ORANGE);
-        myMediumButton.setFont(LARGE_FONT);
-        myHardButton = buildButton("8 x 8");
-        myHardButton.setBackground(RED);
-        myHardButton.setFont(LARGE_FONT);
-        myInsaneButton = buildButton("10 x 10");
-        myInsaneButton.setBackground(PINK);
-        myInsaneButton.setFont(LARGE_FONT);
-
-        myMasterKeyCheck = buildCheckBox("Master Key");
-        myXRayCheck = buildCheckBox("X-Ray");
+        myHelpButton.addActionListener(e -> showDialog(this,"/help.txt",
+                "Help"));
+        myKeyBindingsButton.addActionListener(e -> showDialog(this,
+                "/key_bindings.txt", "Key Bindings"));
+        myAboutButton.addActionListener(e -> showDialog(this, "/about.txt",
+                "About Trivia Maze"));
+        myMainMenuButton.addActionListener(e -> theGame.show("start"));
+        myMenubar = buildMenubar(myMainMenuButton, myHelpButton,
+                myKeyBindingsButton, myAboutButton);
 
         final GridLayout difficultyLayout = new GridLayout(5, 1);
         difficultyLayout.setVgap(7);
         myDifficultyPanel = new JPanel(difficultyLayout);
         myDifficultyPanel.setBackground(MID_GREY);
         myDifficultyPanel.setBorder(DIFFICULTY_BUTTON_BORDER);
+        makeDifficultyButton(4, GREEN, theGame);
+        makeDifficultyButton(6, ORANGE, theGame);
+        makeDifficultyButton(8, RED, theGame);
+        makeDifficultyButton(10, PINK, theGame);
 
         myCheatPanel = new JPanel(new GridLayout(1, 2));
-        myCheatPanel.add(myMasterKeyCheck);
-        myCheatPanel.add(myXRayCheck);
         myCheatPanel.setBackground(DARK_GREY);
         myCheatPanel.setBorder(GENERAL_BORDER);
-
-        myMenubar = buildMenubar(myMainMenuButton, myHelpButton,
-                myKeyBindingsButton, myAboutButton);
-
-        myHelpButton.addActionListener(e -> showDialog("/help.txt", "Help"));
-        myKeyBindingsButton.addActionListener(e -> showDialog("/key_bindings.txt",
-                "Key Bindings"));
-        myAboutButton.addActionListener(e -> showDialog("/about.txt",
-                "About Trivia Maze"));
-        myMainMenuButton.addActionListener(e -> theCards.show(theGame.getContentPanel(), "start"));
-
-        myMasterKeyCheck.addActionListener(e -> {
-            myMasterKey = myMasterKeyCheck.isSelected();
-            theGame.getController().setMasterKeyEnabled(myMasterKey);
-        });
+        myMasterKeyCheck = buildCheckBox("Master Key");
+        myXRayCheck = buildCheckBox("X-Ray");
+        myMasterKeyCheck.addActionListener(e ->
+                theGame.getController().setMasterKeyEnabled(myMasterKeyCheck.isSelected()));
         myXRayCheck.addActionListener(e -> {
             myXRay = myXRayCheck.isSelected();
             theGame.getController().setXRayEnabled(myXRay);
         });
-
-        int dim = 4;
-        for (JButton button : new JButton[]{myEasyButton, myMediumButton,
-                myHardButton, myInsaneButton}) {
-            int finalDim = dim;
-            button.addActionListener(e -> {
-                theGame.getController().buildMaze(finalDim, finalDim);
-                theGame.updateMapDisplay(myXRay);
-                theGame.updateQA();
-                theCards.show(theGame.getContentPanel(), "game");
-            });
-            dim += 2;
-            myDifficultyPanel.add(button);
-        }
+        myCheatPanel.add(myMasterKeyCheck);
+        myCheatPanel.add(myXRayCheck);
         myDifficultyPanel.add(myCheatPanel);
 
         add(myMenubar, BorderLayout.NORTH);
         add(myDifficultyPanel, BorderLayout.CENTER);
     }
 
-    private void showDialog(final String theFilePath, final String theTitle) {
-        try (final InputStream in = getClass().getResourceAsStream(theFilePath);
-             final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
-            JOptionPane.showMessageDialog(this,
-                    br.lines().collect(Collectors.joining("\n")), theTitle,
-                    JOptionPane.INFORMATION_MESSAGE);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-        }
+    private void makeDifficultyButton(final int theDim,
+                                      final Color theColor,
+                                      final Game theGame) {
+        final JButton button = buildButton(theDim + " x " + theDim);
+        button.setBackground(theColor);
+        button.setFont(LARGE_FONT);
+        button.addActionListener(e -> {
+            theGame.getController().buildMaze(theDim, theDim);
+            theGame.updateMapDisplay(myXRay);
+            theGame.show("game");
+        });
+        myDifficultyPanel.add(button);
     }
 }

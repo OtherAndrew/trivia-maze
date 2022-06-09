@@ -4,8 +4,13 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FileAccessor {
 
@@ -44,5 +49,18 @@ public class FileAccessor {
             mySaveFile = myChooser.getSelectedFile();
         }
         return Optional.ofNullable(mySaveFile);
+    }
+
+    static void showDialog(final Component theParent,
+                                  final String theFilePath,
+                                  final String theTitle) {
+        try (final InputStream in = AppTheme.class.getResourceAsStream(theFilePath);
+             final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
+            JOptionPane.showMessageDialog(theParent,
+                    br.lines().collect(Collectors.joining("\n")), theTitle,
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
