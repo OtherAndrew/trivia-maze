@@ -16,6 +16,7 @@ import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
+import static view.FileAccessor.getAccessor;
 import static view.MazeDisplayBuilder.buildMapDisplay;
 
 public class Game {
@@ -79,10 +80,10 @@ public class Game {
             show("game");
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled)
-            FileAccessor.getInstance().saveFile(myContentPanel).ifPresent(myController::save);
+            getAccessor().saveFile(myContentPanel).ifPresent(myController::save);
         });
         myLoadButton.addActionListener(e ->
-                FileAccessor.getInstance().loadFile(myContentPanel).ifPresent(this::load));
+                getAccessor().loadFile(myContentPanel).ifPresent(this::load));
 
         myCancelFunction = new Cancel();
         mySubmitFunction = new Submit();

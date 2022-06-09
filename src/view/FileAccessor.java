@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class FileAccessor {
 
-    private static FileAccessor uniqueInstance;
+    private static FileAccessor myAccessor;
 
     private final JFileChooser myChooser;
     
@@ -29,8 +29,8 @@ public class FileAccessor {
                 "Trivia Maze .ser file", "ser"));
     }
 
-    static FileAccessor getInstance() {
-        return Optional.ofNullable(uniqueInstance).orElse(uniqueInstance = new FileAccessor());
+    static FileAccessor getAccessor() {
+        return Optional.ofNullable(myAccessor).orElse(myAccessor = new FileAccessor());
     }
 
     Optional<File> loadFile(final Component theParent) {
