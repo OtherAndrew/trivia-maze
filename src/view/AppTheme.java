@@ -3,11 +3,6 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * AppTheme defines the shared GUI elements for every GUI class.
