@@ -7,13 +7,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
 import java.util.StringJoiner;
 
+import static java.awt.BorderLayout.*;
+import static java.awt.event.KeyEvent.*;
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
-import static model.mazecomponents.Direction.*;
+import static javax.swing.KeyStroke.getKeyStroke;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
 import static view.FileAccessor.getAccessor;
@@ -66,8 +67,7 @@ public class Game {
         myContentPanel = buildPanel();
         myFrame.add(myContentPanel);
 
-        final CardLayout cards = new CardLayout();
-        myContentPanel.setLayout(cards);
+        myContentPanel.setLayout(new CardLayout());
         myContentPanel.add(drawGamePanel(), "game");
         myContentPanel.add(new Difficulty(this), "difficulty");
         myContentPanel.add(new Start(this), "start");
@@ -88,14 +88,14 @@ public class Game {
         myCancelFunction = new Cancel();
         mySubmitFunction = new Submit();
 
-        final updateGui north = new updateGui(NORTH);
-        final updateGui east = new updateGui(EAST);
-        final updateGui south = new updateGui(SOUTH);
-        final updateGui west = new updateGui(WEST);
+        final updateGui north = new updateGui(Direction.NORTH);
+        final updateGui east = new updateGui(Direction.EAST);
+        final updateGui south = new updateGui(Direction.SOUTH);
+        final updateGui west = new updateGui(Direction.WEST);
         addButtonActionListeners(north, east, south, west);
         addKeyboardBindings(north, east, south, west);
 
-        cards.show(myContentPanel, "start");
+        show("start");
         myFrame.setVisible(true);
     }
 
@@ -108,18 +108,18 @@ public class Game {
 
     private void addKeyboardBindings(final updateGui... theDirections) {
         InputMap iMap = (InputMap) UIManager.get("Button.focusInputMap");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "none");
+        iMap.put(getKeyStroke(VK_SPACE, 0), "none");
         iMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
-        iMap.put(KeyStroke.getKeyStroke("W"), "moveNorth");
-        iMap.put(KeyStroke.getKeyStroke("D"), "moveEast");
-        iMap.put(KeyStroke.getKeyStroke("S"), "moveSouth");
-        iMap.put(KeyStroke.getKeyStroke("A"), "moveWest");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveNorth");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveEast");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveSouth");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveWest");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "submit");
-        iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
+        iMap.put(getKeyStroke("W"), "moveNorth");
+        iMap.put(getKeyStroke("D"), "moveEast");
+        iMap.put(getKeyStroke("S"), "moveSouth");
+        iMap.put(getKeyStroke("A"), "moveWest");
+        iMap.put(getKeyStroke(VK_UP, 0), "moveNorth");
+        iMap.put(getKeyStroke(VK_RIGHT, 0), "moveEast");
+        iMap.put(getKeyStroke(VK_DOWN, 0), "moveSouth");
+        iMap.put(getKeyStroke(VK_LEFT, 0), "moveWest");
+        iMap.put(getKeyStroke(VK_ENTER, 0), "submit");
+        iMap.put(getKeyStroke(VK_ESCAPE, 0), "cancel");
         final ActionMap aMap = myGamePanel.getActionMap();
         aMap.put("moveNorth", theDirections[0]);
         aMap.put("moveEast", theDirections[1]);
@@ -161,10 +161,10 @@ public class Game {
 
     private JPanel drawGamePanel() {
         myGamePanel = buildPanel();
-        myGamePanel.add(drawMenuBar(), BorderLayout.NORTH);
+        myGamePanel.add(drawMenuBar(), NORTH);
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray());
-        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
-        myGamePanel.add(drawSidebar(), BorderLayout.EAST);
+        myGamePanel.add(myMapDisplay, CENTER);
+        myGamePanel.add(drawSidebar(), EAST);
         return myGamePanel;
     }
 
@@ -172,8 +172,8 @@ public class Game {
         mySidebar = new JPanel(new BorderLayout());
         mySidebar.setBorder(SIDEBAR_PADDING);
         mySidebar.setBackground(MID_GREY);
-        mySidebar.add(drawDirectionControls(), BorderLayout.SOUTH);
-        mySidebar.add(drawQAPanel(), BorderLayout.CENTER);
+        mySidebar.add(drawDirectionControls(), SOUTH);
+        mySidebar.add(drawQAPanel(), CENTER);
         return mySidebar;
     }
 
@@ -190,7 +190,7 @@ public class Game {
 
     private JPanel drawQAPanel() {
         myQAPanel = drawGenQAPanel();
-        myQAPanel.add(drawQuestionArea(), BorderLayout.CENTER);
+        myQAPanel.add(drawQuestionArea(), CENTER);
         return myQAPanel;
     }
 
@@ -202,8 +202,8 @@ public class Game {
      */
     private JPanel drawQAPanel(final String theQueryText) {
         myQAPanel = drawGenQAPanel();
-        myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
-        myQAPanel.add(drawShortAnswerPanel(), BorderLayout.SOUTH);
+        myQAPanel.add(drawQuestionArea(theQueryText), CENTER);
+        myQAPanel.add(drawShortAnswerPanel(), SOUTH);
         return myQAPanel;
     }
 
@@ -217,8 +217,8 @@ public class Game {
     private JPanel drawQAPanel(final String theQueryText,
                                final List<String> theAnswerArray) {
         myQAPanel = drawGenQAPanel();
-        myQAPanel.add(drawQuestionArea(theQueryText), BorderLayout.CENTER);
-        myQAPanel.add(drawMultipleChoicePanel(theAnswerArray), BorderLayout.SOUTH);
+        myQAPanel.add(drawQuestionArea(theQueryText), CENTER);
+        myQAPanel.add(drawMultipleChoicePanel(theAnswerArray), SOUTH);
         return myQAPanel;
     }
 
@@ -256,7 +256,7 @@ public class Game {
         myQuestionArea.setText(theQueryText);
         myQuestionArea.setBackground(DARK_GREY);
         myQuestionArea.setForeground(WHITE);
-        myQuestionPanel.add(myQuestionArea, BorderLayout.CENTER);
+        myQuestionPanel.add(myQuestionArea, CENTER);
         return myQuestionPanel;
     }
 
@@ -275,14 +275,14 @@ public class Game {
             myAnswerButtons[i] = buildRadioButton(answer);
             myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0, 1));
             myAnswerButtons[i].getInputMap().put(
-                    KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "submit");
+                    getKeyStroke(VK_SPACE, 0), "submit");
             myAnswerButtons[i].getActionMap().put("submit", mySubmitFunction);
             myAnswerButtonsGroup.add(myAnswerButtons[i]);
             myResponsePanel.add(myAnswerButtons[i]);
         }
 
-        myAnswerPanel.add(myResponsePanel, BorderLayout.CENTER);
-        myAnswerPanel.add(drawAnswerSubmitPanel(), BorderLayout.SOUTH);
+        myAnswerPanel.add(myResponsePanel, CENTER);
+        myAnswerPanel.add(drawAnswerSubmitPanel(), SOUTH);
         return myAnswerPanel;
     }
 
@@ -302,11 +302,11 @@ public class Game {
         final JLabel textIndicator = new JLabel("> ");
         textIndicator.setFont(BUTTON_FONT);
         textIndicator.setForeground(WHITE);
-        myResponsePanel.add(textIndicator, BorderLayout.WEST);
-        myResponsePanel.add(myAnswerPrompt, BorderLayout.CENTER);
+        myResponsePanel.add(textIndicator, WEST);
+        myResponsePanel.add(myAnswerPrompt, CENTER);
 
-        myAnswerPanel.add(myResponsePanel, BorderLayout.CENTER);
-        myAnswerPanel.add(drawAnswerSubmitPanel(), BorderLayout.SOUTH);
+        myAnswerPanel.add(myResponsePanel, CENTER);
+        myAnswerPanel.add(drawAnswerSubmitPanel(), SOUTH);
 
         return myAnswerPanel;
     }
@@ -363,7 +363,7 @@ public class Game {
         setSaveEnabled(true);
         myGamePanel.remove(myMapDisplay);
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), theReveal);
-        myGamePanel.add(myMapDisplay, BorderLayout.CENTER);
+        myGamePanel.add(myMapDisplay, CENTER);
         myFrame.revalidate();
         myFrame.repaint();
     }
@@ -371,7 +371,7 @@ public class Game {
     private void update(final JPanel theContainer, final JPanel theReplaced,
                         final JPanel theReplacer) {
         theContainer.remove(theReplaced);
-        theContainer.add(theReplacer, BorderLayout.CENTER);
+        theContainer.add(theReplacer, CENTER);
         myFrame.revalidate();
         myFrame.repaint();
     }

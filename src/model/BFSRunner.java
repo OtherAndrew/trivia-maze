@@ -4,7 +4,10 @@ import model.mazecomponents.Door;
 import model.mazecomponents.Room;
 import model.mazecomponents.State;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Finds the path to the exit of a maze.

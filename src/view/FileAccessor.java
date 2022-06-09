@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static javax.swing.filechooser.FileSystemView.getFileSystemView;
+
 
 public final class FileAccessor {
 
@@ -20,8 +21,8 @@ public final class FileAccessor {
     private final JFileChooser myChooser;
     
     private FileAccessor() {
-        final File saveFolder = new File(getFileSystemView().getDefaultDirectory()
-                + "/trivia-maze");
+        final File saveFolder = new File(
+                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
         saveFolder.mkdir();
         myChooser = new JFileChooser(saveFolder);
         myChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -35,21 +36,20 @@ public final class FileAccessor {
     }
 
     Optional<File> loadFile(final Component theParent) {
-        myChooser.setDialogTitle("Load a previous game");
-        File myLoadFile = null;
-        if (myChooser.showDialog(theParent, "Resume") == JFileChooser.APPROVE_OPTION) {
-            myLoadFile = myChooser.getSelectedFile();
-        }
-        return Optional.ofNullable(myLoadFile);
+        return getFile(theParent, "Load a previous game", "Resume");
     }
 
     Optional<File> saveFile(final Component theParent) {
-        myChooser.setDialogTitle("Save your game");
-        File mySaveFile = null;
-        if (myChooser.showDialog(theParent, "Save") == JFileChooser.APPROVE_OPTION) {
-            mySaveFile = myChooser.getSelectedFile();
-        }
-        return Optional.ofNullable(mySaveFile);
+        return getFile(theParent, "Save your game", "Save");
+    }
+
+    private Optional<File> getFile(final Component theParent, final String theTitle,
+                                   final String theButton) {
+        myChooser.setDialogTitle(theTitle);
+        File file = null;
+        if (myChooser.showDialog(theParent, theButton) == JFileChooser.APPROVE_OPTION)
+            file = myChooser.getSelectedFile();
+        return Optional.ofNullable(file);
     }
 
     static void showResource(final Component theParent,

@@ -3,7 +3,6 @@ package model.mazecomponents;
 import java.io.Serial;
 import java.io.Serializable;
 
-import static model.mazecomponents.State.*;
 import static model.mazecomponents.Symbol.*;
 
 /**
@@ -53,7 +52,7 @@ public class Door implements Serializable {
      */
     public Door(final Room theRoom1, final Direction theDirection1,
                 final Room theRoom2, final Direction theDirection2) {
-        setState(UNDISCOVERED);
+        setState(State.UNDISCOVERED);
         myRoom1 = theRoom1;
         myDirection1 = theDirection1;
         myRoom2 = theRoom2;

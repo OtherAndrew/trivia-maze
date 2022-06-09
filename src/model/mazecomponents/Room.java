@@ -7,7 +7,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static model.mazecomponents.State.*;
 import static model.mazecomponents.Symbol.*;
 
 /**
@@ -169,8 +168,8 @@ public class Room implements Serializable {
         myVisited = true;
         mySymbol = VISITED;
         for (Door door : myDoors.values()) {
-            if (door.getState() == UNDISCOVERED) {
-                door.setState(CLOSED);
+            if (door.getState() == State.UNDISCOVERED) {
+                door.setState(State.CLOSED);
             }
         }
     }

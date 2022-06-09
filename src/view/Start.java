@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static view.AppTheme.*;
-import static view.FileAccessor.*;
-import static view.FileAccessor.showResource;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
 
 public class Start extends JPanel {
@@ -32,9 +30,9 @@ public class Start extends JPanel {
             theGame.show("game");
         });
         myLoadGameBtn.addActionListener(e ->
-                getAccessor().loadFile(this).ifPresent(theGame::load));
-        myAboutBtn.addActionListener(e -> showResource(this, "/about.txt",
-                        "About Trivia Maze"));
+                FileAccessor.getAccessor().loadFile(this).ifPresent(theGame::load));
+        myAboutBtn.addActionListener(e -> FileAccessor.showResource(this,
+                "/about.txt", "About Trivia Maze"));
         myQuitBtn.addActionListener(e -> System.exit(1));
 
         myMenuBar = buildMenubar(myNewGameBtn, myResumeBtn, myLoadGameBtn,
