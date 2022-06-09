@@ -5,7 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static view.AppTheme.*;
-import static view.FileAccessor.showDialog;
+import static view.FileAccessor.showResource;
 
 public class Difficulty extends JPanel {
 
@@ -34,11 +34,11 @@ public class Difficulty extends JPanel {
         myHelpButton = buildButton("Help");
         myKeyBindingsButton = buildButton("Key Bindings");
         myAboutButton = buildButton("About");
-        myHelpButton.addActionListener(e -> showDialog(this,"/help.txt",
+        myHelpButton.addActionListener(e -> showResource(this,"/help.txt",
                 "Help"));
-        myKeyBindingsButton.addActionListener(e -> showDialog(this,
+        myKeyBindingsButton.addActionListener(e -> showResource(this,
                 "/key_bindings.txt", "Key Bindings"));
-        myAboutButton.addActionListener(e -> showDialog(this, "/about.txt",
+        myAboutButton.addActionListener(e -> showResource(this, "/about.txt",
                 "About Trivia Maze"));
         myMainMenuButton.addActionListener(e -> theGame.show("start"));
         myMenubar = buildMenubar(myMainMenuButton, myHelpButton,

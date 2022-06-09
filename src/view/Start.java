@@ -5,7 +5,7 @@ import java.awt.*;
 
 import static view.AppTheme.*;
 import static view.FileAccessor.*;
-import static view.FileAccessor.showDialog;
+import static view.FileAccessor.showResource;
 import static view.MazeDisplayBuilder.buildDummyMapDisplay;
 
 public class Start extends JPanel {
@@ -33,7 +33,7 @@ public class Start extends JPanel {
         });
         myLoadGameBtn.addActionListener(e ->
                 getAccessor().loadFile(this).ifPresent(theGame::load));
-        myAboutBtn.addActionListener(e -> showDialog(this, "/about.txt",
+        myAboutBtn.addActionListener(e -> showResource(this, "/about.txt",
                         "About Trivia Maze"));
         myQuitBtn.addActionListener(e -> System.exit(1));
 

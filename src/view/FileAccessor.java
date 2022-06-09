@@ -51,9 +51,9 @@ public class FileAccessor {
         return Optional.ofNullable(mySaveFile);
     }
 
-    static void showDialog(final Component theParent,
-                                  final String theFilePath,
-                                  final String theTitle) {
+    static void showResource(final Component theParent,
+                             final String theFilePath,
+                             final String theTitle) {
         try (final InputStream in = AppTheme.class.getResourceAsStream(theFilePath);
              final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             JOptionPane.showMessageDialog(theParent,
