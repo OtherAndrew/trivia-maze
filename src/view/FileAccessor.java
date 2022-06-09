@@ -2,7 +2,6 @@ package view;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,15 +11,17 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FileAccessor {
+import static javax.swing.filechooser.FileSystemView.getFileSystemView;
+
+public final class FileAccessor {
 
     private static FileAccessor myAccessor;
 
     private final JFileChooser myChooser;
     
     private FileAccessor() {
-        final File saveFolder = new File(
-                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
+        final File saveFolder = new File(getFileSystemView().getDefaultDirectory()
+                + "/trivia-maze");
         saveFolder.mkdir();
         myChooser = new JFileChooser(saveFolder);
         myChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

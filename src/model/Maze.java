@@ -5,12 +5,12 @@ import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+import static javax.swing.filechooser.FileSystemView.getFileSystemView;
 import static model.mazecomponents.Direction.*;
 import static model.mazecomponents.State.*;
 import static model.mazecomponents.Symbol.*;
@@ -457,8 +457,8 @@ public class Maze implements Serializable {
      * Creates a folder for saves and then saves a preset file to it.
      */
     public void save() {
-        final File saveFolder = new File(
-                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
+        final File saveFolder = new File(getFileSystemView().getDefaultDirectory()
+                + "/trivia-maze");
         saveFolder.mkdir();
         save(new File(saveFolder + "/quickSave.ser"));
     }
@@ -479,8 +479,8 @@ public class Maze implements Serializable {
      * @return true if successful, else false.
      */
     public boolean load() {
-        return load(new File(
-                FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze/quickSave.ser"));
+        return load(new File(getFileSystemView().getDefaultDirectory()
+                + "/trivia-maze/quickSave.ser"));
     }
 
     /**
