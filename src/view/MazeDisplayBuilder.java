@@ -104,7 +104,7 @@ public final class MazeDisplayBuilder {
     }
 
     /**
-     * Empty constructor
+     * Prevent instantiation.
      */
     private MazeDisplayBuilder() {}
 }

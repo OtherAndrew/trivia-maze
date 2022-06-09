@@ -11,25 +11,45 @@ import java.io.Serializable;
  */
 public class Answer implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = 7662114296546856340L;
+
+    /**
+     * String representation of the answer.
+     */
     private final String myAnswer;
+    /**
+     * The answer's correctness with regard to the question.
+     */
     private final boolean myValidity;
 
+    /**
+     * Creates an answer.
+     *
+     * @param theAnswer     the String representation of the answer.
+     * @param theValidity   the answer's correctness.
+     */
     Answer(final String theAnswer, final boolean theValidity) {
         myAnswer = theAnswer;
         myValidity = theValidity;
     }
 
     /**
-     * @return if this answer is the correct one.
+     * Returns if this answer is a correct one.
+     *
+     * @return true if the answer is correct, else false.
      */
     public boolean isCorrect() {
         return myValidity;
     }
 
     /**
-     * @return answer text.
+     * Returns the answer text.
+     *
+     * @return the String representation of the answer.
      */
     @Override
     public String toString() {

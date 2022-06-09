@@ -3,7 +3,7 @@ package model.mazecomponents;
 /**
  * Data class containing symbology for representation.
  */
-public class Symbol {
+public final class Symbol {
 
     // Maze
     /**
@@ -64,7 +64,7 @@ public class Symbol {
     public static final char UNDISCOVERED_SYMBOL = '#';
 
     /**
-     * Empty constructor
+     * Prevent instantiation.
      */
     private Symbol() {}
 }

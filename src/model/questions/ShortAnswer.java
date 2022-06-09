@@ -5,19 +5,27 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ShortAnswer represents a question that has a number of correct answers.
+ */
 public class ShortAnswer extends Question implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = -3344095561551924264L;
+
+    /**
+     * The accepted answers.
+     */
     private final ArrayList<String> myAnswers;
 
     /**
-     * Constructs a Question object from a query and a set of answers. The
-     * resulting set of answers in the Question will be a shuffled version
-     * of the set provided in arguments.
+     * Creates a short answer question.
      *
-     * @param theQuestion the question to ask.
-     * @param theChoices the possible answer choices.
+     * @param theQuestion   the question to ask.
+     * @param theChoices    the accepted answers.
      */
     ShortAnswer(final String theQuestion, final ArrayList<String> theChoices) {
         super(theQuestion);
@@ -25,10 +33,10 @@ public class ShortAnswer extends Question implements Serializable {
     }
 
     /**
-     * Checks to see if the answer to a short answer question is true.
+     * Checks to see if an answer is accepted.
      *
-     * @param theResponse a response submitted by a player.
-     * @return if the response is correct.
+     * @param theResponse   an answer to check.
+     * @return true if the response is accepted, else false.
      */
     @Override
     public boolean checkAnswer(final String theResponse) {
@@ -36,7 +44,9 @@ public class ShortAnswer extends Question implements Serializable {
     }
 
     /**
-     * @return list of answers for question.
+     * Returns the accepted answers.
+     *
+     * @return list of answers for the short answer question.
      */
     @Override
     public List<String> getAnswers() {

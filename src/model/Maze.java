@@ -16,13 +16,19 @@ import static model.mazecomponents.State.*;
 import static model.mazecomponents.Symbol.*;
 
 /**
- * Maze is a class that represents a maze with doors.
+ * Maze is a class that represents a maze with doors and questions.
  */
 public class Maze implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = 6708702333356795697L;
 
+    /**
+     * The controller for the maze.
+     */
     private TriviaMaze myController;
     /**
      * Number of rows.
@@ -37,7 +43,7 @@ public class Maze implements Serializable {
      */
     private Room[][] myRooms;
     /**
-     * The rooms in the path to the goal location.
+     * The path to the goal location.
      */
     private Path myPath;
     /**
@@ -57,7 +63,15 @@ public class Maze implements Serializable {
      */
     private Room myGoalLocation;
 
-
+    /**
+     * Creates a maze.
+     *
+     * @param theController the controller for the maze.
+     * @param theRows       the number of rows.
+     * @param theCols       the number of columns.
+     * @throws IllegalArgumentException when rows or columns are outside the
+     * inclusive range of 4-10.
+     */
     public Maze(final TriviaMaze theController, final int theRows,
                 final int theCols) throws IllegalArgumentException {
         myController = theController;
@@ -69,6 +83,14 @@ public class Maze implements Serializable {
         build(theRows, theCols);
     }
 
+    /**
+     * Creates a dummy maze.
+     *
+     * @param theRows   the number of rows.
+     * @param theCols   the number of columns.
+     * @throws IllegalArgumentException when rows or columns are outside the
+     * inclusive range of 4-10.
+     */
     private Maze(final int theRows, final int theCols) throws IllegalArgumentException {
         if (theRows < 4 || theRows > 10 || theCols < 4 || theCols > 10) {
             throw new IllegalArgumentException("dimensions passed to Maze " +
@@ -77,6 +99,12 @@ public class Maze implements Serializable {
         build(theRows, theCols);
     }
 
+    /**
+     * Builds a maze and its elements.
+     *
+     * @param theRows   the number of rows.
+     * @param theCols   the number of columns.
+     */
     public void build(final int theRows, final int theCols)  {
         myHeight = theRows;
         myWidth = theCols;
@@ -108,7 +136,7 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Chooses a random room from the maze.
+     * Chooses a random room from the maze along the outer rim.
      *
      * @return a random room from the maze.
      */
@@ -134,8 +162,8 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Picks a random room from the maze that is at least half a maze
-     * length/width away from the entrance.
+     * Picks a random room from the maze along the outer rim that is at least
+     * half a maze length or width away from the entrance.
      *
      * @return a room that is at least half a maze length/width away from the
      * given room
@@ -173,7 +201,8 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Generates a randomized maze.
+     * Generates a randomized maze via adding doors and assigning questions
+     * to those doors.
      *
      * @param theDoors the set of doors to join into a maze.
      */
@@ -193,6 +222,11 @@ public class Maze implements Serializable {
         qf.cleanUp();
     }
 
+    /**
+     * Attempts to move the player in the given direction through a door.
+     *
+     * @param theDirection  the direction to move the player.
+     */
     public void attemptMove(final Direction theDirection) {
         State doorState = myPlayerLocation.getDoorState(theDirection);
         if (doorState == CLOSED || doorState == LOCKED) {
@@ -206,7 +240,8 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Moves the player to an adjacent room in the specified direction.
+     * Moves the player to an adjacent room in the specified direction. If
+     * the player is moved to the goal room then the game is won.
      *
      * @param theDirection the direction to move the player.
      */
@@ -223,9 +258,8 @@ public class Maze implements Serializable {
      * response. If the player's response is correct then the door will be
      * opened and the player is moved to the adjacent room in the direction.
      * If the player's response is incorrect then the door will be locked and
-     * the player will remain in place. If the player is moved to the goal
-     * room then the game is won. If the locked door prevents movement to the
-     * goal then the game is lost.
+     * the player will remain in place. If the locked door prevents movement to
+     * the goal then the game is lost.
      *
      * @param theDirection the direction to move in.
      * @param theResponse the player's response.
@@ -256,7 +290,7 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Checks if player has reached the goal room.
+     * Checks if player has reached the goal room and triggers the end if so.
      */
     public void atGoal() {
         if (myPlayerLocation == myGoalLocation) {
@@ -265,8 +299,8 @@ public class Maze implements Serializable {
     }
 
     /**
-     * Determines if there is no longer a viable path to the goal, meaning
-     * the game is lost.
+     * Determines if there is no longer a viable path to the goal and
+     * triggers the end if so.
      */
     public void gameLoss() {
         if (BFSRunner.findPath(this).isEmpty()) {
@@ -407,6 +441,11 @@ public class Maze implements Serializable {
         return sj.toString();
     }
 
+    /**
+     * Returns a 2D character array representation of a dummy maze.
+     *
+     * @return a 2D character array representation of a dummy maze.
+     */
     public char[][] generateDummy() {
         final int dim = new Random().nextInt(7) + 4;
         final Maze dummyMaze = new Maze(dim, dim);
@@ -414,6 +453,9 @@ public class Maze implements Serializable {
         return dummyMaze.toCharArray();
     }
 
+    /**
+     * Creates a folder for saves and then saves a preset file to it.
+     */
     public void save() {
         final File saveFolder = new File(
                 FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
@@ -421,16 +463,32 @@ public class Maze implements Serializable {
         save(new File(saveFolder + "/quickSave.ser"));
     }
 
+    /**
+     * Saves a given file to saves folder.
+     *
+     * @param theSaveFile   the specified file.
+     */
     public void save(final File theSaveFile) {
         Serializer.save(new Memento(myRooms, myPath, myQuestionMap,
                 myPlayerLocation, myGoalLocation, myStartLocation), theSaveFile);
     }
 
+    /**
+     * Loads a preset file from the saves folder.
+     *
+     * @return true if successful, else false.
+     */
     public boolean load() {
         return load(new File(
                 FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze/quickSave.ser"));
     }
 
+    /**
+     * Loads a given file from saves folder.
+     *
+     * @param theSaveFile   the specified file.
+     * @return true if successful, else false.
+     */
     public boolean load(final File theSaveFile) {
         return Serializer.load(theSaveFile)
                 .map(memento -> {
@@ -441,6 +499,11 @@ public class Maze implements Serializable {
                 .orElse(false);
     }
 
+    /**
+     * Restores a maze to a saved state via a memento.
+     *
+     * @param theMemento    the memento containing the state to restore.
+     */
     private void restore(final Memento theMemento) {
         myRooms = theMemento.mySavedRooms;
         myPath = theMemento.mySavedPath;
@@ -452,8 +515,14 @@ public class Maze implements Serializable {
         myStartLocation = theMemento.mySavedStartLocation;
     }
 
+    /**
+     * Memento contains the state of a maze.
+     */
     static class Memento implements Serializable {
 
+        /**
+         * Class version number.
+         */
         @Serial
         private static final long serialVersionUID = -4739895132858153478L;
 
@@ -482,6 +551,16 @@ public class Maze implements Serializable {
          */
         private final Room mySavedStartLocation;
 
+        /**
+         * Creates a memento.
+         *
+         * @param theRooms          the rooms to save.
+         * @param thePath           the path to save.
+         * @param theQuestionMap    the questions and their doors to save.
+         * @param thePlayerLocation the player's location to save.
+         * @param theGoalLocation   the goal location to save.
+         * @param theStartLocation  the starting location to save.
+         */
         private Memento(final Room[][] theRooms, final Path thePath,
                         final Map<Door, Question> theQuestionMap,
                         final Room thePlayerLocation,

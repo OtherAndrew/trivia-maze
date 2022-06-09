@@ -12,10 +12,13 @@ import static model.mazecomponents.Symbol.*;
 
 /**
  * Room is a class that represents a space in the maze that the player can
- * occupy. Each room may be connected by at most four doors.
+ * visit and occupy. Each room may be connected by at most four doors.
  */
 public class Room implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = 7855965211246841891L;
 
@@ -41,10 +44,10 @@ public class Room implements Serializable {
     private char mySymbol;
 
     /**
-     * Constructor for a Room instance.
+     * Constructs a room.
      *
-     * @param theRow the Room's row position.
-     * @param theCol the Room's column position.
+     * @param theRow    the room's row position.
+     * @param theCol    the room's column position.
      */
     public Room(final int theRow, final int theCol) throws IllegalArgumentException {
         if (theRow < 0 || theCol < 0) {
@@ -59,18 +62,18 @@ public class Room implements Serializable {
     }
 
     /**
-     * Gets this Room's x-coordinate.
+     * Gets this room's row position.
      *
-     * @return an integer representing the Room's row position.
+     * @return an integer representing the room's row position.
      */
     public int getRow() {
         return myRow;
     }
 
     /**
-     * Gets this Room's y-coordinate.
+     * Gets this room's column position.
      *
-     * @return an integer representing the Room's column position.
+     * @return an integer representing the room's column position.
      */
     public int getCol() {
         return myCol;
@@ -80,7 +83,7 @@ public class Room implements Serializable {
      * Get the room on the other side of the door in a specified direction.
      *
      * @param theDirection  the direction the door is in.
-     * @return  the room on the other side of the door if it exists or null.
+     * @return the room on the other side of the door if it exists or null.
      */
     public Room getOtherSide(final Direction theDirection) {
         return Optional.ofNullable(getDoor(theDirection))
@@ -100,17 +103,17 @@ public class Room implements Serializable {
     /**
      * Returns all doors connected to this room.
      *
-     * @return a map of Direction -> Door
+     * @return a map of Direction -> Door.
      */
     public Collection<Door> getAllDoors() {
         return myDoors.values();
     }
 
     /**
-     * Determines if a Door exists in the direction specified.
+     * Determines if a door exists in the direction specified.
      *
-     * @param theDirection the direction to check in.
-     * @return if a Door exists in the direction.
+     * @param theDirection  the direction to check in.
+     * @return true if a door exists in the direction, else false.
      */
     public boolean hasDoor(final Direction theDirection) {
         return myDoors.containsKey(theDirection);
@@ -119,7 +122,7 @@ public class Room implements Serializable {
     /**
      * Gets the door in the direction.
      *
-     * @param theDirection the direction the door is in.
+     * @param theDirection  the direction the door is in.
      * @return the door in the specified direction.
      */
     public Door getDoor(final Direction theDirection) {
@@ -127,10 +130,10 @@ public class Room implements Serializable {
     }
 
     /**
-     * Adds a Door at the specified direction.
+     * Adds a door in the specified direction.
      *
-     * @param theDirection the direction to add the Door at.
-     * @param theDoor      the Door to add.
+     * @param theDirection the direction to add the Door in.
+     * @param theDoor      the door to add.
      */
     public void addDoor(final Direction theDirection, final Door theDoor) {
         myDoors.put(theDirection, theDoor);
@@ -139,8 +142,8 @@ public class Room implements Serializable {
     /**
      * Gets the state of the door in the direction.
      *
-     * @param theDirection the direction the door is in.
-     * @return the state of the specified door or null if door does not exist.
+     * @param theDirection  the direction the door is in.
+     * @return the state of the specified door if it exists, else null.
      */
     public State getDoorState(final Direction theDirection) {
         return Optional.ofNullable(getDoor(theDirection))
@@ -148,13 +151,19 @@ public class Room implements Serializable {
                 .orElse(null);
     }
 
+    /**
+     * Sets the state of the door in the specified direction of the room.
+     *
+     * @param theDirection  the direction the door is in.
+     * @param theState      the state the door is in.
+     */
     public void setDoorState(final Direction theDirection,
                              final State theState) {
         Optional.ofNullable(getDoor(theDirection)).ifPresent(door -> door.setState(theState));
     }
 
     /**
-     * Visits this room.
+     * Visits this room and adjusts the state of its doors.
      */
     public void visit() {
         myVisited = true;
@@ -169,12 +178,15 @@ public class Room implements Serializable {
     /**
      * Determines if this room has been visited.
      *
-     * @return if the room has been visited.
+     * @return true if the room has been visited, else false.
      */
     public boolean isVisited() {
         return myVisited;
     }
 
+    /**
+     * Sets this room's symbol to path if it is unvisited.
+     */
     public void setPathSymbol() {
         if (!myVisited) mySymbol = PATH;
     }

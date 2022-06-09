@@ -5,11 +5,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
+/**
+ * QuestionFactory is a factory that constructs and returns random questions,
+ * either multiple choice or short answer, from a SQLite database.
+ */
 public class QuestionFactory {
 
+    /**
+     * The connection to the SQLite database.
+     */
     private Connection myConnection;
+    /**
+     * Statement for executing SQLite statements and getting the results.
+     */
     private Statement myStatement;
 
+    /**
+     * Creates a factory and establishes the connection to the database.
+     */
     public QuestionFactory() {
         try {
             myConnection = DriverManager.getConnection(
@@ -22,6 +35,12 @@ public class QuestionFactory {
         }
     }
 
+    /**
+     * Creates a random question, either multiple choice or short answer, via
+     * statements extracting data from the database.
+     *
+     * @return a question.
+     */
     public Question createQuestion() {
         Question question = null;
         try (final ResultSet rs = myStatement.executeQuery("SELECT * FROM " +
@@ -56,6 +75,9 @@ public class QuestionFactory {
         return question;
     }
 
+    /**
+     * Cleans up the connection to the database.
+     */
     public void cleanUp() {
         try {
             if (myStatement != null) myStatement.close();

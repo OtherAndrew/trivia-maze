@@ -5,22 +5,27 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Question is a class that represents a question and its answer choices,
- * right and wrong.
+ * Question is a class that represents a question and its answers, right and
+ * wrong.
  *
  * @author Anthony Nguyen
  * @version 2022 May 6
  */
 public abstract class Question implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = -919594342983300606L;
+
+    /**
+     * String representation of the question.
+     */
     private final String myQuery;
 
     /**
-     * Constructs a Question object from a query and a set of answers. The
-     * resulting set of answers in the Question will be a shuffled version
-     * of the set provided in arguments.
+     * Creates a question.
      *
      * @param theQuestion the question to ask.
      */
@@ -29,10 +34,10 @@ public abstract class Question implements Serializable {
     }
 
     /**
-     * Checks if an answer submitted by a player to a question is correct
+     * Checks if an answer to a question is correct.
      *
-     * @param theAnswer an answer submitted by a player.
-     * @return if the option selected correct.
+     * @param theAnswer an answer to be checked.
+     * @return true if the answer is correct, else false.
      */
     public abstract boolean checkAnswer(final String theAnswer);
 

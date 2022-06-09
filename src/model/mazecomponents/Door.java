@@ -8,10 +8,13 @@ import static model.mazecomponents.Symbol.*;
 
 /**
  * Door is a class that represents a maze door. Door connects two Rooms and
- * can be unlocked or locked.
+ * can be undiscovered, closed, opened, or locked .
  */
 public class Door implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = -6572203977734228079L;
 
@@ -65,6 +68,12 @@ public class Door implements Serializable {
         myRoom2.addDoor(myDirection2, this);
     }
 
+    /**
+     * Gets the room on the opposite side of the door give the other room.
+     *
+     * @param theRoom   the other room of the door.
+     * @return the room on the opposite side or null if room is unrelated.
+     */
     public Room getOtherSide(final Room theRoom) {
         Room result = null;
         if (myRoom1.equals(theRoom)) result = myRoom2;
@@ -100,9 +109,9 @@ public class Door implements Serializable {
     }
 
     /**
-     * Sets this Door's State.
+     * Sets this door's State and its symbol accordingly.
      *
-     * @param theState the Door's new State.
+     * @param theState  the Door's new State.
      */
     public void setState(final State theState) {
         myState = theState;
@@ -114,6 +123,9 @@ public class Door implements Serializable {
         }
     }
 
+    /**
+     * Sets this door's symbol to path if it is undiscovered.
+     */
     public void setPathSymbol() {
         if (mySymbol == UNDISCOVERED_SYMBOL) mySymbol = PATH;
     }

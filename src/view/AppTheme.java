@@ -37,7 +37,7 @@ public final class AppTheme {
     public static final String TITLE = "Trivia Maze";
 
     /**
-     * Empty constructor
+     * Prevent instantiation.
      */
     private AppTheme() {}
 

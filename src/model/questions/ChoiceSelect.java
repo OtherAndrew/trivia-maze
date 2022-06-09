@@ -4,21 +4,32 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * ChoiceSelect represents a question with multiple answer choices to pick from.
+ */
 public class ChoiceSelect extends Question implements Serializable {
 
+    /**
+     * Class version number.
+     */
     @Serial
     private static final long serialVersionUID = 2189392842155253463L;
+    /**
+     * The options associated with an answer choice.
+     */
     private static final String[] OPTIONS = {"a", "b", "c", "d"};
 
+    /**
+     * The answer choices along with their corresponding option.
+     */
     private final Map<String, Answer> myAnswers;
 
     /**
-     * Constructs a Question object from a query and a set of answers. The
-     * resulting set of answers in the Question will be a shuffled version
-     * of the set provided in arguments.
+     * Creates a multiple choice question with randomized order of answer
+     * choices.
      *
-     * @param theQuestion the question to ask.
-     * @param theChoices the answer choices.
+     * @param theQuestion   the question to ask.
+     * @param theChoices    the answer choices.
      */
     ChoiceSelect(final String theQuestion, final LinkedList<Answer> theChoices) {
         super(theQuestion);
@@ -30,11 +41,10 @@ public class ChoiceSelect extends Question implements Serializable {
     }
 
     /**
-     * Checks if an answer submitted by a player to a true/false or multiple
-     * choice question is true.
+     * Checks if an answer is correct based off the options.
      *
-     * @param theOption an option submitted by a player.
-     * @return if the option selected correct.
+     * @param theOption an option corresponding to an answer choice.
+     * @return true if the option selected correct, else false.
      */
     @Override
     public boolean checkAnswer(final String theOption) {
@@ -44,7 +54,9 @@ public class ChoiceSelect extends Question implements Serializable {
     }
 
     /**
-     * @return list of answers for question.
+     * Returns a list of the answer choices.
+     *
+     * @return list of answers for the multiple choice question.
      */
     @Override
     public List<String> getAnswers() {

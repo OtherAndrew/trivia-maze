@@ -1,14 +1,27 @@
 package model.mazecomponents;
 
+/**
+ * The state of a door.
+ */
 public enum State {
 
     /**
-     * The state of a door.
-     * - Closed: Unable to be passed through, but able to be opened. Will show
-     *   a question
-     * - Open: Able to be passed through freely, does not show a question.
-     * - Locked: Unable to be passed through or opened. Will show a question.
-     * - Undiscovered: Unable to be passed through or opened. does not show a question.
+     * Unable to passed through, but able to be opened.
      */
-    CLOSED, OPENED, LOCKED, UNDISCOVERED
+    CLOSED,
+
+    /**
+     * Able to be passed through freely.
+     */
+    OPENED,
+
+    /**
+     * Unable to be passed through or opened.
+     */
+    LOCKED,
+
+    /**
+     * Unable to be passed through or opened.
+     */
+    UNDISCOVERED
 }

@@ -1,9 +1,24 @@
 package model.mazecomponents;
 
+/**
+ * Cardinal directions one can move.
+ */
 public enum Direction {
 
     /**
-     * The direction to move.
+     * North direction.
      */
-    NORTH, EAST, SOUTH, WEST
+    NORTH,
+    /**
+     * East direction.
+     */
+    EAST,
+    /**
+     * South direction.
+     */
+    SOUTH,
+    /**
+     * West direction.
+     */
+    WEST
 }

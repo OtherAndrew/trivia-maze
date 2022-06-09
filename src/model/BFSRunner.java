@@ -7,26 +7,23 @@ import model.mazecomponents.State;
 import java.util.*;
 
 /**
- * Finds the shortest path to the exit of a maze, provided it is possible.
+ * Finds the path to the exit of a maze.
  *
  * @author Anthony Nguyen
  * @author Amit Pandey (original)
  */
-public class BFSRunner {
+public final class BFSRunner {
 
     /**
-     * Empty constructor
+     * Prevent instantiation.
      */
     private BFSRunner() {}
 
     /**
-     * Finds a path from the player's location to the goal location. If a path
-     * exists then the List of Rooms that lead to the goal will be returned.
-     * If a path does not exist then an empty List will be returned.
+     * Finds a path from the player's location to the goal location.
      *
-     * @param theMaze the Maze to find a path for.
-     * @return the List of Rooms that leads to the goal, or an empty List if
-     *         no such path exists.
+     * @param theMaze   the Maze to find a path for.
+     * @return an Optional containing the path if it exists, else null.
      */
     public static Optional<Path> findPath(final Maze theMaze) {
         Path path = null;
@@ -64,10 +61,11 @@ public class BFSRunner {
     }
 
     /**
-     * Traces the path from the goal Node to the player's position.
+     * Traces the route from the goal node to the starting position and
+     * returns the path.
      *
      * @param theGoal the Node that contains the goal room.
-     * @return a List of Rooms from the player's position to the goal
+     * @return a path consisting of rooms and doors to the goal.
      */
     private static Path tracePath(final Node theGoal) {
         final LinkedList<Room> rooms = new LinkedList<>();
@@ -89,7 +87,7 @@ public class BFSRunner {
     }
 
     /**
-     * Node contains a reference to a Room and a parent Node.
+     * Node contains a reference to a room and a parent node.
      */
     private static class Node {
         /**
@@ -104,7 +102,7 @@ public class BFSRunner {
         /**
          * Constructs a Node with no reference to another Node.
          *
-         * @param theRoom the Room the Node contains.
+         * @param theRoom   the room the Node contains.
          */
         private Node(final Room theRoom) {
             this(theRoom, null);
@@ -113,8 +111,8 @@ public class BFSRunner {
         /**
          * Constructs a Node with a reference to another Node.
          *
-         * @param theRoom the Room the Node contains.
-         * @param theParent another Node.
+         * @param theRoom   the room the Node contains.
+         * @param theParent the parent Node.
          */
         private Node(final Room theRoom, final Node theParent) {
             myRoom = theRoom;
