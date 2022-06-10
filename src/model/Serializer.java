@@ -42,7 +42,7 @@ public final class Serializer {
             out.writeObject(theMaze);
             out.close();
             file.close();
-        } catch (IOException e) {
+        } catch (final IOException | NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -62,7 +62,7 @@ public final class Serializer {
             returnMaze = (Memento) in.readObject();
             in.close();
             file.close();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (final ClassNotFoundException | IOException | NullPointerException e) {
             returnMaze = null;
         }
         return Optional.ofNullable(returnMaze);
