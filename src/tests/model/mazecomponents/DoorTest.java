@@ -7,7 +7,6 @@ import static model.mazecomponents.State.*;
 import static model.mazecomponents.Symbol.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DoorTest {
 
     private Room myRoom1;

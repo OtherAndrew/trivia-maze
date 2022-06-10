@@ -1,23 +1,15 @@
-package tests.model.mazecomponents;
+package model.mazecomponents;
 
-import model.mazecomponents.Direction;
-import model.mazecomponents.Door;
-import model.mazecomponents.Room;
-import model.mazecomponents.State;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 import java.util.Random;
 
 import static model.mazecomponents.Direction.*;
-import static model.mazecomponents.State.UNDISCOVERED;
-import static model.mazecomponents.Symbol.UNVISITED;
-import static model.mazecomponents.Symbol.VISITED;
+import static model.mazecomponents.State.*;
+import static model.mazecomponents.Symbol.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoomTest {
 
     private Room myTestRoom, myTestRoom2;
@@ -46,12 +38,6 @@ class RoomTest {
         myWestDoor = new Door(myTestRoom, WEST, myTestRoom2, EAST);
     }
 
-    @AfterEach
-    void tearDown() {
-        myTestRoom = null;
-        myTestRoom2 = null;
-    }
-
     @Test
     void constructorNegativeArgs() {
         assertThrowsExactly(IllegalArgumentException.class, () -> new Room(-1, 0));
@@ -70,20 +56,15 @@ class RoomTest {
 
     @Test
     void getOtherSide() {
+        assertNull(myTestRoom.getOtherSide(NORTH));
+        assertNull(myTestRoom.getOtherSide(SOUTH));
+        assertNull(myTestRoom.getOtherSide(EAST));
+        assertNull(myTestRoom.getOtherSide(WEST));
         addDoorsAll();
         assertEquals(myTestRoom2, myTestRoom.getOtherSide(NORTH));
         assertEquals(myTestRoom2, myTestRoom.getOtherSide(SOUTH));
         assertEquals(myTestRoom2, myTestRoom.getOtherSide(EAST));
         assertEquals(myTestRoom2, myTestRoom.getOtherSide(WEST));
-
-    }
-
-    @Test
-    void getOtherSide_NullDoor() {
-        assertNull(myTestRoom.getOtherSide(NORTH));
-        assertNull(myTestRoom.getOtherSide(SOUTH));
-        assertNull(myTestRoom.getOtherSide(EAST));
-        assertNull(myTestRoom.getOtherSide(WEST));
     }
 
     @Test
@@ -153,7 +134,7 @@ class RoomTest {
     void setDoorState() {
         addDoorsAll();
         for (State s : State.values()) {
-            for (Direction d : values()) {
+            for (Direction d : Direction.values()) {
                 myTestRoom.setDoorState(d, s);
                 assertEquals(s, myTestRoom.getDoorState(d));
             }
@@ -162,9 +143,19 @@ class RoomTest {
 
     @Test
     void visit() {
+        addDoorsAll();
         assertFalse(myTestRoom.isVisited());
+        for (Door door : myTestRoom.getAllDoors()) {
+            assertEquals(UNDISCOVERED, door.getState());
+        }
+        myTestRoom.setDoorState(NORTH, LOCKED);
+        assertEquals(LOCKED, myTestRoom.getDoorState(NORTH));
         myTestRoom.visit();
         assertTrue(myTestRoom.isVisited());
+        assertEquals(LOCKED, myTestRoom.getDoorState(NORTH));
+        assertEquals(CLOSED, myTestRoom.getDoorState(EAST));
+        assertEquals(CLOSED, myTestRoom.getDoorState(SOUTH));
+        assertEquals(CLOSED, myTestRoom.getDoorState(WEST));
     }
 
     @Test
@@ -172,6 +163,16 @@ class RoomTest {
         assertFalse(myTestRoom.isVisited());
         myTestRoom.visit();
         assertTrue(myTestRoom.isVisited());
+    }
+
+    @Test
+    void setPathSymbol() {
+        assertEquals(UNVISITED, myTestRoom.toChar());
+        myTestRoom.setPathSymbol();
+        assertEquals(PATH, myTestRoom.toChar());
+        myTestRoom.visit();
+        myTestRoom.setPathSymbol();
+        assertNotEquals(PATH, myTestRoom.toChar());
     }
 
     @Test
