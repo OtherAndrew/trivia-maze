@@ -12,12 +12,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * FileAccessor is used for dialog-related tasks. It can bring up a file
+ * chooser for saving and loading or offer notification-style dialog.
+ */
 public final class FileAccessor {
 
+    /**
+     * The unique instance of the FileAccessor.
+     */
     private static FileAccessor myAccessor;
 
+    /**
+     * Inner tool to retrieve files.
+     */
     private final JFileChooser myChooser;
-    
+
+    /**
+     * Creates a new FileAccessor.
+     */
     private FileAccessor() {
         final File saveFolder = new File(
                 FileSystemView.getFileSystemView().getDefaultDirectory() + "/trivia-maze");
@@ -29,18 +42,43 @@ public final class FileAccessor {
                 "Trivia Maze .ser file", "ser"));
     }
 
-    static FileAccessor getAccessor() {
+    /**
+     * Retrieves the unique FileAccessor or creates it as necessary.
+     *
+     * @return the unique instance.
+     */
+    static FileAccessor getFileAccessor() {
         return Optional.ofNullable(myAccessor).orElse(myAccessor = new FileAccessor());
     }
 
+    /**
+     * Gets a file for loading.
+     *
+     * @param theParent the parent component for the dialog.
+     * @return the file or null.
+     */
     Optional<File> loadFile(final Component theParent) {
         return getFile(theParent, "Load a previous game", "Resume");
     }
 
+    /**
+     * Gets a file for saving.
+     *
+     * @param theParent the parent component for the dialog.
+     * @return the file or null.
+     */
     Optional<File> saveFile(final Component theParent) {
         return getFile(theParent, "Save your game", "Save");
     }
 
+    /**
+     * Customizes the dialog for and retrieves a file.
+     *
+     * @param theParent the parent component for the dialog.
+     * @param theTitle  the title of the dialog.
+     * @param theButton the text of the button.
+     * @return the file or null.
+     */
     private Optional<File> getFile(final Component theParent, final String theTitle,
                                    final String theButton) {
         myChooser.setDialogTitle(theTitle);
@@ -50,6 +88,13 @@ public final class FileAccessor {
         return Optional.ofNullable(file);
     }
 
+    /**
+     * Retrieves and displays the contents of a file.
+     *
+     * @param theParent     the parent component for the dialog.
+     * @param theFilePath   the file path for the file to display.
+     * @param theTitle      the title for the dialog.
+     */
     static void showResource(final Component theParent,
                              final String theFilePath,
                              final String theTitle) {

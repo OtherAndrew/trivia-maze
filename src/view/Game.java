@@ -17,47 +17,143 @@ import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static javax.swing.KeyStroke.getKeyStroke;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
-import static view.FileAccessor.getAccessor;
+import static view.FileAccessor.getFileAccessor;
 import static view.MazeDisplayBuilder.buildMapDisplay;
 
+/**
+ * Game is the main screen for gameplay in the application. It displays a map
+ * of a maze for navigation, buttons to traverse that map, and an interface for
+ * questions to be shown and answers to be inputted or selected.
+ */
 public class Game {
 
+    /**
+     * Border of directions.
+     */
     public final static EmptyBorder DIRECTION_PADDING = new EmptyBorder(17, 0, 7, 0);
+    /**
+     * Border of sidebar.
+     */
     public final static EmptyBorder SIDEBAR_PADDING = new EmptyBorder(0, 7, 0, 0);
+    /**
+     * Border of answers.
+     */
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
+    /**
+     * Body relative directions.
+     */
     public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
+    /**
+     * Whether the user can input text.
+     */
     private boolean myTextInputEnabled;
+    /**
+     * Whether the user can move.
+     */
     private boolean myMovementEnabled;
+    /**
+     * Whether the user can save.
+     */
     private boolean mySaveEnabled;
+    /**
+     * User's chosen direction to move.
+     */
     private Direction myDirection;
+    /**
+     * User's chosen answer to a question.
+     */
     private String myAnswer;
 
-    private final Cancel myCancelFunction;
-    private final Submit mySubmitFunction;
+    /**
+     * Cancel a question action.
+     */
+    private final AbstractAction myCancelFunction;
 
+    /**
+     * Submit an answer action.
+     */
+    private final AbstractAction mySubmitFunction;
+
+    /**
+     * The controller for the GUI.
+     */
     private final TriviaMaze myController;
+    /**
+     *
+     */
     private final JFrame myFrame;
+    /**
+     *
+     */
     private final JPanel myContentPanel;
+    /**
+     *
+     */
     private JPanel myGamePanel;
+    /**
+     *
+     */
     private JPanel myMenuBar;
+    /**
+     *
+     */
     private JPanel myMapDisplay;
+    /**
+     *
+     */
     private JPanel mySidebar;
+    /**
+     *
+     */
     private JPanel myQAPanel;
+    /**
+     *
+     */
     private JPanel myQuestionPanel;
+    /**
+     *
+     */
     private JPanel myAnswerPanel;
+    /**
+     *
+     */
     private JPanel myResponsePanel;
+    /**
+     *
+     */
     private JPanel myDirectionPanel;
+    /**
+     *
+     */
     private JPanel myAnswerSubmissionPanel;
+    /**
+     *
+     */
     private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
             myNewGameButton, myQuickSaveButton, myQuickLoadButton,
             mySaveButton, myLoadButton, mySubmitButton, myCancelButton;
 
+    /**
+     *
+     */
     private JTextArea myQuestionArea;
+    /**
+     *
+     */
     private JTextField myAnswerPrompt;
+    /**
+     *
+     */
     private JRadioButton[] myAnswerButtons;
+    /**
+     *
+     */
     private ButtonGroup myAnswerButtonsGroup;
 
+    /**
+     *
+     */
     public Game(final TriviaMaze theController) {
         myController = theController;
         theController.registerView(this);
@@ -80,13 +176,35 @@ public class Game {
             show("game");
         });
         mySaveButton.addActionListener(e -> { if (mySaveEnabled)
-            getAccessor().saveFile(myContentPanel).ifPresent(myController::save);
+            getFileAccessor().saveFile(myContentPanel).ifPresent(myController::save);
         });
         myLoadButton.addActionListener(e ->
-                getAccessor().loadFile(myContentPanel).ifPresent(this::load));
+                getFileAccessor().loadFile(myContentPanel).ifPresent(this::load));
 
-        myCancelFunction = new Cancel();
-        mySubmitFunction = new Submit();
+        myCancelFunction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myAnswer = null;
+                updateQA();
+            }
+        };
+        mySubmitFunction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (myTextInputEnabled) {
+                    myAnswer = myAnswerPrompt.getText();
+                    if (!myAnswer.isEmpty()) {
+                        myController.respond(myDirection, myAnswer);
+                        myAnswerPrompt.setText("");
+                    }
+                } else {
+                    if (myAnswer != null) {
+                        myController.respond(myDirection, myAnswer);
+                    }
+                }
+                myAnswer = null;
+            }
+        };
 
         final updateGui north = new updateGui(Direction.NORTH);
         final updateGui east = new updateGui(Direction.EAST);
@@ -99,6 +217,9 @@ public class Game {
         myFrame.setVisible(true);
     }
 
+    /**
+     *
+     */
     private void addButtonActionListeners(final updateGui... theDirections) {
         myNorthButton.addActionListener(theDirections[0]);
         myEastButton.addActionListener(theDirections[1]);
@@ -106,6 +227,9 @@ public class Game {
         myWestButton.addActionListener(theDirections[3]);
     }
 
+    /**
+     *
+     */
     private void addKeyboardBindings(final updateGui... theDirections) {
         InputMap iMap = (InputMap) UIManager.get("Button.focusInputMap");
         iMap.put(getKeyStroke(VK_SPACE, 0), "none");
@@ -129,20 +253,32 @@ public class Game {
         aMap.put("cancel", myCancelFunction);
     }
 
+    /**
+     *
+     */
     private void setMovementEnabled(final boolean theStatus) {
         myMovementEnabled = theStatus;
     }
 
+    /**
+     *
+     */
     private void setSaveEnabled(final boolean theStatus) {
         mySaveEnabled = theStatus;
     }
 
+    /**
+     *
+     */
     private void doMove(final Direction theDirection) {
         setMovementEnabled(false);
         myDirection = theDirection;
         myController.move(myDirection);
     }
 
+    /**
+     *
+     */
     public void displayEndGame(final boolean theWinStatus) {
         final StringJoiner sj = new StringJoiner("\n");
         if (theWinStatus) sj.add("You won!");
@@ -159,6 +295,9 @@ public class Game {
         setSaveEnabled(false);
     }
 
+    /**
+     *
+     */
     private JPanel drawGamePanel() {
         myGamePanel = buildPanel();
         myGamePanel.add(drawMenuBar(), NORTH);
@@ -168,6 +307,9 @@ public class Game {
         return myGamePanel;
     }
 
+    /**
+     *
+     */
     private JPanel drawSidebar() {
         mySidebar = new JPanel(new BorderLayout());
         mySidebar.setBorder(SIDEBAR_PADDING);
@@ -177,6 +319,9 @@ public class Game {
         return mySidebar;
     }
 
+    /**
+     *
+     */
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
         myQuickSaveButton = buildButton("Q.Save");
@@ -188,6 +333,9 @@ public class Game {
         return myMenuBar;
     }
 
+    /**
+     *
+     */
     private JPanel drawQAPanel() {
         myQAPanel = drawGenQAPanel();
         myQAPanel.add(drawQuestionArea(), CENTER);
@@ -222,6 +370,9 @@ public class Game {
         return myQAPanel;
     }
 
+    /**
+     *
+     */
     private JPanel drawGenQAPanel() {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.setBackground(MID_GREY);
@@ -260,6 +411,9 @@ public class Game {
         return myQuestionPanel;
     }
 
+    /**
+     *
+     */
     private JPanel drawMultipleChoicePanel(final List<String> theAnswerArray) {
         myTextInputEnabled = false;
         int numberOfAnswers = theAnswerArray.size();
@@ -286,6 +440,9 @@ public class Game {
         return myAnswerPanel;
     }
 
+    /**
+     *
+     */
     private JPanel drawShortAnswerPanel() {
         myTextInputEnabled = true;
         myAnswerPanel = drawAnswerPanel();
@@ -311,6 +468,9 @@ public class Game {
         return myAnswerPanel;
     }
 
+    /**
+     *
+     */
     private JPanel drawAnswerPanel() {
         myAnswerPanel = new JPanel(new BorderLayout());
         myAnswerPanel.setBorder(ANSWER_PADDING);
@@ -318,6 +478,9 @@ public class Game {
         return myAnswerPanel;
     }
 
+    /**
+     *
+     */
     private JPanel drawAnswerSubmitPanel() {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
         mySubmitButton = buildButton("Submit");
@@ -354,10 +517,16 @@ public class Game {
         return myDirectionPanel;
     }
 
+    /**
+     *
+     */
     TriviaMaze getController() {
         return myController;
     }
 
+    /**
+     *
+     */
     public void updateMapDisplay(final boolean theReveal) {
         setMovementEnabled(true);
         setSaveEnabled(true);
@@ -368,6 +537,9 @@ public class Game {
         myFrame.repaint();
     }
 
+    /**
+     *
+     */
     private void update(final JPanel theContainer, final JPanel theReplaced,
                         final JPanel theReplacer) {
         theContainer.remove(theReplaced);
@@ -376,70 +548,71 @@ public class Game {
         myFrame.repaint();
     }
 
+    /**
+     *
+     */
     public void updateQA() {
         setMovementEnabled(true);
         update(mySidebar, myQAPanel, drawQAPanel());
     }
 
+    /**
+     *
+     */
     public void updateQA(final String theQuery) {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery));
         myAnswerPrompt.requestFocus();
     }
 
+    /**
+     *
+     */
     public void updateQA(final String theQuery, final List<String> theAnswers) {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery, theAnswers));
     }
 
+    /**
+     *
+     */
     public void show(final String theCard) {
         updateQA();
         final CardLayout cards = (CardLayout) myContentPanel.getLayout();
         cards.show(myContentPanel, theCard);
     }
 
+    /**
+     *
+     */
     public void load(final File theFile) {
         myController.load(theFile);
         show("game");
     }
 
+    /**
+     *
+     */
     private class updateGui extends AbstractAction {
 
+        /**
+         *
+         */
         private final Direction myDirection;
 
+        /**
+         *
+         */
         private updateGui(final Direction theDirection) {
             myDirection = theDirection;
         }
 
+        /**
+         *
+         */
         @Override
         public void actionPerformed(final ActionEvent e) {
             if (myMovementEnabled) {
                 doMove(myDirection);
             }
-        }
-    }
-
-    private class Submit extends AbstractAction {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            if (myTextInputEnabled) {
-                myAnswer = myAnswerPrompt.getText();
-                if (!myAnswer.isEmpty()) {
-                    myController.respond(myDirection, myAnswer);
-                    myAnswerPrompt.setText("");
-                }
-            } else {
-                if (myAnswer != null) {
-                    myController.respond(myDirection, myAnswer);
-                }
-            }
-            myAnswer = null;
-        }
-    }
-
-    private class Cancel extends AbstractAction {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            myAnswer = null;
-            updateQA();
         }
     }
 }
