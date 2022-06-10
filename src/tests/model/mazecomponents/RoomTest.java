@@ -1,9 +1,5 @@
 package model.mazecomponents;
 
-import model.mazecomponents.Direction;
-import model.mazecomponents.Door;
-import model.mazecomponents.Room;
-import model.mazecomponents.State;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
