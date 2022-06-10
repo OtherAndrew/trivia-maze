@@ -1,4 +1,4 @@
-package tests.model.questions;
+package model.questions;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

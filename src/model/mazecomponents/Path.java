@@ -1,7 +1,4 @@
-package model;
-
-import model.mazecomponents.Door;
-import model.mazecomponents.Room;
+package model.mazecomponents;
 
 import java.io.Serial;
 import java.io.Serializable;

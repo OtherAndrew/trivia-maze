@@ -1,10 +1,7 @@
 package model;
 
 import controller.TriviaMaze;
-import model.mazecomponents.Direction;
-import model.mazecomponents.Door;
-import model.mazecomponents.Room;
-import model.mazecomponents.State;
+import model.mazecomponents.*;
 import model.questions.Question;
 import model.questions.QuestionFactory;
 

@@ -1,6 +1,7 @@
 package model;
 
 import model.mazecomponents.Door;
+import model.mazecomponents.Path;
 import model.mazecomponents.Room;
 import model.mazecomponents.State;
 

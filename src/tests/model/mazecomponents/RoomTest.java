@@ -1,4 +1,4 @@
-package tests.model.mazecomponents;
+package model.mazecomponents;
 
 import model.mazecomponents.Direction;
 import model.mazecomponents.Door;
