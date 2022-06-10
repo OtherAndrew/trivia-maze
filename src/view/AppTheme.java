@@ -4,6 +4,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+import static java.awt.Color.decode;
+import static java.awt.Font.BOLD;
+import static java.awt.Font.SANS_SERIF;
+
 /**
  * AppTheme defines the shared GUI elements for every GUI class.
  * Colors are pulled from the Dracula text editor color scheme by Zeno Rocha
@@ -14,67 +18,64 @@ public final class AppTheme {
     /**
      * Red color.
      */
-    public static final Color RED = Color.decode("#ff5555");
+    public static final Color RED = decode("#ff5555");
     /**
      * Orange color.
      */
-    public static final Color ORANGE = Color.decode("#ffb86c");
+    public static final Color ORANGE = decode("#ffb86c");
     /**
      * Yellow color.
      */
-    public static final Color YELLOW = Color.decode("#f1fa8c");
+    public static final Color YELLOW = decode("#f1fa8c");
     /**
      * Green color.
      */
-    public static final Color GREEN = Color.decode("#50fa7b");
+    public static final Color GREEN = decode("#50fa7b");
     /**
      * Blue color.
      */
-    public static final Color BLUE = Color.decode("#8be9fd");
+    public static final Color BLUE = decode("#8be9fd");
     /**
      * Purple color.
      */
-    public static final Color PURPLE = Color.decode("#bd93f9");
+    public static final Color PURPLE = decode("#bd93f9");
     /**
      * Pink color.
      */
-    public static final Color PINK = Color.decode("#ff79c6");
+    public static final Color PINK = decode("#ff79c6");
     /**
      * White color.
      */
-    public static final Color WHITE = Color.decode("#f8f8f2");
+    public static final Color WHITE = decode("#f8f8f2");
     /**
      * Light grey color.
      */
-    public static final Color LIGHT_GREY = Color.decode("#6272a4");
+    public static final Color LIGHT_GREY = decode("#6272a4");
     /**
      * Medium grey color.
      */
-    public static final Color MID_GREY = Color.decode("#44475a");
+    public static final Color MID_GREY = decode("#44475a");
     /**
      * Dark grey color.
      */
-    public static final Color DARK_GREY = Color.decode("#282a36");
+    public static final Color DARK_GREY = decode("#282a36");
     /**
      * Black color.
      */
-    public static final Color BLACK = Color.decode("#101010");
+    public static final Color BLACK = decode("#101010");
 
     /**
      * Font for buttons.
      */
-    public static final Font BUTTON_FONT =
-            new Font(Font.SANS_SERIF, Font.BOLD, 12);
+    public static final Font BUTTON_FONT = new Font(SANS_SERIF, BOLD, 12);
     /**
      * Font for text.
      */
-    public static final Font TEXT_FONT =
-            new Font(Font.SANS_SERIF, Font.BOLD, 15);
+    public static final Font TEXT_FONT = new Font(SANS_SERIF, BOLD, 15);
     /**
      * Big font.
      */
-    public static final Font LARGE_FONT =
-            new Font(Font.SANS_SERIF, Font.BOLD, 18);
+    public static final Font LARGE_FONT = new Font(SANS_SERIF, BOLD, 18);
 
     /**
      * General border.

@@ -98,7 +98,7 @@ public final class FileAccessor {
     static void showResource(final Component theParent,
                              final String theFilePath,
                              final String theTitle) {
-        try (final InputStream in = AppTheme.class.getResourceAsStream(theFilePath);
+        try (final InputStream in = FileAccessor.class.getResourceAsStream(theFilePath);
              final BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             JOptionPane.showMessageDialog(theParent,
                     br.lines().collect(Collectors.joining("\n")), theTitle,

@@ -13,7 +13,6 @@ import java.util.StringJoiner;
 
 import static java.awt.BorderLayout.*;
 import static java.awt.event.KeyEvent.*;
-import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static javax.swing.KeyStroke.getKeyStroke;
 import static model.mazecomponents.State.*;
 import static view.AppTheme.*;
@@ -181,7 +180,6 @@ public class Game {
      */
     private ButtonGroup myAnswerButtonsGroup;
 
-
     /**
      * Creates a game screen.
      *
@@ -268,7 +266,7 @@ public class Game {
     private void addKeyboardBindings(final move... theDirections) {
         InputMap iMap = (InputMap) UIManager.get("Button.focusInputMap");
         iMap.put(getKeyStroke(VK_SPACE, 0), "none");
-        iMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        iMap = myGamePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         iMap.put(getKeyStroke("W"), "moveNorth");
         iMap.put(getKeyStroke("D"), "moveEast");
         iMap.put(getKeyStroke("S"), "moveSouth");
