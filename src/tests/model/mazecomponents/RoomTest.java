@@ -1,5 +1,9 @@
-package model.mazecomponents;
+package tests.model.mazecomponents;
 
+import model.mazecomponents.Direction;
+import model.mazecomponents.Door;
+import model.mazecomponents.Room;
+import model.mazecomponents.State;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoomTest {
 
-    private Room myTestRoom;
+    private Room myTestRoom, myTestRoom2;
     private int myRow;
     private int myCol;
     private Door myNorthDoor, mySouthDoor, myEastDoor, myWestDoor;
@@ -34,11 +38,18 @@ class RoomTest {
         myRow = r.nextInt(6) + 4;
         myCol = r.nextInt(6) + 4;
         myTestRoom = new Room(myRow, myCol);
+        myTestRoom2 = new Room(0, 0);
 
-        myNorthDoor = new Door(myTestRoom, NORTH, myTestRoom, SOUTH);
-        mySouthDoor = new Door(myTestRoom, SOUTH, myTestRoom, NORTH);
-        myEastDoor = new Door(myTestRoom, EAST, myTestRoom, WEST);
-        myWestDoor = new Door(myTestRoom, WEST, myTestRoom, EAST);
+        myNorthDoor = new Door(myTestRoom, NORTH, myTestRoom2, SOUTH);
+        mySouthDoor = new Door(myTestRoom, SOUTH, myTestRoom2, NORTH);
+        myEastDoor = new Door(myTestRoom, EAST, myTestRoom2, WEST);
+        myWestDoor = new Door(myTestRoom, WEST, myTestRoom2, EAST);
+    }
+
+    @AfterEach
+    void tearDown() {
+        myTestRoom = null;
+        myTestRoom2 = null;
     }
 
     @Test
@@ -59,11 +70,20 @@ class RoomTest {
 
     @Test
     void getOtherSide() {
+        addDoorsAll();
+        assertEquals(myTestRoom2, myTestRoom.getOtherSide(NORTH));
+        assertEquals(myTestRoom2, myTestRoom.getOtherSide(SOUTH));
+        assertEquals(myTestRoom2, myTestRoom.getOtherSide(EAST));
+        assertEquals(myTestRoom2, myTestRoom.getOtherSide(WEST));
 
     }
 
+    @Test
     void getOtherSide_NullDoor() {
-
+        assertNull(myTestRoom.getOtherSide(NORTH));
+        assertNull(myTestRoom.getOtherSide(SOUTH));
+        assertNull(myTestRoom.getOtherSide(EAST));
+        assertNull(myTestRoom.getOtherSide(WEST));
     }
 
     @Test
