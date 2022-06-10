@@ -7,6 +7,8 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.util.Random;
 
+import static model.mazecomponents.Direction.*;
+import static model.mazecomponents.State.UNDISCOVERED;
 import static model.mazecomponents.Symbol.UNVISITED;
 import static model.mazecomponents.Symbol.VISITED;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,27 +22,29 @@ class RoomTest {
     private Door myNorthDoor, mySouthDoor, myEastDoor, myWestDoor;
 
     private void addDoorsAll() {
-        myTestRoom.addDoor(Direction.NORTH, myNorthDoor);
-        myTestRoom.addDoor(Direction.SOUTH, mySouthDoor);
-        myTestRoom.addDoor(Direction.EAST, myEastDoor);
-        myTestRoom.addDoor(Direction.WEST, myWestDoor);
+        myTestRoom.addDoor(NORTH, myNorthDoor);
+        myTestRoom.addDoor(SOUTH, mySouthDoor);
+        myTestRoom.addDoor(EAST, myEastDoor);
+        myTestRoom.addDoor(WEST, myWestDoor);
     }
 
     @BeforeEach
     void setUp() {
-        Random r = new Random();
+        final Random r = new Random();
         myRow = r.nextInt(6) + 4;
         myCol = r.nextInt(6) + 4;
         myTestRoom = new Room(myRow, myCol);
 
-        myNorthDoor = new Door(myTestRoom, Direction.NORTH, myTestRoom, Direction.SOUTH);
-        mySouthDoor = new Door(myTestRoom, Direction.SOUTH, myTestRoom, Direction.NORTH);
-        myEastDoor = new Door(myTestRoom, Direction.EAST, myTestRoom, Direction.WEST);
-        myWestDoor = new Door(myTestRoom, Direction.WEST, myTestRoom, Direction.EAST);
+        myNorthDoor = new Door(myTestRoom, NORTH, myTestRoom, SOUTH);
+        mySouthDoor = new Door(myTestRoom, SOUTH, myTestRoom, NORTH);
+        myEastDoor = new Door(myTestRoom, EAST, myTestRoom, WEST);
+        myWestDoor = new Door(myTestRoom, WEST, myTestRoom, EAST);
     }
 
-    @AfterEach
-    void tearDown() {
+    @Test
+    void constructorNegativeArgs() {
+        assertThrowsExactly(IllegalArgumentException.class, () -> new Room(-1, 0));
+        assertThrowsExactly(IllegalArgumentException.class, () -> new Room(0, -1));
     }
 
     @Test
@@ -55,6 +59,11 @@ class RoomTest {
 
     @Test
     void getOtherSide() {
+
+    }
+
+    void getOtherSide_NullDoor() {
+
     }
 
     @Test
@@ -74,57 +83,57 @@ class RoomTest {
 
     @Test
     void hasDoor() {
-        assertFalse(myTestRoom.hasDoor(Direction.NORTH));
-        assertFalse(myTestRoom.hasDoor(Direction.SOUTH));
-        assertFalse(myTestRoom.hasDoor(Direction.EAST));
-        assertFalse(myTestRoom.hasDoor(Direction.WEST));
+        assertFalse(myTestRoom.hasDoor(NORTH));
+        assertFalse(myTestRoom.hasDoor(SOUTH));
+        assertFalse(myTestRoom.hasDoor(EAST));
+        assertFalse(myTestRoom.hasDoor(WEST));
         addDoorsAll();
-        assertTrue(myTestRoom.hasDoor(Direction.NORTH));
-        assertTrue(myTestRoom.hasDoor(Direction.SOUTH));
-        assertTrue(myTestRoom.hasDoor(Direction.EAST));
-        assertTrue(myTestRoom.hasDoor(Direction.WEST));
+        assertTrue(myTestRoom.hasDoor(NORTH));
+        assertTrue(myTestRoom.hasDoor(SOUTH));
+        assertTrue(myTestRoom.hasDoor(EAST));
+        assertTrue(myTestRoom.hasDoor(WEST));
     }
 
     @Test
     void getDoor() {
-        assertNull(myTestRoom.getDoor(Direction.NORTH));
-        assertNull(myTestRoom.getDoor(Direction.SOUTH));
-        assertNull(myTestRoom.getDoor(Direction.EAST));
-        assertNull(myTestRoom.getDoor(Direction.WEST));
+        assertNull(myTestRoom.getDoor(NORTH));
+        assertNull(myTestRoom.getDoor(SOUTH));
+        assertNull(myTestRoom.getDoor(EAST));
+        assertNull(myTestRoom.getDoor(WEST));
         addDoorsAll();
     }
 
     @Test
     void addDoor() {
-        assertFalse(myTestRoom.hasDoor(Direction.NORTH));
-        assertFalse(myTestRoom.hasDoor(Direction.SOUTH));
-        assertFalse(myTestRoom.hasDoor(Direction.EAST));
-        assertFalse(myTestRoom.hasDoor(Direction.WEST));
+        assertFalse(myTestRoom.hasDoor(NORTH));
+        assertFalse(myTestRoom.hasDoor(SOUTH));
+        assertFalse(myTestRoom.hasDoor(EAST));
+        assertFalse(myTestRoom.hasDoor(WEST));
         addDoorsAll();
-        assertTrue(myTestRoom.hasDoor(Direction.NORTH));
-        assertTrue(myTestRoom.hasDoor(Direction.SOUTH));
-        assertTrue(myTestRoom.hasDoor(Direction.EAST));
-        assertTrue(myTestRoom.hasDoor(Direction.WEST));
+        assertTrue(myTestRoom.hasDoor(NORTH));
+        assertTrue(myTestRoom.hasDoor(SOUTH));
+        assertTrue(myTestRoom.hasDoor(EAST));
+        assertTrue(myTestRoom.hasDoor(WEST));
     }
 
     @Test
     void getDoorState() {
-        assertNull(myTestRoom.getDoorState(Direction.NORTH));
-        assertNull(myTestRoom.getDoorState(Direction.SOUTH));
-        assertNull(myTestRoom.getDoorState(Direction.EAST));
-        assertNull(myTestRoom.getDoorState(Direction.WEST));
+        assertNull(myTestRoom.getDoorState(NORTH));
+        assertNull(myTestRoom.getDoorState(SOUTH));
+        assertNull(myTestRoom.getDoorState(EAST));
+        assertNull(myTestRoom.getDoorState(WEST));
         addDoorsAll();
-        assertEquals(State.UNDISCOVERED, myTestRoom.getDoorState(Direction.NORTH));
-        assertEquals(State.UNDISCOVERED, myTestRoom.getDoorState(Direction.SOUTH));
-        assertEquals(State.UNDISCOVERED, myTestRoom.getDoorState(Direction.EAST));
-        assertEquals(State.UNDISCOVERED, myTestRoom.getDoorState(Direction.WEST));
+        assertEquals(UNDISCOVERED, myTestRoom.getDoorState(NORTH));
+        assertEquals(UNDISCOVERED, myTestRoom.getDoorState(SOUTH));
+        assertEquals(UNDISCOVERED, myTestRoom.getDoorState(EAST));
+        assertEquals(UNDISCOVERED, myTestRoom.getDoorState(WEST));
     }
 
     @Test
     void setDoorState() {
         addDoorsAll();
         for (State s : State.values()) {
-            for (Direction d : Direction.values()) {
+            for (Direction d : values()) {
                 myTestRoom.setDoorState(d, s);
                 assertEquals(s, myTestRoom.getDoorState(d));
             }
