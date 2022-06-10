@@ -1,13 +1,12 @@
 package model.mazecomponents;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
+import static model.mazecomponents.Symbol.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PathTest {
@@ -18,9 +17,8 @@ class PathTest {
 
     @BeforeEach
     void setUp() {
-        myTestRooms = new ArrayList<>();
-        myTestDoors = new ArrayList<>();
-        Random r = new Random();
+        myTestRooms = new LinkedList<>();
+        myTestDoors = new LinkedList<>();
         int i = 0;
         myTestRooms.add(i, new Room(0, 0));
         while (i < 10) {
@@ -32,24 +30,20 @@ class PathTest {
         myTestPath = new Path(myTestRooms, myTestDoors);
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void mark() {
         for (Room r : myTestRooms) {
-            assertEquals(Symbol.UNVISITED, r.toChar());
+            assertEquals(UNVISITED, r.toChar());
         }
         for (Door d : myTestDoors) {
-            assertEquals(Symbol.UNDISCOVERED_SYMBOL, d.toChar());
+            assertEquals(UNDISCOVERED_SYMBOL, d.toChar());
         }
         myTestPath.mark();
         for (Room r : myTestRooms) {
-            assertEquals(Symbol.PATH, r.toChar());
+            assertEquals(PATH, r.toChar());
         }
         for (Door d : myTestDoors) {
-            assertEquals(Symbol.PATH, d.toChar());
+            assertEquals(PATH, d.toChar());
         }
     }
 }
