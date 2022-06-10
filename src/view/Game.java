@@ -39,10 +39,6 @@ public class Game {
      * Border of answers.
      */
     public final static EmptyBorder ANSWER_PADDING = new EmptyBorder(7, 0, 0, 0);
-    /**
-     * Body relative directions.
-     */
-    public static final String[] DIRECTION_TEXT = {"Up", "Left", "Right", "Down"};
 
     /**
      * Whether the user can input text.
@@ -64,95 +60,132 @@ public class Game {
      * User's chosen answer to a question.
      */
     private String myAnswer;
-
     /**
      * Cancel a question action.
      */
     private final AbstractAction myCancelFunction;
-
     /**
      * Submit an answer action.
      */
     private final AbstractAction mySubmitFunction;
-
     /**
      * The controller for the GUI.
      */
     private final TriviaMaze myController;
     /**
-     *
+     * Contains all panels.
      */
     private final JFrame myFrame;
     /**
-     *
+     * Contains start, difficulty, and game screens.
      */
     private final JPanel myContentPanel;
     /**
-     *
+     * The overall game screen.
      */
     private JPanel myGamePanel;
     /**
-     *
+     * A menubar to navigate the game screen options.
      */
     private JPanel myMenuBar;
     /**
-     *
+     * Displays the map.
      */
     private JPanel myMapDisplay;
     /**
-     *
+     *  Interface for question/answer and movement.
      */
     private JPanel mySidebar;
     /**
-     *
+     * Interface for questions and answers.
      */
     private JPanel myQAPanel;
     /**
-     *
+     * Displays the question.
      */
     private JPanel myQuestionPanel;
     /**
-     *
+     * Answering and interacting with a question.
      */
     private JPanel myAnswerPanel;
     /**
-     *
+     * Input for answering question.
      */
     private JPanel myResponsePanel;
     /**
-     *
+     * Button panel for moving.
      */
     private JPanel myDirectionPanel;
     /**
-     *
+     * Button panel for interacting with question.
      */
     private JPanel myAnswerSubmissionPanel;
     /**
-     *
+     * Move north.
      */
-    private JButton myNorthButton, myWestButton, myEastButton, mySouthButton,
-            myNewGameButton, myQuickSaveButton, myQuickLoadButton,
-            mySaveButton, myLoadButton, mySubmitButton, myCancelButton;
-
+    private JButton myNorthButton;
     /**
-     *
+     * Move west.
+     */
+    private JButton myWestButton;
+    /**
+     * Move east.
+     */
+    private JButton myEastButton;
+    /**
+     * Move south.
+     */
+    private JButton mySouthButton;
+    /**
+     * Start a new maze.
+     */
+    private JButton myNewGameButton;
+    /**
+     * Quick save preset file.
+     */
+    private JButton myQuickSaveButton;
+    /**
+     * Quick load preset file.
+     */
+    private JButton myQuickLoadButton;
+    /**
+     * Save a file.
+     */
+    private JButton mySaveButton;
+    /**
+     * Load a file.
+     */
+    private JButton myLoadButton;
+    /**
+     * Submit an answer to a question.
+     */
+    private JButton mySubmitButton;
+    /**
+     * Cancel out of answering a question.
+     */
+    private JButton myCancelButton;
+    /**
+     * The container for question text.
      */
     private JTextArea myQuestionArea;
     /**
-     *
+     * Input for answer text.
      */
     private JTextField myAnswerPrompt;
     /**
-     *
+     * Buttons for answer choices.
      */
     private JRadioButton[] myAnswerButtons;
     /**
-     *
+     * Group of answer choices.
      */
     private ButtonGroup myAnswerButtonsGroup;
 
+
     /**
+     * Creates a game screen.
      *
+     * @param theController the controller.
      */
     public Game(final TriviaMaze theController) {
         myController = theController;
@@ -161,12 +194,10 @@ public class Game {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         myFrame = buildFrame();
         myContentPanel = buildPanel();
-        myFrame.add(myContentPanel);
-
         myContentPanel.setLayout(new CardLayout());
-        myContentPanel.add(drawGamePanel(), "game");
-        myContentPanel.add(new Difficulty(this), "difficulty");
         myContentPanel.add(new Start(this), "start");
+        myContentPanel.add(new Difficulty(this), "difficulty");
+        myContentPanel.add(drawGamePanel(), "game");
 
         myNewGameButton.addActionListener(e -> show("difficulty"));
         myQuickSaveButton.addActionListener(e -> { if (mySaveEnabled)
@@ -206,21 +237,23 @@ public class Game {
             }
         };
 
-        final updateGui north = new updateGui(Direction.NORTH);
-        final updateGui east = new updateGui(Direction.EAST);
-        final updateGui south = new updateGui(Direction.SOUTH);
-        final updateGui west = new updateGui(Direction.WEST);
-        addButtonActionListeners(north, east, south, west);
+        final move north = new move(Direction.NORTH);
+        final move east = new move(Direction.EAST);
+        final move south = new move(Direction.SOUTH);
+        final move west = new move(Direction.WEST);
+        addActionListeners(north, east, south, west);
         addKeyboardBindings(north, east, south, west);
 
-        show("start");
+        myFrame.add(myContentPanel);
         myFrame.setVisible(true);
     }
 
     /**
+     * Add actions to buttons.
      *
+     * @param theDirections moves in certain directions.
      */
-    private void addButtonActionListeners(final updateGui... theDirections) {
+    private void addActionListeners(final move... theDirections) {
         myNorthButton.addActionListener(theDirections[0]);
         myEastButton.addActionListener(theDirections[1]);
         mySouthButton.addActionListener(theDirections[2]);
@@ -228,9 +261,11 @@ public class Game {
     }
 
     /**
+     * Add keyboard shortcuts.
      *
+     * @param theDirections moves in certain directions.
      */
-    private void addKeyboardBindings(final updateGui... theDirections) {
+    private void addKeyboardBindings(final move... theDirections) {
         InputMap iMap = (InputMap) UIManager.get("Button.focusInputMap");
         iMap.put(getKeyStroke(VK_SPACE, 0), "none");
         iMap = myGamePanel.getInputMap(WHEN_IN_FOCUSED_WINDOW);
@@ -254,30 +289,9 @@ public class Game {
     }
 
     /**
+     * Display game over message and initiate end of game.
      *
-     */
-    private void setMovementEnabled(final boolean theStatus) {
-        myMovementEnabled = theStatus;
-    }
-
-    /**
-     *
-     */
-    private void setSaveEnabled(final boolean theStatus) {
-        mySaveEnabled = theStatus;
-    }
-
-    /**
-     *
-     */
-    private void doMove(final Direction theDirection) {
-        setMovementEnabled(false);
-        myDirection = theDirection;
-        myController.move(myDirection);
-    }
-
-    /**
-     *
+     * @param theWinStatus whether the player won or not.
      */
     public void displayEndGame(final boolean theWinStatus) {
         final StringJoiner sj = new StringJoiner("\n");
@@ -291,12 +305,14 @@ public class Game {
         sj.add("Undiscovered doors: " + myController.getMazeDoorCount(UNDISCOVERED));
         myQuestionArea.setText(sj.toString());
         updateMapDisplay(true);
-        setMovementEnabled(false);
-        setSaveEnabled(false);
+        myMovementEnabled = false;
+        mySaveEnabled = false;
     }
 
     /**
+     * Draws the overall game panel.
      *
+     * @return the overall game panel.
      */
     private JPanel drawGamePanel() {
         myGamePanel = buildPanel();
@@ -308,7 +324,9 @@ public class Game {
     }
 
     /**
+     * Draws the game sidebar.
      *
+     * @return the game sidebar.
      */
     private JPanel drawSidebar() {
         mySidebar = new JPanel(new BorderLayout());
@@ -320,7 +338,9 @@ public class Game {
     }
 
     /**
+     * Draws the game menubar.
      *
+     * @return the game menubar.
      */
     private JPanel drawMenuBar() {
         myNewGameButton = buildButton("New Game");
@@ -334,11 +354,13 @@ public class Game {
     }
 
     /**
+     * Draws an empty question answer panel.
      *
+     * @return an empty question answer panel.
      */
     private JPanel drawQAPanel() {
         myQAPanel = drawGenQAPanel();
-        myQAPanel.add(drawQuestionArea(), CENTER);
+        myQAPanel.add(drawQuestionArea(""), CENTER);
         return myQAPanel;
     }
 
@@ -371,21 +393,14 @@ public class Game {
     }
 
     /**
+     * Draws a generic question/answer panel.
      *
+     * @return a generic question answer panel.
      */
     private JPanel drawGenQAPanel() {
         myQAPanel = new JPanel(new BorderLayout());
         myQAPanel.setBackground(MID_GREY);
         return myQAPanel;
-    }
-
-    /**
-     * Draws blank question area.
-     *
-     * @return the question area.
-     */
-    private JPanel drawQuestionArea() {
-        return drawQuestionArea("");
     }
 
     /**
@@ -412,7 +427,9 @@ public class Game {
     }
 
     /**
+     * Draws a multiple choice answer panel.
      *
+     * @return a multiple choice answer panel.
      */
     private JPanel drawMultipleChoicePanel(final List<String> theAnswerArray) {
         myTextInputEnabled = false;
@@ -425,7 +442,7 @@ public class Game {
         myAnswerButtons = new JRadioButton[numberOfAnswers];
         myAnswerButtonsGroup = new ButtonGroup();
         for (int i = 0; i < numberOfAnswers; i++) {
-            String answer = theAnswerArray.get(i);
+            final String answer = theAnswerArray.get(i);
             myAnswerButtons[i] = buildRadioButton(answer);
             myAnswerButtons[i].addActionListener(e -> myAnswer = answer.substring(0, 1));
             myAnswerButtons[i].getInputMap().put(
@@ -441,7 +458,9 @@ public class Game {
     }
 
     /**
+     * Draws a short answer panel.
      *
+     * @return a short answer panel.
      */
     private JPanel drawShortAnswerPanel() {
         myTextInputEnabled = true;
@@ -469,7 +488,9 @@ public class Game {
     }
 
     /**
+     * Draws a baseline answer panel.
      *
+     * @return a baseline answer panel.
      */
     private JPanel drawAnswerPanel() {
         myAnswerPanel = new JPanel(new BorderLayout());
@@ -479,7 +500,9 @@ public class Game {
     }
 
     /**
+     * Draws the answer submit panel.
      *
+     * @return the answer submit panel.
      */
     private JPanel drawAnswerSubmitPanel() {
         myAnswerSubmissionPanel = new JPanel(new GridLayout(1, 2));
@@ -503,10 +526,10 @@ public class Game {
      */
     private JPanel drawDirectionControls() {
         myDirectionPanel = new JPanel(new GridLayout(3, 3));
-        myNorthButton = buildButton(DIRECTION_TEXT[0]);
-        myWestButton = buildButton(DIRECTION_TEXT[1]);
-        myEastButton = buildButton(DIRECTION_TEXT[2]);
-        mySouthButton = buildButton(DIRECTION_TEXT[3]);
+        myNorthButton = buildButton("Up");
+        myWestButton = buildButton("Left");
+        myEastButton = buildButton("Right");
+        mySouthButton = buildButton("Down");
         myDirectionPanel.add(buildBufferPanel());
         for (JButton button : new JButton[]{myNorthButton, myWestButton, myEastButton, mySouthButton}) {
             myDirectionPanel.add(button);
@@ -518,18 +541,22 @@ public class Game {
     }
 
     /**
+     * Gets controller.
      *
+     * @return the controller.
      */
     TriviaMaze getController() {
         return myController;
     }
 
     /**
+     * Update map display.
      *
+     * @param theReveal whether the entire map is visible or not.
      */
     public void updateMapDisplay(final boolean theReveal) {
-        setMovementEnabled(true);
-        setSaveEnabled(true);
+        myMovementEnabled = true;
+        mySaveEnabled = true;
         myGamePanel.remove(myMapDisplay);
         myMapDisplay = buildMapDisplay(myController.getMazeCharArray(), theReveal);
         myGamePanel.add(myMapDisplay, CENTER);
@@ -538,7 +565,11 @@ public class Game {
     }
 
     /**
+     * Replaces a panel and then refreshes the frame.
      *
+     * @param theContainer  from where to remove the panel.
+     * @param theReplaced   the panel to remove.
+     * @param theReplacer   the panel to add.
      */
     private void update(final JPanel theContainer, final JPanel theReplaced,
                         final JPanel theReplacer) {
@@ -549,15 +580,17 @@ public class Game {
     }
 
     /**
-     *
+     * Clears the question answer interface.
      */
     public void updateQA() {
-        setMovementEnabled(true);
+        myMovementEnabled = true;
         update(mySidebar, myQAPanel, drawQAPanel());
     }
 
     /**
+     * Update question answer interface with a short answer question.
      *
+     * @param theQuery the question.
      */
     public void updateQA(final String theQuery) {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery));
@@ -565,14 +598,19 @@ public class Game {
     }
 
     /**
+     * Update question answer interface with a multiple choice question.
      *
+     * @param theQuery   the question.
+     * @param theAnswers the answer choices.
      */
     public void updateQA(final String theQuery, final List<String> theAnswers) {
         update(mySidebar, myQAPanel, drawQAPanel(theQuery, theAnswers));
     }
 
     /**
+     * Swap to the specified card.
      *
+     * @param theCard   the card to swap to.
      */
     public void show(final String theCard) {
         updateQA();
@@ -581,7 +619,9 @@ public class Game {
     }
 
     /**
+     * Loads a file and then swap to the game screen.
      *
+     * @param theFile the file containing the game.
      */
     public void load(final File theFile) {
         myController.load(theFile);
@@ -589,29 +629,35 @@ public class Game {
     }
 
     /**
-     *
+     * Move in a certain direction.
      */
-    private class updateGui extends AbstractAction {
+    private class move extends AbstractAction {
 
         /**
-         *
+         * The direction to move.
          */
-        private final Direction myDirection;
+        private final Direction mySetDirection;
 
         /**
+         * Creates a move.
          *
+         * @param theDirection  the direction to move in.
          */
-        private updateGui(final Direction theDirection) {
-            myDirection = theDirection;
+        private move(final Direction theDirection) {
+            mySetDirection = theDirection;
         }
 
         /**
+         * Try to move in specific direction if enabled.
          *
+         * @param e the event to be processed
          */
         @Override
         public void actionPerformed(final ActionEvent e) {
             if (myMovementEnabled) {
-                doMove(myDirection);
+                myMovementEnabled = false;
+                myDirection = mySetDirection;
+                myController.move(myDirection);
             }
         }
     }
