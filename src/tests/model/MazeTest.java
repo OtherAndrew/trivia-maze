@@ -6,15 +6,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MazeTest {
 
     private Maze myTestMaze;
+    private int myDim;
 
     @BeforeEach
     void setUp() {
-        myTestMaze = new Maze(new TriviaMaze(), 4, 4);
+        Random r = new Random();
+        myDim = r.nextInt(6) + 4;
+        myTestMaze = new Maze(new TriviaMaze(), myDim, myDim);
     }
 
     @AfterEach
@@ -47,10 +52,10 @@ class MazeTest {
         int playerCol = myTestMaze.getPlayerLocation().getCol();
         int goalRow = myTestMaze.getGoalLocation().getRow();
         int goalCol = myTestMaze.getGoalLocation().getCol();
-        assertTrue(goalRow == 0 || goalRow == 3
-                || goalCol == 0 || goalCol == 3);
-        assertTrue(Math.abs(playerRow - goalRow) >= 2
-            || Math.abs(playerCol - goalCol) >= 2);
+        assertTrue(goalRow == 0 || goalRow == myDim - 1
+                || goalCol == 0 || goalCol == myDim - 1);
+        assertTrue(Math.abs(playerRow - goalRow) >= myDim / 2
+            || Math.abs(playerCol - goalCol) >= myDim / 2);
     }
 
     @Test
@@ -59,16 +64,16 @@ class MazeTest {
         int playerCol = myTestMaze.getPlayerLocation().getCol();
         int goalRow = myTestMaze.getGoalLocation().getRow();
         int goalCol = myTestMaze.getGoalLocation().getCol();
-        assertTrue(playerRow == 0 || playerRow == 3
-                || playerCol == 0 || playerCol == 3);
-        assertTrue(Math.abs(playerRow - goalRow) >= 2
-                || Math.abs(playerCol - goalCol) >= 2);
+        assertTrue(playerRow == 0 || playerRow == myDim - 1
+                || playerCol == 0 || playerCol == myDim - 1);
+        assertTrue(Math.abs(playerRow - goalRow) >= myDim / 2
+                || Math.abs(playerCol - goalCol) >= myDim / 2);
     }
 
     @Test
     void getRoomVisitedNum() {
         assertEquals(1, myTestMaze.getRoomVisitedNum(true));
-        assertEquals(15, myTestMaze.getRoomVisitedNum(false));
+        assertEquals(myDim * myDim - 1, myTestMaze.getRoomVisitedNum(false));
     }
 
     @Test
@@ -89,6 +94,8 @@ class MazeTest {
 
     @Test
     void toCharArray() {
+        assertEquals(myDim * 2 + 1 , myTestMaze.toCharArray().length);
+        assertEquals(myDim * 2 + 1, myTestMaze.toCharArray()[0].length);
     }
 
     @Test
