@@ -291,22 +291,30 @@ public class Maze implements Serializable {
 
     /**
      * Checks if player has reached the goal room and triggers the end if so.
+     *
+     * @return there the player has reached the goal room.
      */
-    public void atGoal() {
-        if (myPlayerLocation == myGoalLocation) {
+    public boolean atGoal() {
+        final boolean goal = myPlayerLocation == myGoalLocation;
+        if (goal) {
             myController.endGame(true);
         }
+        return goal;
     }
 
     /**
      * Determines if there is no longer a viable path to the goal and
      * triggers the end if so.
+     *
+     * @return if there is no longer a viable path to the goal;
      */
-    public void gameLoss() {
-        if (BFSRunner.findPath(this).isEmpty()) {
+    public boolean gameLoss() {
+        final boolean loss = BFSRunner.findPath(this).isEmpty();
+        if (loss) {
             myPath.mark();
             myController.endGame(false);
         }
+        return loss;
     }
 
     /**
