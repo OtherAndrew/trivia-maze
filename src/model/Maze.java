@@ -126,7 +126,7 @@ public class Maze implements Serializable {
      * @return a room matrix with the specified number of rows and columns.
      */
     private Room[][] generateRoomMatrix(final int theRows, final int theCols) {
-        Room[][] roomMatrix = new Room[theRows][theCols];
+        final Room[][] roomMatrix = new Room[theRows][theCols];
         for (int row = 0; row < roomMatrix.length; row++) {
             for (int col = 0; col < roomMatrix[row].length; col++) {
                 roomMatrix[row][col] = new Room(row, col);
@@ -228,7 +228,7 @@ public class Maze implements Serializable {
      * @param theDirection  the direction to move the player.
      */
     public void attemptMove(final Direction theDirection) {
-        State doorState = myPlayerLocation.getDoorState(theDirection);
+        final State doorState = myPlayerLocation.getDoorState(theDirection);
         if (doorState == CLOSED || doorState == LOCKED) {
             final Question question = getQuestion(theDirection);
             myController.updateQA(question.getQuery(), question.getAnswers());
