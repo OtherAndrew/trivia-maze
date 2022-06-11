@@ -1,4 +1,4 @@
 Developers:
-    - Tim Tukei
     - Andrew Nguyen
     - Anthony Nguyen
+    - Tim Tukei
