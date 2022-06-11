@@ -1,5 +1,6 @@
 package model;
 
+import controller.TriviaMaze;
 import model.mazecomponents.State;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ class BFSRunnerTest {
 
     @BeforeEach
     void setUp() {
-        myTestMaze = new Maze(4, 4);
+        myTestMaze = new Maze(new TriviaMaze(), 4, 4);
 
     }
 
