@@ -18,7 +18,7 @@ class MazeTest {
     @BeforeEach
     void setUp() {
         Random r = new Random();
-        myDim = r.nextInt(6) + 4;
+        myDim = r.nextInt(7) + 4;
         myTestMaze = new Maze(new TriviaMaze(), myDim, myDim);
     }
 

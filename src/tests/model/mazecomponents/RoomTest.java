@@ -27,8 +27,8 @@ class RoomTest {
     @BeforeEach
     void setUp() {
         final Random r = new Random();
-        myRow = r.nextInt(6) + 4;
-        myCol = r.nextInt(6) + 4;
+        myRow = r.nextInt(7) + 4;
+        myCol = r.nextInt(7) + 4;
         myTestRoom = new Room(myRow, myCol);
         myTestRoom2 = new Room(0, 0);
 
