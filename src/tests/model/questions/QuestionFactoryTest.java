@@ -39,5 +39,6 @@ class QuestionFactoryTest {
     void cleanUp() {
         myQF.cleanUp();
         assertNull(myQF.createQuestion());
+        assertDoesNotThrow(() -> myQF.cleanUp());
     }
 }
