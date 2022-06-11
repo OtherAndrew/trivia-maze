@@ -1,7 +1,8 @@
 package model;
 
 import controller.TriviaMaze;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import view.Game;
 
@@ -12,54 +13,66 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SerializerTest {
 
-    private Random myRand;
-    private TriviaMaze myTestController;
-    private Maze myTestMaze;
-    private File myTestFile;
+    private static final Random RANDOM = new Random();
+    private static final TriviaMaze CONTROLLER = new TriviaMaze();
+    private static final Maze myMaze = randomMaze();
+    private static final File myFile = new File("testRes/testSave.ser");
 
+    // Credit to Baeldung
+    private static boolean deleteDirectory(File deleteDirectory) {
+        final File[] contents = deleteDirectory.listFiles();
+        if (contents != null) for (File file : contents) deleteDirectory(file);
+        return deleteDirectory.delete();
+    }
 
-    @BeforeEach
-    void setUp() {
-        myRand = new Random();
-        myTestController = new TriviaMaze();
-        myTestMaze = new Maze(myTestController, myRand.nextInt(7) + 4,
-                myRand.nextInt(7) + 4);
-        final Game gui = new Game(myTestController);
-        myTestFile = new File("testRes/testSave.ser");
+    private static int randomNum() {
+        return RANDOM.nextInt(7) + 4;
+    }
+
+    private static Maze randomMaze() {
+        return new Maze(CONTROLLER, randomNum(), randomNum());
+    }
+
+    @BeforeAll
+    static void setUp() {
+        new Game(CONTROLLER);
+        new File("testRes").mkdir();
+    }
+
+    @AfterAll
+    static void tearDown() {
+        deleteDirectory(new File("testRes"));
     }
 
     @Test
     void save() {
-        myTestMaze.save(myTestFile);
-        assertTrue(myTestFile.exists());
+        myMaze.save(myFile);
+        assertTrue(myFile.exists());
     }
 
     @Test
     void save_WithoutSer() {
         final File testFile = new File("testRes/testSave1");
-        myTestMaze.save(testFile);
+        myMaze.save(testFile);
         assertTrue(new File(testFile + ".ser").exists());
     }
 
     @Test
     void save_Null() {
-        assertDoesNotThrow(() -> myTestMaze.save(null));
+        assertDoesNotThrow(() -> myMaze.save(null));
     }
 
     @Test
     void load() {
         save();
-        final Maze testMaze = new Maze(myTestController, myRand.nextInt(7) + 4,
-                myRand.nextInt(7) + 4);
-        testMaze.load(myTestFile);
-        assertArrayEquals(testMaze.toCharArray(), myTestMaze.toCharArray());
+        final Maze testMaze = randomMaze();
+        testMaze.load(myFile);
+        assertArrayEquals(testMaze.toCharArray(), myMaze.toCharArray());
     }
 
     @Test
     void load_Null() {
         save();
-        final char[][] charArray = myTestMaze.toCharArray();
-        myTestMaze.load(null);
-        assertArrayEquals(charArray, myTestMaze.toCharArray());
+        assertDoesNotThrow(() -> myMaze.load(null));
     }
 }
