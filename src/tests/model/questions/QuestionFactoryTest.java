@@ -16,7 +16,7 @@ class QuestionFactoryTest {
         myQF = new QuestionFactory();
     }
 
-    @AfterAll
+    @AfterEach
     void tearDown() {
         myQF.cleanUp();
     }
