@@ -61,7 +61,7 @@ class MazeTest {
         int goalCol = myTestMaze.getGoalLocation().getCol();
         assertTrue(playerRow == 0 || playerRow == 3
                 || playerCol == 0 || playerCol == 3);
-        assertTrue(Math.abs(playerRow - playerCol) >= 2
+        assertTrue(Math.abs(playerRow - goalRow) >= 2
                 || Math.abs(playerCol - goalCol) >= 2);
     }
 
