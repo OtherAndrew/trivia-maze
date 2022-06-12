@@ -10,6 +10,7 @@ If the player answers the question incorrectly then the door will be locked and 
 If the path to the goal is blocked then the game is lost.
 
 Trivia Maze features randomized maze structure, questions, and answer order for each play session.
+Game sessions can be saved and loaded.
 
 ## Getting Started
 
