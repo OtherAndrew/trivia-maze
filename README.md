@@ -22,7 +22,7 @@ Game sessions can be saved and loaded.
 
 ### Installing
 
-Download [trivia-maze.jar](trivia-maze.jar).
+Download [trivia-maze.jar](https://github.com/OtherAndrew/trivia-maze/releases/download/v1.0/trivia-maze.jar).
 
 ### Executing program
  
